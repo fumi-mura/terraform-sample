@@ -33,14 +33,14 @@ todo
 ```sh
 .
 ├── environments/ # リソースが少ない場合はmain.tfにまとめてもOK
-│   ├── ecs.tf
-│   └── ecr.tf
+│   ├── ecr.tf
+│   └── ecs.tf
 └── modules/
-    ├── ecs/
+    ├── ecr/
     │   ├── main.tf
     │   ├── variables.tf
     │   └── outputs.tf
-    └── ecr/
+    └── ecs/
         ├── main.tf
         ├── variables.tf
         └── outputs.tf
