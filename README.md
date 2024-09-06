@@ -1,6 +1,6 @@
-# This is My infra portfolio
+# This is my infra portfolio
 
-## System Configuration Chart
+## System configuration chart
 todo
 
 ## Directory structure
