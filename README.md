@@ -1,6 +1,7 @@
 # This is my infra portfolio
 
 ## System configuration chart
+
 todo
 
 ## Directory structure
@@ -47,7 +48,10 @@ todo
 ```
 
 ## Setting local environment
+
 todo
 
 ## Outside source code control
-Nothing at the moment.
+
+- S3 bucket for terraform.tfstate
+  - If use CFn(terraform/aws/tfstate/s3.yml)
