@@ -19,14 +19,11 @@ Parameters:
     Type: String
     AllowedPattern: '.+'
     ConstraintDescription: 'Environments name is required and cannot be empty.'
-Conditions:
-  EnterBucketName: !Not [!Equals [!Ref BucketName, '']]
-  EnterTagName: !Not [!Equals [!Ref Env, '']]
 Resources:
   S3Bucket:
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: !If [EnterBucketName, !Ref BucketName, !Ref 'AWS::NoValue']
+      BucketName: !If [!Ref BucketName, !Ref 'AWS::NoValue']
       AccessControl: Private
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
@@ -54,6 +51,6 @@ Resources:
             Status: Enabled
       Tags:
         - Key: env
-          Value: !If [EnterTagName, !Ref Env, !Ref 'AWS::NoValue']
+          Value: !If [!Ref Env, !Ref 'AWS::NoValue']
         - Key: created-terraform
           Value: false
