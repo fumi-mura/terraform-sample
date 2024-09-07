@@ -1,21 +1,20 @@
-# todo
-
-# name: Check
-# on:
-#   # Push or PR作成されたら起動
-#   pull_request:
-#     branches: develop
-# permissions:
-#   id-token: write
-#   contents: read
-#   issues: write # PRにコメントするために追加
-# env:
-#   WORKING_DIRECTORY: "terraform/aws/iam/dev"
-# jobs:
-#   check:
-#     runs-on: ubuntu-latest
-#     # GitHubのEnvironments Secretsから各環境に登録してある環境変数を使用
-#     environment: dev
+name: Check
+on:
+  # Push or PR作成されたら起動
+  pull_request:
+    branches: develop
+permissions:
+  id-token: write
+  contents: read
+  issues: write # PRにコメントするために追加
+env:
+  WORKING_DIRECTORY: "terraform/aws/iam/dev"
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    # GitHubのEnvironments Secretsから各環境に登録してある環境変数を使用
+    environment: dev
+      # todo
 #     steps:
 #       - name: Checkout infra repository
 #         uses: actions/checkout@v4

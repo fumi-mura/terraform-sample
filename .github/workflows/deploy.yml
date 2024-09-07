@@ -1,22 +1,21 @@
-# todo
-
-# name: Deploy
-# on:
-#   pull_request:
-#     branches: develop
-#     types: [closed] # Mergeされたら起動
-# permissions:
-#   id-token: write
-#   contents: read
-# env:
-#   WORKING_DIRECTORY: "terraform/aws/iam/dev"
-# jobs:
-#   deploy:
-#     # マージされた時のみ起動
-#     if: github.event.pull_request.merged == true
-#     runs-on: ubuntu-latest
-#     # GitHubのEnvironments Secretsから各環境に登録してある環境変数を使用
-#     environment: dev
+name: Deploy
+on:
+  pull_request:
+    branches: develop
+    types: [closed] # Mergeされたら起動
+permissions:
+  id-token: write
+  contents: read
+env:
+  WORKING_DIRECTORY: "terraform/aws/iam/dev"
+jobs:
+  deploy:
+    # マージされた時のみ起動
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    # GitHubのEnvironments Secretsから各環境に登録してある環境変数を使用
+    environment: dev
+      # todo
 #     steps:
 #       - name: Checkout infra repository
 #         uses: actions/checkout@v4
