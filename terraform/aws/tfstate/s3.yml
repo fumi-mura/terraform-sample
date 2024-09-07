@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Template to create S3 Bucket for terraform.tfstate
+Metadata:
+  'AWS::CloudFormation::Interface':
+    ParameterGroups:
+      - Label:
+          default: 'Storage'
+        Parameters:
+          - BucketName
+Parameters:
+  BucketName:
+    Description: 'The name of the bucket to store the data in. If left blank, a bucket name will be generated.'
+    Type: String
+    Default: ''
+Conditions:
+  HasBucket: !Not [!Equals [!Ref BucketName, '']]
+Resources:
+  S3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: !If [HasBucket, !Ref BucketName, !Ref 'AWS::NoValue']
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: 'AES256'
+      VersioningConfiguration:
+        Status: Enabled
+      LifecycleConfiguration:
+        Rules:
+          - Id: LifeCycleRule
+            Status: Enabled
