@@ -7,19 +7,26 @@ Metadata:
           default: 'Storage'
         Parameters:
           - BucketName
+          - Env
 Parameters:
   BucketName:
     Description: 'The name of the bucket to store the data in. This parameter is required.'
     Type: String
     AllowedPattern: '.+'
     ConstraintDescription: 'Bucket name is required and cannot be empty.'
+  Env:
+    Description: 'This parameter is required.'
+    Type: String
+    AllowedPattern: '.+'
+    ConstraintDescription: 'Environments name is required and cannot be empty.'
 Conditions:
-  HasBucket: !Not [!Equals [!Ref BucketName, '']]
+  EnterBucketName: !Not [!Equals [!Ref BucketName, '']]
+  EnterTagName: !Not [!Equals [!Ref Env, '']]
 Resources:
   S3Bucket:
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: !If [HasBucket, !Ref BucketName, !Ref 'AWS::NoValue']
+      BucketName: !If [EnterBucketName, !Ref BucketName, !Ref 'AWS::NoValue']
       AccessControl: Private
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
@@ -36,3 +43,8 @@ Resources:
         Rules:
           - Id: LifeCycleRule
             Status: Enabled
+      Tags:
+        - Key: env
+          Value: !If [EnterTagName, !Ref Env, !Ref 'AWS::NoValue']
+        - Key: created-terraform
+          Value: false
