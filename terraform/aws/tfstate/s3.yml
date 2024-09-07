@@ -41,7 +41,16 @@ Resources:
         Status: Enabled
       LifecycleConfiguration:
         Rules:
-          - Id: LifeCycleRule
+          - Id: NoncurrentVersionExpiration
+            NoncurrentVersionExpiration:
+              NoncurrentDays: 7
+            Status: Enabled
+          - Id: ExpiredObjectDeleteMarker
+            ExpiredObjectDeleteMarker: true
+            Status: Enabled
+          - Id: AbortIncompleteMultipartUpload
+            AbortIncompleteMultipartUpload:
+              DaysAfterInitiation: 7
             Status: Enabled
       Tags:
         - Key: env
