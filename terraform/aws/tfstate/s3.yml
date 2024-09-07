@@ -9,9 +9,10 @@ Metadata:
           - BucketName
 Parameters:
   BucketName:
-    Description: 'The name of the bucket to store the data in. If left blank, a bucket name will be generated.'
+    Description: 'The name of the bucket to store the data in. This parameter is required.'
     Type: String
-    Default: ''
+    AllowedPattern: '.+'
+    ConstraintDescription: 'Bucket name is required and cannot be empty.'
 Conditions:
   HasBucket: !Not [!Equals [!Ref BucketName, '']]
 Resources:
