@@ -20,9 +20,9 @@ todo
 │   │   │   ├── backend.tf
 │   │   │   ├── provider.tf
 │   │   │   └── terraform.tf
-│   │   └── ecs
-│   ├── stg
-│   └── prd
+│   │   └── ecs/
+│   ├── stg/
+│   └── prd/
 └── modules/
     ├── ecr/
     │   ├── main.tf
@@ -42,8 +42,8 @@ todo
 │   │   ├── backend.tf
 │   │   ├── provider.tf
 │   │   └── terraform.tf
-│   ├── stg
-│   └── prd
+│   ├── stg/
+│   └── prd/
 └── modules/
     ├── ecr/
     │   ├── main.tf
