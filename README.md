@@ -17,25 +17,37 @@ todo
 
 ```sh
 .
-├── ecr/
+├── environmets/
 │   ├── dev/
-│   │   └── main.tf
+│   │   ├── ecr/
+│   │   │   ├── main.tf
+│   │   │   ├── backend.tf
+│   │   │   ├── provider.tf
+│   │   │   └── terraform.tf
+│   │   └── ecs
 │   ├── stg
-│   ├── prd
-│   └── modules/
-│       ├── main.tf
-│       ├── variables.tf
-│       └── outputs.tf
-└── ecs/
+│   └── prd
+└── modules/
+    ├── ecr/
+    │   ├── main.tf
+    │   ├── outputs.tf
+    │   └── variables.tf
+    └── ecs/
 ```
 
 ### Pattern B
 
 ```sh
 .
-├── environments/ # リソースが少ない場合はmain.tfにまとめてもOK
-│   ├── ecr.tf
-│   └── ecs.tf
+├── environments/
+│   ├── dev/
+│   │   ├── ecr.tf # リソースが少ない場合はmain.tfにまとめてもOK
+│   │   ├── ecs.tf
+│   │   ├── backend.tf
+│   │   ├── provider.tf
+│   │   └── terraform.tf
+│   ├── stg
+│   └── prd
 └── modules/
     ├── ecr/
     │   ├── main.tf
