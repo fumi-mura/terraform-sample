@@ -1,4 +1,4 @@
 module "access_analyzer" {
-  source = "../../iam/modules/"
+  source = "../../../modules/iam"
   env    = "dev"
 }
