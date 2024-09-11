@@ -50,7 +50,7 @@ Resources:
               DaysAfterInitiation: 7
             Status: Enabled
       Tags:
-        - Key: env
+        - Key: Environment
           Value: !If [!Ref Env, !Ref 'AWS::NoValue']
         - Key: created-terraform
           Value: false
