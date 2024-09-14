@@ -2,10 +2,8 @@ data "aws_ssoadmin_instances" "this" {}
 
 # 許可セットの作成
 resource "aws_ssoadmin_permission_set" "this" {
-  for_each = toset([
-    "AdministratorAccess",
-    "ReadOnlyAccess"
-  ])
+  for_each = toset(var.permission_sets)
+
   instance_arn     = tolist(data.aws_ssoadmin_instances.this.arns)[0]
   name             = each.value
   session_duration = "PT8H"
@@ -24,10 +22,7 @@ resource "aws_ssoadmin_managed_policy_attachment" "main" {
 resource "aws_identitystore_user" "this" {
   identity_store_id = tolist(data.aws_ssoadmin_instances.this.identity_store_ids)[0]
 
-  for_each = toset([
-    "Admin",
-    "ReadOnly"
-  ])
+  for_each = toset(var.create_users)
 
   user_name    = each.key # signinに使用、後から変更不可
   display_name = each.key
@@ -44,10 +39,8 @@ resource "aws_identitystore_user" "this" {
 
 # Create group
 resource "aws_identitystore_group" "this" {
-  for_each = toset([
-    "Admin",
-    "ReadOnly"
-  ])
+  for_each = toset(var.create_groups)
+
   display_name      = "${var.env}-iam-identity-center-group-${each.key}"
   identity_store_id = tolist(data.aws_ssoadmin_instances.this.identity_store_ids)[0]
 }
