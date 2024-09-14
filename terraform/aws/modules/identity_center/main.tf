@@ -5,6 +5,7 @@ resource "aws_ssoadmin_permission_set" "this" {
   for_each = toset(var.permission_sets)
 
   instance_arn     = tolist(data.aws_ssoadmin_instances.this.arns)[0]
+  relay_state      = "https://ap-northeast-1.console.aws.amazon.com/console/home?region=ap-northeast-1" # Transition destination when session expires.
   name             = each.value
   session_duration = "PT8H"
 }
@@ -20,10 +21,9 @@ resource "aws_ssoadmin_managed_policy_attachment" "main" {
 
 # Create user
 resource "aws_identitystore_user" "this" {
-  identity_store_id = tolist(data.aws_ssoadmin_instances.this.identity_store_ids)[0]
-
   for_each = toset(var.create_users)
 
+  identity_store_id = tolist(data.aws_ssoadmin_instances.this.identity_store_ids)[0]
   user_name    = each.key # signinに使用、後から変更不可
   display_name = each.key
 
