@@ -60,7 +60,10 @@ todo
 
 - S3 bucket for terraform.tfstate
   - If use CFn(terraform/aws/tfstate/s3.yml)
-- Enable IAM Identity Center
+- IAM Identity Center
+  - Enable IAM Identity Center
+  - Enable sent OTP when Create UserAPI
+  - Enable mfa
   - Terraform not yet supported
 
 ## Tools
