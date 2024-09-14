@@ -14,3 +14,4 @@ variable "create_groups" {
   type        = list(string)
   default     = [ "Admin", "ReadOnly" ]
 }
+variable "master_account_id" {}
