@@ -1,5 +1,9 @@
-variable "env" {}
-variable "name" {}
+variable "env" {
+  type = string
+}
+variable "name" {
+  type = string
+}
 variable "permission_sets" {
   description = "Create IAM Identity Center permission set"
   type        = list(string)
@@ -15,7 +19,9 @@ variable "create_groups" {
   type        = list(string)
   default     = ["Admin", "ReadOnly"]
 }
-variable "master_account_id" {}
+variable "master_account_id" {
+  type = string
+}
 variable "email_local_pert" {
   type = string
 }

@@ -1,7 +1,21 @@
-variable "env" {}
-variable "name" {}
-variable "sns_name" {}
-variable "sns_policy" {}
-variable "sns_protocol" {}
-variable "sns_endpoint" {}
-variable "function_name" {}
+variable "env" {
+  type = string
+}
+variable "name" {
+  type = string
+}
+variable "sns_name" {
+  type = string
+}
+variable "sns_policy" {
+  type = map()
+}
+variable "sns_protocol" {
+  type = string
+}
+variable "sns_endpoint" {
+  type = string
+}
+variable "function_name" {
+  type = string
+}
