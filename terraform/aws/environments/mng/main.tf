@@ -3,7 +3,7 @@ module "organizations" {
 }
 
 module "identity_center" {
-  source = "../../modules/identity_center"
-  env    = local.env
+  source            = "../../modules/identity_center"
+  env               = local.env
   master_account_id = module.organizations.master_account_id
 }
