@@ -7,7 +7,7 @@ resource "aws_iam_openid_connect_provider" "this" {
 }
 
 resource "aws_iam_role" "oidc" {
-  name               = "${var.env}-${var.name}-oidc-iam-role"
+  name = "${var.env}-${var.name}-oidc-iam-role"
   assume_role_policy = jsonencode(
     {
       Version = "2012-10-17"
@@ -20,11 +20,11 @@ resource "aws_iam_role" "oidc" {
           Action = "sts:AssumeRoleWithWebIdentity",
           Condition = {
             StringEquals = {
-              "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
+              "token.actions.githubusercontent.com:aud" : "sts.amazonaws.com"
             },
             StringLike = {
               # リポジトリを指定して認証を許可
-              "token.actions.githubusercontent.com:sub": "repo:Fumi-Mura/infra_portfolio:*"
+              "token.actions.githubusercontent.com:sub" : "repo:Fumi-Mura/infra_portfolio:*"
             }
           }
         }
@@ -34,14 +34,14 @@ resource "aws_iam_role" "oidc" {
 }
 
 resource "aws_iam_policy" "oidc" {
-  name     = "${var.env}-${var.name}-oidc-iam-policy"
-  policy   = jsonencode({
-    Version   = "2012-10-17"
+  name = "${var.env}-${var.name}-oidc-iam-policy"
+  policy = jsonencode({
+    Version = "2012-10-17"
     Statement = [
       {
-        Effect    = "Allow"
-        Action    = ["*"]
-        Resource  = ["*"]
+        Effect   = "Allow"
+        Action   = ["*"]
+        Resource = ["*"]
       }
     ]
   })
