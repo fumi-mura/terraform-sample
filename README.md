@@ -54,7 +54,12 @@ todo
 
 ## Setting local environment
 
-todo
+### If use IAM Identity Center
+
+```sh
+# The variable is passed from github secrets, so if you wanna run terraform from local, you need to include this variable in the tfvars file.
+echo 'email_local_pert = "foo"' >> terraform/aws/environments/{env}/terraform.tfvars
+```
 
 ## Outside source code control
 

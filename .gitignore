@@ -5,6 +5,9 @@
 *.tfstate
 *.tfstate.*
 
+# Exclude all .tfvars files
+*.tfvars
+
 # Local settings
 **/.vscode/*
 **/.envrc
