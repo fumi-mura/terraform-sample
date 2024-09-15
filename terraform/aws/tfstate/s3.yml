@@ -52,5 +52,5 @@ Resources:
       Tags:
         - Key: Environment
           Value: !Ref Env
-        - Key: created-terraform
+        - Key: ManagedByTerraform
           Value: false
