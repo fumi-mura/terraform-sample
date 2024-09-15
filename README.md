@@ -58,8 +58,8 @@ todo
 
 ### AWS resource name
 
-{env}-{service_name}-{resource_name}-{purpose}  
-ex: mng-fumis-portfolio-s3-bucket-terraform-tfstate
+{env}-{service_name}-{purpose}-{resource_name}  
+ex: mng-fumis-portfolio-terraform-tfstate-s3-bucket
 
 
 ## Outside source code control
