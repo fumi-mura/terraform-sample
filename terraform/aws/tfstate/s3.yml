@@ -23,7 +23,7 @@ Resources:
   S3Bucket:
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: !If [!Ref BucketName, !Ref 'AWS::NoValue']
+      BucketName: !Ref BucketName
       AccessControl: Private
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
@@ -51,6 +51,6 @@ Resources:
             Status: Enabled
       Tags:
         - Key: Environment
-          Value: !If [!Ref Env, !Ref 'AWS::NoValue']
+          Value: !Ref Env
         - Key: created-terraform
           Value: false
