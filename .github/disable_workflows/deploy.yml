@@ -1,25 +1,28 @@
 name: Deploy
 on:
-  pull_request:
-    branches: develop
-    types: [closed] # Mergeされたら起動
+  push:
+    branches:
+      - 'main'
+  # pull_request:
+  #   branches: develop
+  #   types: [closed] # Only run when merged
 permissions:
   id-token: write
   contents: read
 env:
-  WORKING_DIRECTORY: "terraform/aws/iam/dev"
+  WORKING_DIRECTORY: "terraform/aws/environments/mng"
 jobs:
   deploy:
-    # マージされた時のみ起動
-    if: github.event.pull_request.merged == true
+    # Only run when merged
+    # if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    # GitHubのEnvironments Secretsから各環境に登録してある環境変数を使用
-    environment: dev
+    # Use environment variables registered in Environments Secrets on GitHub
+    environment: mng
     steps:
-      - name: Checkout infra repository
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: develop # developブランチをチェックアウト
+          ref: main # Checkout main branch
       - name: Check Repository
         run: |
           echo "This repository"
@@ -37,5 +40,6 @@ jobs:
         run: terraform init
         working-directory: ${{ env.WORKING_DIRECTORY }}
       - name: Apply
-        run: terraform apply -auto-approve
+        # run: terraform apply -auto-approve
+        run: terraform plan
         working-directory: ${{ env.WORKING_DIRECTORY }}
