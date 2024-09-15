@@ -6,8 +6,11 @@ todo
 
 ## Directory structure
 
-このリポジトリではパターンAを採用する。リソースが少ない場合はパターンBや、env以下のファイルも単一のmain.tfにまとめてもOK。
-選定基準はtfstateファイルをどの単位で分割するかによる。1つのstateファイルで管理するリソースが増えると、target指定をしないplan/applyなどの実行時間が長くなる。分割しすぎるとソースコードを書く時に辛くなるが、リソースが増えるほどに恩恵は大きくなる。
+Pattern A is adopted in this repository.
+Pattern B used if resources are few, or files under env can be combined into a single main.tf file.
+The selection criterion depends on which unit the tfstate file is divided into.
+The more resources are managed in one state file, the longer the execution time when plan/apply, etc. without specifying a target.
+Too much division makes it hard to write source code, but the more resources you have, the greater the benefit.
 
 ### Pattern A
 
@@ -37,7 +40,7 @@ todo
 .
 ├── environments/
 │   ├── dev/
-│   │   ├── ecr.tf # リソースが少ない場合はmain.tfにまとめてもOK
+│   │   ├── ecr.tf # If resources are few,  together them in main.tf is ok.
 │   │   ├── ecs.tf
 │   │   ├── backend.tf
 │   │   ├── provider.tf
