@@ -54,13 +54,6 @@ todo
 
 ## Setting local environment
 
-### If use IAM Identity Center
-
-```sh
-# The variable is passed from github secrets, so if you wanna run terraform from local, you need to include this variable in the tfvars file.
-echo 'email_local_pert = "foo"' >> terraform/aws/environments/{env}/terraform.tfvars
-```
-
 ## Outside source code control
 
 - S3 bucket for terraform.tfstate
@@ -74,6 +67,8 @@ echo 'email_local_pert = "foo"' >> terraform/aws/environments/{env}/terraform.tf
   - Enable mfa
   - Sent verify Email(success sent email when manual make user...?)
   - Terraform not yet supported
+- SSM Parameter Store
+  - ${email_local_pert} added manually
 
 ## Tools
 
