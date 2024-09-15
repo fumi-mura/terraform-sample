@@ -23,7 +23,6 @@ resource "aws_iam_role" "oidc" {
               "token.actions.githubusercontent.com:aud" : "sts.amazonaws.com"
             },
             StringLike = {
-              # リポジトリを指定して認証を許可
               "token.actions.githubusercontent.com:sub" : "repo:Fumi-Mura/infra_portfolio:*"
             }
           }

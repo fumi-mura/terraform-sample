@@ -1,6 +1,6 @@
-# 初回実行でDefault VPCをTerraform管理下に取り入れる
+# Bring Default VPC under Terraform management on first run.
 resource "aws_default_vpc" "this" {
-  force_destroy = true # 関連りソースを削除することを許可
+  force_destroy = true # Allow delete related resource.
 }
 
 # Delete default sg rule.

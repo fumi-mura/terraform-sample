@@ -1,7 +1,7 @@
-# rootアカウントを参照
+# Refer to root account
 data "aws_organizations_organization" "main" {}
 
-# アカウントの作成
+# Make account
 resource "aws_organizations_account" "accounts" {
   for_each = toset(var.account_names)
 
