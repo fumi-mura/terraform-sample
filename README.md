@@ -54,6 +54,14 @@ todo
 
 ## Setting local environment
 
+## Rules
+
+### AWS resource name
+
+{env}-{service_name}-{resource_name}-{purpose}  
+ex: mng-fumis-portfolio-s3-bucket-terraform-tfstate
+
+
 ## Outside source code control
 
 - S3 bucket for terraform.tfstate

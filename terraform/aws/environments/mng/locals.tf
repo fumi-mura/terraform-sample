@@ -1,3 +1,4 @@
 locals {
-  env = "mng"
+  env  = "mng"
+  name = "fumis-portfolio"
 }

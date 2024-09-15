@@ -1,4 +1,5 @@
 variable "env" {}
+variable "name" {}
 variable "sns_name" {}
 variable "sns_policy" {}
 variable "sns_protocol" {}

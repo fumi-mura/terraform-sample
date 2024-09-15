@@ -1,7 +1,7 @@
 resource "aws_sns_topic" "this" {
-  name = "${var.env}-sns-topic-${var.sns_name}"
+  name = "${var.env}-${var.name}-sns-topic-${var.sns_name}"
   tags = {
-    Name = "${var.env}-sns-topic${var.sns_name}"
+    Name = "${var.env}-${var.name}-sns-topic-${var.sns_name}"
   }
 }
 

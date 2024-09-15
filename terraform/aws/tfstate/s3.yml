@@ -8,6 +8,7 @@ Metadata:
         Parameters:
           - BucketName
           - Env
+          - ServiceName
 Parameters:
   BucketName:
     Description: 'The name of the bucket to store the data in. This parameter is required.'
@@ -19,6 +20,11 @@ Parameters:
     Type: String
     AllowedPattern: '.+'
     ConstraintDescription: 'Environments name is required and cannot be empty.'
+  ServiceName:
+    Description: 'This parameter is required.'
+    Type: String
+    AllowedPattern: '.+'
+    ConstraintDescription: 'Service name is required and cannot be empty.'
 Resources:
   S3Bucket:
     Type: 'AWS::S3::Bucket'
@@ -52,5 +58,7 @@ Resources:
       Tags:
         - Key: Environment
           Value: !Ref Env
+        - Key: ServiceName
+          Value: !Ref ServiceName
         - Key: ManagedByTerraform
           Value: false

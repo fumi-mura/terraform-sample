@@ -5,6 +5,7 @@ module "organizations" {
 module "identity_center" {
   source            = "../../modules/identity_center"
   env               = local.env
+  name              = local.name
   master_account_id = module.organizations.master_account_id
   email_local_pert  = module.ssm.email_local_pert
 }

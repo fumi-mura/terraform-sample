@@ -1,4 +1,5 @@
 variable "env" {}
+variable "name" {}
 variable "permission_sets" {
   description = "Create IAM Identity Center permission set"
   type        = list(string)
