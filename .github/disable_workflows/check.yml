@@ -5,7 +5,7 @@ on:
       - 'main'
   # Only run when Push or make PR
   # pull_request:
-  #   branches: develop
+  #   branches: main
 permissions:
   id-token: write
   contents: read
