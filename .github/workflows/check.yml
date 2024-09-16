@@ -55,7 +55,7 @@ jobs:
       # - name: Run TFLint
         # run: tflint --recursive --format compact
       - name: Run TFLint
-        run: tflint --recursive --config ./terraform/.tflint.hcl --format compact
+        run: tflint --recursive --config $(realpath ./terraform/.tflint.hcl) --format compact
 
       - name: Plan
         run: terraform plan -no-color
