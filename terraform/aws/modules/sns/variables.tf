@@ -8,7 +8,7 @@ variable "sns_name" {
   type = string
 }
 variable "sns_policy" {
-  type = map()
+  type = map(string)
 }
 variable "sns_protocol" {
   type = string
