@@ -41,7 +41,6 @@ jobs:
       - name: Format Terraform
         id: fmt
         run: terraform fmt -check -recursive # Output a list of filenames whose files are not properly formatted.
-        working-directory: ${{ env.WORKING_DIRECTORY }}
         continue-on-error: true # Don't stop when an error occurs
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v4
@@ -55,7 +54,7 @@ jobs:
         run: tflint --recursive --format compact --config $(realpath ./terraform/.tflint.hcl)
         continue-on-error: true # Don't stop when an error occurs
       - name: Plan Terraform
-        run: terraform plan -no-color
+        run: terraform plan
         working-directory: ${{ env.WORKING_DIRECTORY }}
         continue-on-error: true # Don't stop when an error occurs.
       # # Output plan results to GitHub PR comments
