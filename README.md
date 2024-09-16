@@ -97,7 +97,7 @@ ex: mng-fumis-portfolio-terraform-tfstate-s3-bucket
 ### TFLint
 
 ```sh
-infra_portfolio $ tflint --recursive
+infra_portfolio $ tflint --recursive --format compact
 # The error below appears in the module. Ignore it ok because it is specified on the use side. (Even if set the disable setting in tflint.hcl, the error appears...)
 # terraform_required_providers, terraform_required_version
 ```
