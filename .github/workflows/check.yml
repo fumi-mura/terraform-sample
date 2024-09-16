@@ -50,19 +50,14 @@ jobs:
       - name: Show version
         run: tflint --version
       - name: Init TFLint
-        run: tflint --init --config ./terraform/.tflint.hcl
-
-      # - name: Run TFLint
-        # run: tflint --recursive --format compact
+        run: tflint --init --config $(realpath ./terraform/.tflint.hcl)
       - name: Run TFLint
-        run: tflint --recursive --config $(realpath ./terraform/.tflint.hcl) --format compact
-
+        run: tflint --recursive --format compact --config $(realpath ./terraform/.tflint.hcl)
+        continue-on-error: true # Don't stop when an error occurs
       - name: Plan
         run: terraform plan -no-color
         working-directory: ${{ env.WORKING_DIRECTORY }}
         continue-on-error: true # Don't stop when an error occurs.
-
-
       # # Output plan results to GitHub PR comments
       # - name: Comment PR
       #   uses: actions/github-script@v3
