@@ -83,10 +83,10 @@ ex: mng-fumis-portfolio-terraform-tfstate-s3-bucket
 
 ## Tools
 
-- tfenv
+- tfenv(manage Terraform version)
+- tgenv(manage Terragrunt version)
 - tflint
 - tfsec
-- Terragrunt
 - terraform-docs
 - Infracost
 - direnv
