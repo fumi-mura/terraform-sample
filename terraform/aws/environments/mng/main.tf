@@ -19,3 +19,7 @@ module "oidc" {
   env    = local.env
   name   = local.name
 }
+
+module "default_vpc" {
+  source = "../../modules/vpc"
+}
