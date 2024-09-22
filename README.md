@@ -12,6 +12,12 @@ The selection criterion depends on which unit the tfstate file is divided into.
 The more resources are managed in one state file, the longer the execution time when plan/apply, etc. without specifying a target.
 Too much division makes it hard to write source code, but the more resources you have, the greater the benefit.
 
+If you further divide environments/{env} into ecr/・/ecs, etc., it is not possible to pass values between modules as shown below (directory design depends on the concept of tfstate division).
+Instead, terraform_remote_state source or data source should be used.
+The terraform_remote_state is a reference from the state, so there is no need to call the API. data resource is not misaligned with the real resource entity.
+If there are many directories, it may be easier to manage them by creating a integrate file with reference data directly under environments/{env}.
+(In some cases, it is safer to use the data source because terraform_remote_state may not be able to read the old tfstate if the format is changed when tf is updated.)
+
 ### Pattern A
 
 ```sh
