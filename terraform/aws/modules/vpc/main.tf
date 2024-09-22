@@ -1,10 +1,9 @@
-# Bring Default VPC under Terraform management on first run.
-resource "aws_default_vpc" "this" {
-  force_destroy = true # Allow delete related resource.
+data "aws_vpc" "default" {
+  default = true
 }
 
 # Delete default sg rule.
 # If egress/ingress is not specified, delete sg rule.
 resource "aws_default_security_group" "this" {
-  vpc_id = aws_default_vpc.this.id
+  vpc_id = data.aws_vpc.default.id
 }
