@@ -5,7 +5,7 @@ resource "aws_ssoadmin_permission_set" "this" {
 
   instance_arn     = tolist(data.aws_ssoadmin_instances.this.arns)[0]
   relay_state      = "https://ap-northeast-1.console.aws.amazon.com/console/home?region=ap-northeast-1" # Transition destination when session expires.
-  name             = each.value # Expected name length is 1-32.
+  name             = each.value                                                                         # Expected name length is 1-32.
   session_duration = "PT8H"
 }
 

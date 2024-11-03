@@ -11,8 +11,8 @@ module "oidc_iam_role" {
   max_session_duration = 3600
   policy_statement = {
     1 = {
-      effect    = "Allow"
-      actions   = ["sts:AssumeRoleWithWebIdentity"]
+      effect  = "Allow"
+      actions = ["sts:AssumeRoleWithWebIdentity"]
       principals = [{
         type        = "Federated"
         identifiers = ["${module.oidc_provider.oidc_arn}"]
@@ -21,13 +21,13 @@ module "oidc_iam_role" {
         test     = "StringEquals"
         variable = "token.actions.githubusercontent.com:aud"
         values   = ["sts.amazonaws.com"]
-      },
-      {
-        test     = "StringLike"
-        variable = "token.actions.githubusercontent.com:sub"
-        values   = [
-          "repo:Fumi-Mura/infra_portfolio:*",
-        ]
+        },
+        {
+          test     = "StringLike"
+          variable = "token.actions.githubusercontent.com:sub"
+          values = [
+            "repo:Fumi-Mura/infra_portfolio:*",
+          ]
       }]
     }
   }
@@ -46,4 +46,11 @@ module "oidc_iam_policy" {
       condition = []
     }
   }
+}
+
+module "s3_bucket_test" {
+  source = "../../../modules/s3/bucket/"
+  env    = local.env
+  name   = local.name
+  role    = "test"
 }
