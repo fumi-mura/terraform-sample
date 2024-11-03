@@ -48,14 +48,14 @@ jobs:
       ##################################################
       # TFLint
       ##################################################
-      # - name: Setup TFLint
-      #   uses: terraform-linters/setup-tflint@v4
-      #   with:
-      #     tflint_version: v0.52.0
-      # - name: Show TFLint version
-      #   run: tflint --version
-      # - name: Init TFLint
-      #   run: tflint --init --config ${{ github.workspace }}/terraform/.tflint.hcl
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: v0.52.0
+      - name: Show TFLint version
+        run: tflint --version
+      - name: Init TFLint
+        run: tflint --init --config ${{ github.workspace }}/terraform/.tflint.hcl
       # - name: Run TFLint
       #   id: TFLINT
       #   run: tflint --recursive --format compact --config ${{ github.workspace }}/terraform/.tflint.hcl
