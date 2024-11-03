@@ -24,8 +24,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          ref: feature_test_gha # Checkout main branch
       - name: Check Repository
         run: |
           echo "This repository"
