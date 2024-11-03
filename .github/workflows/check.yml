@@ -97,9 +97,7 @@ jobs:
             #### Terraform fmt test 🖌\`${{ steps.fmt.outcome }}\`
             <details>
             <summary>Show fmt</summary>
-            \n\`\`\`
             ${process.env.FMT}
-            \`\`\`
             </details>`;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
