@@ -1,12 +1,26 @@
 data "aws_iam_policy_document" "assume_role" {
-  statement {
-    effect  = "Allow"
-    actions = [ "sts:AssumeRole" ]
-    resources = var.resources
-
-    principals {
-      type        = var.assume_type
-      identifiers = var.assume_identifiers
+  dynamic "statement" {
+    for_each = var.policy_statement
+    content {
+      effect        = statement.value.effect
+      actions       = statement.value.actions
+      not_actions   = statement.value.not_actions
+      not_resources = statement.value.not_resources
+      dynamic "principals" {
+        for_each = statement.value.principals
+        content {
+          type        = principals.value.type
+          identifiers = principals.value.identifiers
+        }
+      }
+      dynamic "condition" {
+        for_each = statement.value.condition
+        content {
+          test     = condition.value.test
+          variable = condition.value.variable
+          values   = condition.value.values
+        }
+      }
     }
   }
 }

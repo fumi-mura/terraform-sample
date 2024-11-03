@@ -15,7 +15,7 @@ variable "policy_statement" {
     effect        = string
     actions       = optional(list(string), [])
     not_actions   = optional(list(string), [])
-    resource      = optional(list(string), [])
+    resources     = optional(list(string), [])
     not_resources = optional(list(string), [])
     condition = list(object({
       test     = string
@@ -23,6 +23,5 @@ variable "policy_statement" {
       values   = list(string)
     }))
   }))
-  default     = []
   description = "IAM policy statement list."
 }

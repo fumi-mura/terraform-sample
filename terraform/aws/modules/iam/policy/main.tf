@@ -7,9 +7,8 @@ data "aws_iam_policy_document" "this" {
       not_actions   = statement.value.not_actions
       resources     = statement.value.resources
       not_resources = statement.value.not_resources
-
       dynamic "condition" {
-        for_each = statement.value.condition # Execute loop only when use condition.
+        for_each = statement.value.condition
         content {
           test     = condition.value.test
           variable = condition.value.variable
