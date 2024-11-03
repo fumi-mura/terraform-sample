@@ -100,7 +100,7 @@ jobs:
           script: |
             const output = `
             #### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-            #### Terraform Plan 📖\`${{ steps.plan.outcome.stdout }}\`
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
             <details><summary>Show Plan</summary>
             \`\`\`terraform${process.env.PLAN}\`\`\`
             </details>`;
