@@ -4,7 +4,7 @@ variable "env" {
 variable "name" {
   type = string
 }
-variable "sns_name" {
+variable "role" {
   type = string
 }
 variable "sns_policy" {
