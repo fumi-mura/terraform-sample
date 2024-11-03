@@ -9,6 +9,8 @@
 registries:
 - type: standard
   ref: v4.155.1 # renovate: depName=aquaproj/aqua-registry
+env:
+  AQUA_DISABLE_SIGNATURE_VERIFICATION: true
 packages:
 - name: hashicorp/terraform@v1.9.0
 - name: terraform-linters/tflint@v0.53.0
