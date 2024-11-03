@@ -63,6 +63,7 @@ jobs:
         uses: reviewdog/action-tflint@master
         with:
           github_token: ${{ secrets.github_token }}
+          working_directory: "${{ github.workspace }}/terraform/aws/"
           reporter: github-pr-review
           tflint_init: true
           tflint_version: "v0.52.0"
