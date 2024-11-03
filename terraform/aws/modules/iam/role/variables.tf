@@ -35,6 +35,6 @@ variable "managed_policy_arns" {
 }
 
 variable "max_session_duration" {
-  type = number
+  type    = number
   default = 3600
 }

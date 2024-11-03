@@ -73,7 +73,7 @@ resource "aws_subnet" "db" {
 resource "aws_eip" "this" {
   for_each = var.public_subnets
 
-  depends_on = [ aws_internet_gateway.this ]
+  depends_on = [aws_internet_gateway.this]
 
   tags = {
     Name = "${var.env}-${var.name}-${each.value.role}-eip"
@@ -82,7 +82,7 @@ resource "aws_eip" "this" {
 
 # NAT
 resource "aws_nat_gateway" "this" {
-  for_each      = var.public_subnets
+  for_each = var.public_subnets
 
   allocation_id = aws_eip.this[each.key].id
   subnet_id     = aws_subnet.public[each.key].id
@@ -109,7 +109,7 @@ resource "aws_route" "public" {
 }
 
 resource "aws_route_table_association" "public" {
-  for_each       = var.public_subnets
+  for_each = var.public_subnets
 
   subnet_id      = aws_subnet.public[each.key].id
   route_table_id = aws_route_table.public.id
@@ -126,7 +126,7 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route" "private" {
-  for_each               = zipmap(keys(var.public_subnets), keys(var.private_subnets)) # RouteTableはvar.private_subnetsのkey, NATはvar.public_subnetsのkeyで作成されているため結合が必要
+  for_each = zipmap(keys(var.public_subnets), keys(var.private_subnets)) # RouteTableはvar.private_subnetsのkey, NATはvar.public_subnetsのkeyで作成されているため結合が必要
 
   destination_cidr_block = "0.0.0.0/0"
   route_table_id         = aws_route_table.private[each.value].id
