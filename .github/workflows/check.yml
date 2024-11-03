@@ -43,6 +43,8 @@ jobs:
         with:
           aqua_version: v2.9.0
           aqua_opts: ""
+        env:
+          AQUA_CONFIG: aqua-config.yaml
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
