@@ -11,15 +11,15 @@ Metadata:
           - ServiceName
 Parameters:
   BucketName:
-    Description: 'The name of the bucket to store the data in. This parameter is required.'
+    Description: 'S3 bucket name. This parameter is required.'
     Type: String
     AllowedPattern: '.+'
-    ConstraintDescription: 'Bucket name is required and cannot be empty.'
+    ConstraintDescription: 'S3 bucket name is required and cannot be empty.'
   Env:
     Description: 'This parameter is required.'
     Type: String
     AllowedPattern: '.+'
-    ConstraintDescription: 'Environments name is required and cannot be empty.'
+    ConstraintDescription: 'Environment name is required and cannot be empty.'
   ServiceName:
     Description: 'This parameter is required.'
     Type: String
