@@ -64,12 +64,15 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           working_directory: "/terraform/aws"
+          tflint_target_dir: "/terraform/aws"
           reporter: github-pr-review
           tflint_init: true
           tflint_version: "v0.52.0"
           tflint_config: ${{ github.workspace }}/terraform/.tflint.hcl
           flags: "--recursive --format=checkstyle"
-          fail_on_error: false # Don't stop when an error occurs 
+          fail_on_error: false # Don't stop when an error occurs
+        # env:
+        #   WORKING_DIRECTORY: /home/runner/work/infra_portfolio/infra_portfolio/terraform/aws/environments/mng/oidc
 
       ##################################################
       # tfsec
