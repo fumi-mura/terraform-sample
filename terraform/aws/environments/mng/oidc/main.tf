@@ -52,5 +52,5 @@ module "s3_bucket_test" {
   source = "../../../modules/s3/bucket/"
   env    = local.env
   name   = local.name
-  role   = "test"
+  role    = "test"
 }
