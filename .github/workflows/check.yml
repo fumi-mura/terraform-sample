@@ -97,9 +97,7 @@ jobs:
             #### Terraform fmt 🖌\`${{ steps.fmt.outcome }}\`
             <details>
             <summary>Show fmt</summary>
-            \`\`\`
-            ${process.env.FMT}
-            \`\`\`
+            \`\`\`\n${process.env.FMT}\`\`\`
             </details>`;
             github.issues.createComment({
               issue_number: context.issue.number,
@@ -127,9 +125,7 @@ jobs:
             #### Terraform plan 📖\`${{ steps.plan.outcome }}\`
             <details>
             <summary>Show plan</summary>
-            \`\`\`
-            ${process.env.PLAN}
-            \`\`\`
+            \`\`\`${process.env.PLAN}\`\`\`
             </details>`;
             github.issues.createComment({
               issue_number: context.issue.number,
