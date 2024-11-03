@@ -87,7 +87,7 @@ jobs:
         run: terraform fmt -check -recursive # Output a list of filenames whose files are not properly formatted.
         continue-on-error: true # Don't stop when an error occurs
       - name: Comment fmt
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         env:
           FMT: ${{ steps.fmt.outputs.stdout }}
         with:
@@ -101,7 +101,7 @@ jobs:
             ${process.env.FMT}
             \`\`\`
             </details>`;
-            github.issues.createComment({
+            github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -117,7 +117,7 @@ jobs:
         working-directory: ${{ env.WORKING_DIRECTORY }}
         continue-on-error: true # Don't stop when an error occurs.
       - name: Comment plan
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         env:
           PLAN: ${{ steps.plan.outputs.stdout }}
         with:
@@ -131,7 +131,7 @@ jobs:
             ${process.env.PLAN}
             \`\`\`
             </details>`;
-            github.issues.createComment({
+            github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
