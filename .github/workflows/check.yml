@@ -71,7 +71,7 @@ jobs:
           flags: "--recursive --format=checkstyle"
           fail_on_error: false # Don't stop when an error occurs
 
-/home/runner/work/_actions/reviewdog/action-tflint/master/script.sh: line 6: cd: /home/runner/work/infra_portfolio/infra_portfolio//home/runner/work/infra_portfolio/infra_portfolio/terraform/aws: No such file or directory
+# /home/runner/work/_actions/reviewdog/action-tflint/master/script.sh: line 6: cd: /home/runner/work/infra_portfolio/infra_portfolio//home/runner/work/infra_portfolio/infra_portfolio/terraform/aws: No such file or directory
 
       ##################################################
       # tfsec
