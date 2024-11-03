@@ -28,6 +28,7 @@ jobs:
         run: |
           echo "This repository"
           git branch
+          echo "Current branch: ${GITHUB_HEAD_REF:-$GITHUB_REF}"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
