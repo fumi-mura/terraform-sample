@@ -25,7 +25,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: main # Checkout main branch
+          ref: feature_test_gha # Checkout main branch
       - name: Check Repository
         run: |
           echo "This repository"
