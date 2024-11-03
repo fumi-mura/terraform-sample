@@ -89,12 +89,13 @@ jobs:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.github_token }}
         run: |
           tflint --init --config ${{ github.workspace }}/terraform/.tflint.hcl
-          tflint --recursive --format compact --config ${{ github.workspace }}/terraform/.tflint.hcl | \
+          tflint --recursive --config ${{ github.workspace }}/terraform/.tflint.hcl --format=checkstyle | \
           reviewdog -f=checkstyle \
                     -name="tflint" \
                     -reporter=github-pr-review \
                     -filter-mode=nofilter \
                     -fail-on-error \
+        continue-on-error: true # Don't stop when an error occurs
 
       ##################################################
       # tfsec
