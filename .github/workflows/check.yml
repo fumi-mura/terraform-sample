@@ -126,8 +126,9 @@ jobs:
           script: |
             const output = `
             #### Terraform plan 📖\`${{ steps.plan.outcome }}\`
-            <details><summary>Show plan</summary>
-            \`\`\`terraform${process.env.PLAN}\`\`\`
+            <details>
+            <summary>Show plan</summary>
+            terraform${process.env.PLAN}
             </details>`;
             github.issues.createComment({
               issue_number: context.issue.number,
