@@ -65,13 +65,14 @@ jobs:
           github_token: ${{ secrets.github_token }}
           # working_directory: ${{ github.workspace }}/terraform/aws
           # tflint_target_dir: ${{ github.workspace }}
-          working-directory: ${{ github.workspace }}/terraform/aws
           reporter: github-pr-review
           tflint_init: true
           tflint_version: "v0.52.0"
           tflint_config: ${{ github.workspace }}/terraform/.tflint.hcl
           flags: "--recursive --format=checkstyle"
           fail_on_error: false # Don't stop when an error occurs
+        env:
+          working-directory: ${{ github.workspace }}/terraform/aws
 
       ##################################################
       # tfsec
