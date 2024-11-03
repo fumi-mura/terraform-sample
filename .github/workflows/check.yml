@@ -87,6 +87,7 @@ jobs:
       # tf plan
       ##################################################
       - name: Plan Terraform
+        id: plan
         run: terraform plan
         working-directory: ${{ env.WORKING_DIRECTORY }}
         continue-on-error: true # Don't stop when an error occurs.

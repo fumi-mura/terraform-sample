@@ -48,7 +48,6 @@ module "oidc_iam_policy" {
   }
 }
 
-
 module "s3_bucket_test" {
   source = "../../../modules/s3/bucket/"
   env    = local.env
