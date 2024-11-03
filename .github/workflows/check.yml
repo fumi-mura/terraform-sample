@@ -63,11 +63,11 @@ jobs:
         uses: reviewdog/action-tflint@master
         with:
           github_token: ${{ secrets.github_token }}
-          working_directory: "${{ github.workspace }}/terraform/aws/"
+          working_directory: "infra_portfolio/terraform/aws/"
           reporter: github-pr-review
           tflint_init: true
           tflint_version: "v0.52.0"
-          tflint_config: ${{ github.workspace }}/terraform/.tflint.hcl
+          tflint_config: "infra_portfolio/terraform/.tflint.hcl"
           flags: "--recursive --format=checkstyle"
           fail_on_error: false # Don't stop when an error occurs
 
