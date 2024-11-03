@@ -14,8 +14,8 @@ permissions:
   contents: read
   id-token: write
   pull-requests: write
-# env:
-#   WORKING_DIRECTORY: "${{ github.workspace }}/terraform/aws/environments/mng/oidc"
+env:
+  WORKING_DIRECTORY: "${{ github.workspace }}/terraform/aws/environments/mng/oidc"
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -41,9 +41,9 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.9.0
-      # - name: Init Terraform
-      #   run: terraform init
-      #   working-directory: ${{ env.WORKING_DIRECTORY }}
+      - name: Init Terraform
+        run: terraform init
+        working-directory: ${{ env.WORKING_DIRECTORY }}
 
       ##################################################
       # TFLint
@@ -63,16 +63,14 @@ jobs:
         uses: reviewdog/action-tflint@master
         with:
           github_token: ${{ secrets.github_token }}
-          working_directory: "/terraform/aws"
-          # tflint_target_dir: "/terraform/aws"
+          working_directory: ${{ github.workspace }}/terraform/aws
+          # tflint_target_dir: .
           reporter: github-pr-review
           tflint_init: true
           tflint_version: "v0.52.0"
           tflint_config: ${{ github.workspace }}/terraform/.tflint.hcl
           flags: "--recursive --format=checkstyle"
           fail_on_error: false # Don't stop when an error occurs
-        # env:
-        #   WORKING_DIRECTORY: /home/runner/work/infra_portfolio/infra_portfolio/terraform/aws/environments/mng/oidc
 
       ##################################################
       # tfsec
