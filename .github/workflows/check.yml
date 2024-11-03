@@ -42,7 +42,7 @@ jobs:
         uses: aquaproj/aqua-installer@v3.0.1
         with:
           aqua_version: v2.9.0
-          aqua_opts: "--slsa-skip"
+          aqua_opts: "--disable-slsa"
         env:
           AQUA_CONFIG: aqua.yaml
       - name: Setup Terraform
