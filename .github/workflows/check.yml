@@ -46,10 +46,10 @@ jobs:
           AQUA_CONFIG: aqua.yaml
           AQUA_DISABLE_COSIGN: true
           AQUA_DISABLE_SLSA: true
-      # - name: Setup Terraform
-      #   uses: hashicorp/setup-terraform@v2
-      #   with:
-      #     terraform_version: 1.9.0
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.9.0
       # - name: Init Terraform
       #   run: terraform init
       #   working-directory: ${{ env.WORKING_DIRECTORY }}
@@ -57,12 +57,12 @@ jobs:
       ##################################################
       # TFLint
       ##################################################
-      # - name: Setup TFLint
-      #   uses: terraform-linters/setup-tflint@v4
-      #   with:
-      #     tflint_version: v0.52.0
-      # - name: Show TFLint version
-      #   run: tflint --version
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: v0.52.0
+      - name: Show TFLint version
+        run: tflint --version
       # - name: Init TFLint
       #   run: tflint --init --config ${{ github.workspace }}/terraform/.tflint.hcl
       # - name: Run TFLint
