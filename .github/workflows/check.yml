@@ -151,7 +151,7 @@ jobs:
           script: |
             const output = `
             #### Terraform plan 📖\`${{ steps.plan.outcome }}\`
-            #### Commit sha ${{ github.sha }} \`
+            Commit sha ${{ github.sha }} \
             <details>
             <summary>Show plan</summary>
             \n\`\`\`${process.env.PLAN}\`\`\`
