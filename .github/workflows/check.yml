@@ -14,8 +14,6 @@ permissions:
   contents: read
   id-token: write
   pull-requests: write
-  checks: write
-  actions: read
 # env:
 #   WORKING_DIRECTORY: "${{ github.workspace }}/terraform/aws/environments/mng/oidc"
 jobs:
