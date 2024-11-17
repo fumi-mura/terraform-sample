@@ -1,6 +1,7 @@
 resource "aws_security_group" "this" {
-  name   = "${var.env}-${var.name}-${var.role}-sg"
-  vpc_id = var.vpc_id
+  name        = "${var.env}-${var.name}-${var.role}-sg"
+  vpc_id      = var.vpc_id
+  description = var.description
 
   tags = {
     Name = "${var.env}-${var.name}-${var.role}-sg"
