@@ -1,3 +1,19 @@
+# Get latest AMI version.
+data "aws_ami" "this" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "owner-alias"
+    values = ["amazon"]
+  }
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+}
+
 resource "aws_instance" "this" {
   ami                         = coalesce(var.ami, data.aws_ami.this.id)
   subnet_id                   = var.subnet_id
