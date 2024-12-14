@@ -38,3 +38,8 @@ resource "aws_instance" "this" {
     Name = var.ec2_name
   }
 }
+
+resource "aws_iam_instance_profile" "this" {
+  name = var.instance_profile_name
+  role = var.iam_role_name
+}
