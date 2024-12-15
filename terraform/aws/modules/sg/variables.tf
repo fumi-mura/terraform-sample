@@ -16,7 +16,7 @@ variable "vpc_id" {
 
 variable "description" {
   type    = string
-  default = "Managed by Terraform" # Default value by terraform
+  default = "Managed by Terraform" # Default value by terraform.
 }
 
 variable "rule_map" {
