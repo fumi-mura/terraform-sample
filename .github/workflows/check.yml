@@ -49,9 +49,6 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.9.0
-      # - name: Init Terraform
-      #   run: terraform init
-      #   working-directory: ${{ env.WORKING_DIRECTORY }}
 
       ##################################################
       # TFLint
@@ -62,24 +59,6 @@ jobs:
           tflint_version: v0.52.0
       - name: Show TFLint version
         run: tflint --version
-      # - name: Init TFLint
-      #   run: tflint --init --config ${{ github.workspace }}/terraform/.tflint.hcl
-      # - name: Run TFLint
-      #   run: tflint --recursive --format compact --config ${{ github.workspace }}/terraform/.tflint.hcl
-      #   continue-on-error: true # Don't stop when an error occurs
-
-      # - name: Comment TFLint
-      #   uses: reviewdog/action-tflint@master
-      #   with:
-      #     github_token: ${{ secrets.github_token }}
-      #     # working_directory: ${{ github.workspace }}/terraform/aws
-      #     # tflint_target_dir: ${{ github.workspace }}
-      #     reporter: github-pr-review
-      #     tflint_init: true
-      #     tflint_version: "v0.52.0"
-      #     tflint_config: ${{ github.workspace }}/terraform/.tflint.hcl
-      #     flags: "--recursive --format=checkstyle"
-      #     fail_on_error: false # Don't stop when an error occurs
 
       - name: TFlint
         working-directory: ${{ github.workspace }}/terraform/aws
