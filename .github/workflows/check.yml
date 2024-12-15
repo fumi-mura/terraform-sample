@@ -113,10 +113,7 @@ jobs:
         working-directory: ${{ env.WORKING_DIRECTORY }}
       - name: Plan Terraform
         id: plan
-        run: |
-          echo "check dir"
-          pwd
-          terraform plan -no-color
+        run: terraform plan -no-color
         working-directory: ${{ env.WORKING_DIRECTORY }}
         continue-on-error: true # Don't stop when an error occurs.
       - name: Comment plan
@@ -139,13 +136,3 @@ jobs:
               repo: context.repo.repo,
               body: output
             });
-      - name: test 1
-        working-directory: ${{ github.workspace }}
-        run: |
-          echo "check dir"
-          pwd
-      - name: test 2
-        working-directory: ${{ github.workspace }}/terraform/aws
-        run: |
-          echo "check dir"
-          pwd
