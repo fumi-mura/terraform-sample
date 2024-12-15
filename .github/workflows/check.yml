@@ -111,9 +111,9 @@ jobs:
       - name: Plan Terraform
         id: plan
         run: |
-          terraform plan -no-color
           echo "check dir"
           pwd
+          terraform plan -no-color
         working-directory: ${{ env.WORKING_DIRECTORY }}
         continue-on-error: true # Don't stop when an error occurs.
       - name: Comment plan
