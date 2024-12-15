@@ -14,11 +14,6 @@ variable "vpc_id" {
   type = string
 }
 
-variable "description" {
-  type    = string
-  default = "Managed by Terraform" # Default value by terraform.
-}
-
 variable "rule_map" {
   type = map(object({
     type                     = string
