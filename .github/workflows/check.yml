@@ -27,9 +27,8 @@ jobs:
       ##################################################
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Check Repository
+      - name: Check branch
         run: |
-          echo "This repository"
           git branch
           echo "Current branch: ${GITHUB_HEAD_REF:-$GITHUB_REF}"
       - name: Configure AWS credentials
