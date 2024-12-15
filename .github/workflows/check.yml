@@ -45,10 +45,6 @@ jobs:
           AQUA_CONFIG: aqua.yaml
           AQUA_DISABLE_COSIGN: true
           AQUA_DISABLE_SLSA: true
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.9.0
 
       ##################################################
       # TFLint
