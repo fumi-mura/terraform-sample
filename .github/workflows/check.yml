@@ -14,8 +14,8 @@ permissions:
   contents: read
   id-token: write
   pull-requests: write
-# env:
-#   WORKING_DIRECTORY: "${{ github.workspace }}/terraform/aws/environments/mng/oidc"
+env:
+  WORKING_DIRECTORY: "${{ github.workspace }}/terraform/aws/environments/mng/oidc"
 jobs:
   check:
     runs-on: ubuntu-latest
