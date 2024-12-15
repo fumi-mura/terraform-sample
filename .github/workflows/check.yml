@@ -27,9 +27,8 @@ jobs:
       ##################################################
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Check Repository
+      - name: Check branch
         run: |
-          echo "This repository"
           git branch
           echo "Current branch: ${GITHUB_HEAD_REF:-$GITHUB_REF}"
       - name: Configure AWS credentials
@@ -37,38 +36,38 @@ jobs:
         with:
           role-to-assume: ${{ secrets.OIDC_ROLE_ARN }}
           aws-region: ap-northeast-1
-      - name: Setup Terraform
+      - name: Setup aqua
+        uses: aquaproj/aqua-installer@v3.0.1
+        with:
+          aqua_version: v2.28.0
+          aqua_opts: ""
+        env:
+          AQUA_CONFIG: aqua.yaml
+          AQUA_DISABLE_COSIGN: true
+          AQUA_DISABLE_SLSA: true
+      - name: Setup Terraform # ここを消すとfmt/planのコメントがうまくいかない...
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.9.0
-      - name: Init Terraform
-        run: terraform init
-        working-directory: ${{ env.WORKING_DIRECTORY }}
 
       ##################################################
       # TFLint
       ##################################################
-      # - name: Setup TFLint
-      #   uses: terraform-linters/setup-tflint@v4
-      #   with:
-      #     tflint_version: v0.52.0
-      # - name: Show TFLint version
-      #   run: tflint --version
-      # - name: Init TFLint
-      #   run: tflint --init --config ${{ github.workspace }}/terraform/.tflint.hcl
-      # - name: Run TFLint
-      #   run: tflint --recursive --format compact --config ${{ github.workspace }}/terraform/.tflint.hcl
-      #   continue-on-error: true # Don't stop when an error occurs
-      - name: Comment TFLint
-        uses: reviewdog/action-tflint@master
-        with:
-          github_token: ${{ secrets.github_token }}
-          reporter: github-pr-review
-          tflint_init: true
-          tflint_version: "v0.52.0"
-          tflint_config: ${{ github.workspace }}/terraform/.tflint.hcl
-          flags: "--recursive --format=checkstyle"
-          fail_on_error: false # Don't stop when an error occurs
+      - name: TFlint
+        working-directory: ${{ github.workspace }}/terraform/aws
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tflint --init --config ${{ github.workspace }}/terraform/.tflint.hcl
+          tflint --recursive --config ${{ github.workspace }}/terraform/.tflint.hcl --format=checkstyle | \
+          reviewdog -f=checkstyle \
+                    -name="tflint" \
+                    -reporter=github-pr-review \
+                    -filter-mode=nofilter \
+                    -fail-on-error=false \
+                    -level=warning
+        continue-on-error: true # Don't stop when an error occurs
 
       ##################################################
       # tfsec
@@ -76,7 +75,7 @@ jobs:
       - name: Run tfsec
         uses: tfsec/tfsec-pr-commenter-action@main
         with:
-          working_directory: ${{env.WORKING_DIRECTORY}}
+          working_directory: ${{ github.workspace }}/terraform/aws
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       ##################################################
@@ -97,9 +96,7 @@ jobs:
             #### Terraform fmt 🖌\`${{ steps.fmt.outcome }}\`
             <details>
             <summary>Show fmt</summary>
-            \n\`\`\`
-            ${process.env.FMT}
-            \`\`\`
+            \n\`\`\`\n${process.env.FMT}\`\`\`
             </details>`;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
@@ -111,6 +108,9 @@ jobs:
       ##################################################
       # plan
       ##################################################
+      - name: Init Terraform
+        run: terraform init
+        working-directory: ${{ env.WORKING_DIRECTORY }}
       - name: Plan Terraform
         id: plan
         run: terraform plan -no-color
@@ -125,11 +125,10 @@ jobs:
           script: |
             const output = `
             #### Terraform plan 📖\`${{ steps.plan.outcome }}\`
+            Commit sha ${{ github.sha }} \
             <details>
             <summary>Show plan</summary>
-            \n\`\`\`
-            ${process.env.PLAN}
-            \`\`\`
+            \n\`\`\`${process.env.PLAN}\`\`\`
             </details>`;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
