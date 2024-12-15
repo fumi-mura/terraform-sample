@@ -75,7 +75,7 @@ jobs:
       - name: Run tfsec
         uses: tfsec/tfsec-pr-commenter-action@main
         with:
-          working_directory: ${{env.WORKING_DIRECTORY}}
+          working_directory: ${{ github.workspace }}/terraform/aws
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       ##################################################
