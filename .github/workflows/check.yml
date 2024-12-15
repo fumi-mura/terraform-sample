@@ -17,7 +17,7 @@ permissions:
 # env:
 #   WORKING_DIRECTORY: "${{ github.workspace }}/terraform/aws/environments/mng/oidc"
 jobs:
-  setup:
+  check:
     runs-on: ubuntu-latest
     # Use environment variables registered in Environments Secrets on GitHub
     environment: mng
@@ -50,10 +50,6 @@ jobs:
         with:
           terraform_version: 1.9.0
 
-  check:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
       ##################################################
       # TFLint
       ##################################################
