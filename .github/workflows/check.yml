@@ -66,6 +66,7 @@ jobs:
   ci:
     needs: setup
     runs-on: ubuntu-latest
+    environment: mng
     steps:
       - name: Download workspace
         uses: actions/download-artifact@v4
