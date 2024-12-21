@@ -39,9 +39,9 @@ jobs:
       - name: Output changed files
         run: |
           echo "=== Environments ==="
-          echo ${{ steps.changes.outputs.modules }}
-          echo "=== Modules ==="
           echo ${{ steps.changes.outputs.environments }}
+          echo "=== Modules ==="
+          echo ${{ steps.changes.outputs.modules }}
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
