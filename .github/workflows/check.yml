@@ -48,6 +48,7 @@ jobs:
 
   ci:
     needs: setup
+    if: ${{ needs.setup.outputs.changed_dirs != '[]' && needs.setup.outputs.changed_dirs != '' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
