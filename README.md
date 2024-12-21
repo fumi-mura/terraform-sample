@@ -68,8 +68,17 @@ If there are many directories, it may be easier to manage them by creating a int
 ### AWS resource name
 
 {env}-{service_name}-{purpose}-{resource_name}  
-ex: mng-fumis-portfolio-terraform-tfstate-s3-bucket
+ex: dev-fumis-portfolio-terraform-tfstate-s3-bucket
 
+### Module user side name
+
+Follow AWS resource name rule.
+
+```
+module "{purpose}_{resource_name}" {
+  source = "module"
+}
+```
 
 ## Outside source code control
 
@@ -96,6 +105,7 @@ ex: mng-fumis-portfolio-terraform-tfstate-s3-bucket
 - terraform-docs
 - Infracost
 - direnv
+- aqua
 - draw.io
 
 ## Static Analysis
