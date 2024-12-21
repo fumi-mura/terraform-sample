@@ -36,14 +36,6 @@ jobs:
         id: filter
         with:
           filters: .github/path-filter.yml
-      - name: Output changed files
-        run: |
-          echo "=== Environments ==="
-          echo "${{ steps.filter.outputs.environments }}"
-          echo "=== Modules ==="
-          echo ${{ steps.filter.outputs.modules_files }}
-          echo "=== Modules 2 ==="
-          echo "${{ steps.filter.outputs.modules_files }}"
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
