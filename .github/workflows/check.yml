@@ -37,7 +37,6 @@ jobs:
         with:
           filters: .github/path-filter.yml
       - name: Output changed files
-        if: steps.filter.outputs.terraform_dev == 'true'
         run: |
           echo "=== Environments ==="
           echo ${{ steps.paths-filter.outputs.modules }}
