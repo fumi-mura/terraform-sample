@@ -43,19 +43,6 @@ jobs:
         with:
           role-to-assume: ${{ secrets.OIDC_ROLE_ARN }}
           aws-region: ap-northeast-1
-      - name: Setup aqua
-        uses: aquaproj/aqua-installer@v3.0.1
-        with:
-          aqua_version: v2.28.0
-          aqua_opts: ""
-        env:
-          AQUA_CONFIG: aqua.yaml
-          AQUA_DISABLE_COSIGN: true
-          AQUA_DISABLE_SLSA: true
-      - name: Setup Terraform # ここを消すとfmt/planのコメントがうまくいかない...
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.9.0
       - name: Upload workspace
         uses: actions/upload-artifact@v4
         with:
