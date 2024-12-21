@@ -22,7 +22,7 @@ jobs:
     # Use environment variables registered in Environments Secrets on GitHub
     environment: mng
     outputs:
-      filter: ${{ steps.filter.outputs.changes }}
+      changed_dirs: ${{ steps.filter.outputs.changes }}
     steps:
       ##################################################
       # setup
@@ -54,6 +54,9 @@ jobs:
   ci:
     needs: setup
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        changed_dir: ${{ fromJSON(needs.setup.outputs.changed_dirs) }}
     environment: mng
     steps:
       - name: Download workspace
@@ -82,7 +85,8 @@ jobs:
       # TFLint
       ##################################################
       - name: TFlint
-        working-directory: ${{ github.workspace }}/terraform/aws
+        # working-directory: ${{ github.workspace }}/terraform/aws
+        working-directory: terraform/aws/environments/${{ matrix.changed_dir }}
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
