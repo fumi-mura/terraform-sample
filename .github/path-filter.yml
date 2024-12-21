@@ -1,9 +1,9 @@
 filters:
   # Outputs chnaged files
   environments:
-    - terraform/aws/environments/*
+    - terraform/aws/environments/**
   modules:
-    - terraform/aws/modules/*
+    - terraform/aws/modules/**
 
   # environments
   dev:
