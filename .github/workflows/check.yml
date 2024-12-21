@@ -31,6 +31,18 @@ jobs:
         run: |
           git branch
           echo "Current branch: ${GITHUB_HEAD_REF:-$GITHUB_REF}"
+      - name: Get changed dirs
+        uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: .github/path-filter.yml
+      - name: Output changed files
+        if: steps.filter.outputs.terraform_dev == 'true'
+        run: |
+          echo "=== Environments ==="
+          echo ${{ steps.paths-filter.outputs.modules }}
+          echo "=== Modules ==="
+          echo ${{ steps.paths-filter.outputs.environments }}
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
