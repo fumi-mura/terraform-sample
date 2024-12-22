@@ -23,6 +23,7 @@ jobs:
     environment: mng
     outputs:
       changed_dirs: ${{ steps.get_dirs.outputs.dirs }}
+      test: ${{ steps.filter.outputs.test }}
     steps:
       ##################################################
       # setup
