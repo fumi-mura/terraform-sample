@@ -100,7 +100,7 @@ jobs:
       ##################################################
       # tfsec
       ##################################################
-      - name: Run tfsec
+      - name: tfsec
         uses: tfsec/tfsec-pr-commenter-action@main
         with:
           working_directory: ${{ github.workspace }}/terraform/aws
@@ -109,7 +109,7 @@ jobs:
       ##################################################
       # fmt
       ##################################################
-      - name: Format Terraform
+      - name: Terraform fmt
         id: fmt
         run: terraform fmt -check -recursive # Output a list of filenames whose files are not properly formatted.
         continue-on-error: true # Don't stop when an error occurs
@@ -136,10 +136,10 @@ jobs:
       ##################################################
       # plan
       ##################################################
-      - name: Init Terraform
+      - name: Terraform init
         run: terraform init
         working-directory: ${{ env.WORKING_DIRECTORY }}
-      - name: Plan Terraform
+      - name: Terraform plan
         id: plan
         run: terraform plan -no-color
         working-directory: ${{ env.WORKING_DIRECTORY }}
