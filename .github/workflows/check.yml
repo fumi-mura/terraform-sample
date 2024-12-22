@@ -162,7 +162,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           terraform fmt -check -recursive -list=true | \
-          reviewdog -f=checkstyle \
+          reviewdog -f=diff \
                     -name="terraform fmt" \
                     -reporter=github-pr-review \
                     -filter-mode=nofilter \
