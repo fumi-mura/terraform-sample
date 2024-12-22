@@ -1,0 +1,26 @@
+cloudwatch:
+  - terraform/aws/modules/cloudwatch/**
+ec2:
+  - terraform/aws/modules/ec2/**
+iam:
+  - terraform/aws/modules/iam/**
+identity_center:
+  - terraform/aws/modules/identity_center/**
+kms:
+  - terraform/aws/modules/kms/**
+oidc:
+  - terraform/aws/modules/oidc/**
+organizations:
+  - terraform/aws/modules/organizations/**
+s3:
+  - terraform/aws/modules/s3/**
+sg:
+  - terraform/aws/modules/sg/**
+sns:
+  - terraform/aws/modules/sns/**
+ssm:
+  - terraform/aws/modules/ssm/**
+vpc:
+  - terraform/aws/modules/vpc/**
+vpc_endpoint:
+  - terraform/aws/modules/vpc_endpoint/**

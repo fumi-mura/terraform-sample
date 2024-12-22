@@ -1,11 +1,13 @@
 name: Check
 on:
-  # push:
-  #   branches:
-  #     - 'main'
-  # Only run when Push or make PR
   pull_request:
-    branches: main
+    branches:
+      - main
+      - develop
+    # Only run actions when make or update PR.
+    types:
+      - opened
+      - synchronize
 # Cancel if workflow is running in the same group.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -14,13 +16,13 @@ permissions:
   contents: read
   id-token: write
   pull-requests: write
-env:
-  WORKING_DIRECTORY: "${{ github.workspace }}/terraform/aws/environments/mng/oidc"
 jobs:
-  check:
+  setup:
     runs-on: ubuntu-latest
-    # Use environment variables registered in Environments Secrets on GitHub
+    # Use environment variables registered in Environments Secrets on GitHub.
     environment: mng
+    outputs:
+      envs_changed_dirs: ${{ steps.get_envs_dirs.outputs.env_dirs }}
     steps:
       ##################################################
       # setup
@@ -31,6 +33,56 @@ jobs:
         run: |
           git branch
           echo "Current branch: ${GITHUB_HEAD_REF:-$GITHUB_REF}"
+      - name: Get changed envs files
+        uses: dorny/paths-filter@v3
+        id: envs_filter
+        with:
+          filters: .github/envs-path-filter.yml
+      - name: Get changed envs directories
+        id: get_envs_dirs
+        run: |
+          ENV_DIRS=()
+          if [ ${{ steps.envs_filter.outputs.dev }} == 'true' ]; then
+            ENV_DIRS+=("dev")
+          fi
+          if [ ${{ steps.envs_filter.outputs.mng }} == 'true' ]; then
+            ENV_DIRS+=("mng")
+          fi
+          if [ ${{ steps.envs_filter.outputs.test }} == 'true' ]; then
+            ENV_DIRS+=("test")
+          fi
+          JSON=$(printf "%s " "${ENV_DIRS[@]}" | sed 's/ $//' | jq -R -s -c 'split(" ")')
+          echo "env_dirs=${JSON}" >> $GITHUB_OUTPUT
+      - name: Debug changed envs directories
+        run: |
+          echo "Changed directories: ${{ steps.get_envs_dirs.outputs.env_dirs }}"
+          echo "dev: ${{ steps.envs_filter.outputs.dev }}"
+          echo "mng: ${{ steps.envs_filter.outputs.mng }}"
+          echo "test: ${{ steps.envs_filter.outputs.test }}"
+      - name: Upload workspace
+        uses: actions/upload-artifact@v4
+        with:
+          name: workspace
+          path: .
+          include-hidden-files: true
+          retention-days: 1
+
+  envs-ci:
+    needs: setup
+    if: ${{ fromJSON(needs.setup.outputs.envs_changed_dirs)[0] != null }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        envs_changed_dir: ${{ fromJSON(needs.setup.outputs.envs_changed_dirs) }}
+    environment: mng
+    steps:
+      - name: Debug matrix
+        run: |
+          echo "Matrix values: ${{ fromJSON(needs.setup.outputs.envs_changed_dirs) }}"
+      - name: Download workspace
+        uses: actions/download-artifact@v4
+        with:
+          name: workspace
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -45,16 +97,12 @@ jobs:
           AQUA_CONFIG: aqua.yaml
           AQUA_DISABLE_COSIGN: true
           AQUA_DISABLE_SLSA: true
-      - name: Setup Terraform # ここを消すとfmt/planのコメントがうまくいかない...
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.9.0
-
       ##################################################
       # TFLint
       ##################################################
       - name: TFlint
-        working-directory: ${{ github.workspace }}/terraform/aws
+        working-directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
+        continue-on-error: true
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -67,36 +115,37 @@ jobs:
                     -filter-mode=nofilter \
                     -fail-on-error=false \
                     -level=warning
-        continue-on-error: true # Don't stop when an error occurs
 
       ##################################################
       # tfsec
       ##################################################
-      - name: Run tfsec
+      - name: tfsec
         uses: tfsec/tfsec-pr-commenter-action@main
         with:
-          working_directory: ${{ github.workspace }}/terraform/aws
+          working_directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       ##################################################
       # fmt
       ##################################################
-      - name: Format Terraform
+      - name: Terraform fmt
+        working-directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
         id: fmt
+        continue-on-error: true
         run: terraform fmt -check -recursive # Output a list of filenames whose files are not properly formatted.
-        continue-on-error: true # Don't stop when an error occurs
       - name: Comment fmt
+        if: steps.fmt.outputs.stdout != ''
         uses: actions/github-script@v7
         env:
           FMT: ${{ steps.fmt.outputs.stdout }}
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }} # Use tokens automatically generated by Github
+          github-token: ${{ secrets.GITHUB_TOKEN }} # Use tokens automatically generated by Github.
           script: |
             const output = `
             #### Terraform fmt 🖌\`${{ steps.fmt.outcome }}\`
             <details>
             <summary>Show fmt</summary>
-            \n\`\`\`\n${process.env.FMT}\`\`\`
+            \n\`\`\`\nterraform/aws/environments/${{ matrix.envs_changed_dir }}/${process.env.FMT}\`\`\`
             </details>`;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
@@ -108,31 +157,12 @@ jobs:
       ##################################################
       # plan
       ##################################################
-      - name: Init Terraform
+      - name: Terraform init
         run: terraform init
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-      - name: Plan Terraform
-        id: plan
-        run: terraform plan -no-color
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-        continue-on-error: true # Don't stop when an error occurs.
-      - name: Comment plan
-        uses: actions/github-script@v7
+        working-directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
+      - name: Terraform plan
+        working-directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
+        continue-on-error: true
         env:
-          PLAN: ${{ steps.plan.outputs.stdout }}
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }} # Use tokens automatically generated by Github
-          script: |
-            const output = `
-            #### Terraform plan 📖\`${{ steps.plan.outcome }}\`
-            Commit sha ${{ github.sha }} \
-            <details>
-            <summary>Show plan</summary>
-            \n\`\`\`${process.env.PLAN}\`\`\`
-            </details>`;
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            });
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: tfcmt plan -patch -- terraform plan -no-color -input=false
