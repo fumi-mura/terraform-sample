@@ -161,14 +161,14 @@ jobs:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          terraform fmt -check -recursive
-      #     terraform fmt -check -recursive | \
-      #     reviewdog -f=diff \
-      #               -name="terraform fmt" \
-      #               -reporter=github-pr-review \
-      #               -filter-mode=nofilter \
-      #               -fail-on-error=false \
-      #               -level=warning
+          # terraform fmt -check -recursive
+          terraform fmt -check -recursive | \
+          reviewdog -f=checkstyle \
+                    -name="terraform fmt" \
+                    -reporter=github-pr-review \
+                    -filter-mode=nofilter \
+                    -fail-on-error=false \
+                    -level=warning
       # - name: debug
       #   run: terraform fmt -check -recursive
 
