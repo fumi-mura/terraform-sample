@@ -138,6 +138,7 @@ jobs:
         run: terraform fmt -check -recursive # Output a list of filenames whose files are not properly formatted.
         continue-on-error: true
       - name: Comment fmt
+        if: steps.fmt.outputs.stdout != ''
         uses: actions/github-script@v7
         env:
           FMT: ${{ steps.fmt.outputs.stdout }}
