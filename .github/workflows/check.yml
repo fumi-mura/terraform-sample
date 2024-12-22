@@ -42,13 +42,13 @@ jobs:
         id: get_dirs
         run: |
           DIRS=()
-          if [[ "${{ steps.filter.outputs.dev }}" == "true" ]]; then
+          if [ ${{ steps.filter.outputs.dev }} == 'true' ]; then
             DIRS+=("dev")
           fi
-          if [[ "${{ steps.filter.outputs.mng }}" == "true" ]]; then
+          if [ ${{ steps.filter.outputs.mng }} == 'true' ]; then
             DIRS+=("mng")
           fi
-          if [[ "${{ steps.filter.outputs.test }}" == "true" ]]; then
+          if [ ${{ steps.filter.outputs.test }} == 'true' ]; then
             DIRS+=("test")
           fi
           JSON=$(echo "${DIRS[@]}" | jq -R -s -c 'split(" ")')
