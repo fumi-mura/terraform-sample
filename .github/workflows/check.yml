@@ -22,7 +22,7 @@ jobs:
     # Use environment variables registered in Environments Secrets on GitHub
     environment: mng
     outputs:
-      changed_dirs: ${{ steps.filter.outputs.changes }}
+      changed_dirs: ${{ steps.get_dirs.outputs.changes }}
     steps:
       ##################################################
       # setup
