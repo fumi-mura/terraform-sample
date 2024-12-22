@@ -117,7 +117,7 @@ jobs:
                     -filter-mode=nofilter \
                     -fail-on-error=false \
                     -level=warning
-        continue-on-error: true # Don't stop when an error occurs
+        continue-on-error: true
 
       ##################################################
       # tfsec
@@ -136,7 +136,7 @@ jobs:
         working-directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
         id: fmt
         run: terraform fmt -check -recursive # Output a list of filenames whose files are not properly formatted.
-        continue-on-error: true # Don't stop when an error occurs
+        continue-on-error: true
       - name: Comment fmt
         uses: actions/github-script@v7
         env:
@@ -168,7 +168,7 @@ jobs:
         id: plan
         run: terraform plan -no-color
         working-directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
-        continue-on-error: true # Don't stop when an error occurs.
+        continue-on-error: true
       - name: Comment plan
         uses: actions/github-script@v7
         env:
