@@ -161,7 +161,7 @@ jobs:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          terraform fmt -check -recursive -list=true | \
+          terraform fmt -diff -recursive -list=true | \
           reviewdog -f=diff \
                     -name="terraform fmt" \
                     -reporter=github-pr-review \
@@ -170,7 +170,7 @@ jobs:
                     -level=warning
       - name: debug
         working-directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
-        run: terraform fmt -check -recursive
+        run: terraform fmt -diff -recursive
 
       ##################################################
       # plan
