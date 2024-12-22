@@ -32,7 +32,7 @@ jobs:
           git branch
           echo "Current branch: ${GITHUB_HEAD_REF:-$GITHUB_REF}"
       - name: Get changed envs files
-        uses: dorny/paths-filter@v2
+        uses: dorny/paths-filter@v3
         id: envs_filter
         with:
           filters: .github/envs-path-filter.yml
