@@ -38,10 +38,10 @@ jobs:
         uses: dorny/paths-filter@v2
         id: filter
         with:
-          filters: |
-            test:
-              - 'terraform/aws/environments/test/**'
-          # filters: .github/path-filter.yml
+          # filters: |
+          #   test:
+          #     - 'terraform/aws/environments/test/**'
+          filters: .github/path-filter.yml
       - name: Get changed directories
         id: get_dirs
         run: |
