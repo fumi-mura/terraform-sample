@@ -14,8 +14,6 @@ permissions:
   contents: read
   id-token: write
   pull-requests: write
-# env:
-#   WORKING_DIRECTORY: "${{ github.workspace }}/terraform/aws/environments/mng/oidc"
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -23,7 +21,6 @@ jobs:
     environment: mng
     outputs:
       changed_dirs: ${{ steps.get_dirs.outputs.dirs }}
-      test: ${{ steps.filter.outputs.test }}
     steps:
       ##################################################
       # setup
@@ -38,9 +35,6 @@ jobs:
         uses: dorny/paths-filter@v2
         id: filter
         with:
-          # filters: |
-          #   test:
-          #     - 'terraform/aws/environments/test/**'
           filters: .github/path-filter.yml
       - name: Get changed directories
         id: get_dirs
@@ -71,7 +65,7 @@ jobs:
 
   ci:
     needs: setup
-    # if: ${{ fromJSON(needs.setup.outputs.changed_dirs)[0] != null }}
+    if: ${{ fromJSON(needs.setup.outputs.changed_dirs)[0] != null }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -182,7 +176,6 @@ jobs:
           script: |
             const output = `
             #### Terraform plan 📖\`${{ steps.plan.outcome }}\`
-            Commit sha ${{ github.sha }} \
             <details>
             <summary>Show plan</summary>
             \n\`\`\`${process.env.PLAN}\`\`\`
