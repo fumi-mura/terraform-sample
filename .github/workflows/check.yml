@@ -20,7 +20,7 @@ jobs:
     # Use environment variables registered in Environments Secrets on GitHub
     environment: mng
     outputs:
-      changed_dirs: ${{ steps.get_dirs.outputs.dirs }}
+      envs_changed_dirs: ${{ steps.get_envs_dirs.outputs.env_dirs }}
     steps:
       ##################################################
       # setup
@@ -31,30 +31,32 @@ jobs:
         run: |
           git branch
           echo "Current branch: ${GITHUB_HEAD_REF:-$GITHUB_REF}"
-      - name: Get changed files
+      - name: Get changed envs files
         uses: dorny/paths-filter@v2
-        id: filter
+        id: envs_filter
         with:
-          filters: .github/path-filter.yml
-      - name: Get changed directories
-        id: get_dirs
+          filters: .github/envs-path-filter.yml
+      - name: Get changed envs directories
+        id: get_envs_dirs
         run: |
-          DIRS=()
-          if [ ${{ steps.filter.outputs.dev }} == 'true' ]; then
-            DIRS+=("dev")
+          ENV_DIRS=()
+          if [ ${{ steps.envs_filter.outputs.dev }} == 'true' ]; then
+            ENV_DIRS+=("dev")
           fi
-          if [ ${{ steps.filter.outputs.mng }} == 'true' ]; then
-            DIRS+=("mng")
+          if [ ${{ steps.envs_filter.outputs.mng }} == 'true' ]; then
+            ENV_DIRS+=("mng")
           fi
-          if [ ${{ steps.filter.outputs.test }} == 'true' ]; then
-            DIRS+=("test")
+          if [ ${{ steps.envs_filter.outputs.test }} == 'true' ]; then
+            ENV_DIRS+=("test")
           fi
-          JSON=$(printf "%s " "${DIRS[@]}" | sed 's/ $//' | jq -R -s -c 'split(" ")')
-          echo "dirs=${JSON}" >> $GITHUB_OUTPUT
-      - name: Debug changed directories
+          JSON=$(printf "%s " "${ENV_DIRS[@]}" | sed 's/ $//' | jq -R -s -c 'split(" ")')
+          echo "env_dirs=${JSON}" >> $GITHUB_OUTPUT
+      - name: Debug changed envs directories
         run: |
-          echo "Changed directories: ${{ steps.get_dirs.outputs.dirs }}"
-          echo "test: ${{ steps.filter.outputs.test }}"
+          echo "Changed directories: ${{ steps.get_envs_dirs.outputs.env_dirs }}"
+          echo "dev: ${{ steps.envs_filter.outputs.dev }}"
+          echo "mng: ${{ steps.envs_filter.outputs.mng }}"
+          echo "test: ${{ steps.envs_filter.outputs.test }}"
       - name: Upload workspace
         uses: actions/upload-artifact@v4
         with:
@@ -63,18 +65,18 @@ jobs:
           include-hidden-files: true
           retention-days: 1
 
-  ci:
+  envs-ci:
     needs: setup
-    if: ${{ fromJSON(needs.setup.outputs.changed_dirs)[0] != null }}
+    if: ${{ fromJSON(needs.setup.outputs.envs_changed_dirs)[0] != null }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        changed_dir: ${{ fromJSON(needs.setup.outputs.changed_dirs) }}
+        envs_changed_dir: ${{ fromJSON(needs.setup.outputs.envs_changed_dirs) }}
     environment: mng
     steps:
       - name: Debug matrix
         run: |
-          echo "Matrix values: ${{ fromJSON(needs.setup.outputs.changed_dirs) }}"
+          echo "Matrix values: ${{ fromJSON(needs.setup.outputs.envs_changed_dirs) }}"
       - name: Download workspace
         uses: actions/download-artifact@v4
         with:
@@ -102,7 +104,7 @@ jobs:
       ##################################################
       - name: TFlint
         # working-directory: ${{ github.workspace }}/terraform/aws
-        working-directory: terraform/aws/environments/${{ matrix.changed_dir }}
+        working-directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -124,14 +126,14 @@ jobs:
         uses: tfsec/tfsec-pr-commenter-action@main
         with:
           # working_directory: ${{ github.workspace }}/terraform/aws
-          working_directory: terraform/aws/environments/${{ matrix.changed_dir }}
+          working_directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       ##################################################
       # fmt
       ##################################################
       - name: Terraform fmt
-        working-directory: terraform/aws/environments/${{ matrix.changed_dir }}
+        working-directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
         id: fmt
         run: terraform fmt -check -recursive # Output a list of filenames whose files are not properly formatted.
         continue-on-error: true # Don't stop when an error occurs
@@ -146,7 +148,7 @@ jobs:
             #### Terraform fmt 🖌\`${{ steps.fmt.outcome }}\`
             <details>
             <summary>Show fmt</summary>
-            \n\`\`\`\nterraform/aws/environments/${{ matrix.changed_dir }}/${process.env.FMT}\`\`\`
+            \n\`\`\`\nterraform/aws/environments/${{ matrix.envs_changed_dir }}/${process.env.FMT}\`\`\`
             </details>`;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
@@ -161,11 +163,11 @@ jobs:
       - name: Terraform init
         run: terraform init
         # working-directory: ${{ env.WORKING_DIRECTORY }}
-        working-directory: terraform/aws/environments/${{ matrix.changed_dir }}
+        working-directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
       - name: Terraform plan
         id: plan
         run: terraform plan -no-color
-        working-directory: terraform/aws/environments/${{ matrix.changed_dir }}
+        working-directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
         continue-on-error: true # Don't stop when an error occurs.
       - name: Comment plan
         uses: actions/github-script@v7
