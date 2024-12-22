@@ -56,8 +56,9 @@ jobs:
             DIRS+=("test")
           fi
           # JSON=$(echo "${DIRS[@]}" | jq -R -s -c 'split(" ")')
-          JSON=$(echo "${DIRS[@]}" | jq -R -s -c 'split(" ")' | tr -d 'n')
+          # JSON=$(echo "${DIRS[@]}" | jq -R -s -c 'split(" ")' | tr -d 'n')
           # JSON=$(printf "%s " "${DIRS[@]}" | jq -R -s -c 'split(" ")')
+          JSON=$(printf "%s " "${DIRS[@]}" | sed 's/ $//' | jq -R -s -c 'split(" ")')
           echo "dirs=${JSON}" >> $GITHUB_OUTPUT
       - name: Debug changed directories
         run: |
