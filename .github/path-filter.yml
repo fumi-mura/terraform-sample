@@ -1,9 +1,3 @@
-# Outputs chnaged files
-# environments:
-#   - terraform/aws/environments/**
-# modules:
-#   - terraform/aws/modules/**
-
 # environments
 dev:
   - terraform/aws/environments/dev/**
