@@ -144,9 +144,9 @@ jobs:
             const output = `#### Terraform fmt 🖌\`${{ steps.fmt.outcome }}\`
             <details>
             <summary>Show fmt</summary>
-            \`\`\`
+            \n\`\`\`\n
             terraform/aws/environments/${{ matrix.envs_changed_dir }}/${process.env.FMT}
-            \`\`\`
+            \n\`\`\`
             </details>`;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
@@ -154,6 +154,9 @@ jobs:
               repo: context.repo.repo,
               body: output
             });
+      - name: debug
+        run:
+          echo z${{ steps.fmt.outputs.stdout }}
 
       ##################################################
       # plan
