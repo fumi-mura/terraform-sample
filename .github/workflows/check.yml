@@ -145,7 +145,7 @@ jobs:
             #### Terraform fmt 🖌\`${{ steps.fmt.outcome }}\`
             <details>
             <summary>Show fmt</summary>
-            \n\`\`\`\nterraform/aws/environments/${{ matrix.envs_changed_dir }}/${process.env.FMT}\`\`\`
+            \n\`\`\`\n${process.env.FMT}\`\`\`
             </details>`;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
