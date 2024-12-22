@@ -63,7 +63,7 @@ jobs:
 
   ci:
     needs: setup
-    if: ${{ fromJSON(needs.setup.outputs.changed_dirs)[0] != null }}
+    # if: ${{ fromJSON(needs.setup.outputs.changed_dirs)[0] != null }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
