@@ -48,8 +48,8 @@ jobs:
           if [ ${{ steps.envs_filter.outputs.mng }} == 'true' ]; then
             ENV_DIRS+=("mng")
           fi
-          if [ ${{ steps.envs_filter.outputs.test }} == 'true' ]; then
-            ENV_DIRS+=("test")
+          if [ ${{ steps.envs_filter.outputs.prd }} == 'true' ]; then
+            ENV_DIRS+=("prd")
           fi
           JSON=$(printf "%s " "${ENV_DIRS[@]}" | sed 's/ $//' | jq -R -s -c 'split(" ")')
           echo "env_dirs=${JSON}" >> $GITHUB_OUTPUT
@@ -58,7 +58,7 @@ jobs:
           echo "Changed directories: ${{ steps.get_envs_dirs.outputs.env_dirs }}"
           echo "dev: ${{ steps.envs_filter.outputs.dev }}"
           echo "mng: ${{ steps.envs_filter.outputs.mng }}"
-          echo "test: ${{ steps.envs_filter.outputs.test }}"
+          echo "prd: ${{ steps.envs_filter.outputs.prd }}"
       - name: Upload workspace
         uses: actions/upload-artifact@v4
         with:

@@ -1,6 +1,6 @@
-dev:
-  - terraform/aws/environments/dev/**
 mng:
   - terraform/aws/environments/mng/**
-test:
-  - terraform/aws/environments/test/**
+prd:
+  - terraform/aws/environments/prd/**
+dev:
+  - terraform/aws/environments/dev/**
