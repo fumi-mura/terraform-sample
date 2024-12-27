@@ -139,18 +139,7 @@ jobs:
         continue-on-error: true
         # run: terraform fmt -check -recursive # Output a list of filenames whose files are not properly formatted.
         run: |
-          # FMT_OUTPUT=$(terraform fmt -check -recursive | sed 's/^//')
-          # echo "fmt_output<<EOF" >> $GITHUB_ENV
-          # echo "$FMT_OUTPUT" >> $GITHUB_ENV
-          # echo "EOF" >> $GITHUB_ENV
-          # ファイル名を1行ずつ抽出して整形
-          FMT_OUTPUT=$(terraform fmt -check -recursive | while read -r line; do
-            # ```や</details>などの不要な文字を削除し、フルパスで出力
-            clean_line=$(echo "$line" | tr -d "```" | tr -d "</details>")
-            if [ ! -z "$clean_line" ]; then
-              echo "terraform/aws/environments/${{ matrix.envs_changed_dir }}/${clean_line}"
-            fi
-          done)
+          FMT_OUTPUT=$(terraform fmt -check -recursive | sed 's/^//')
           echo "fmt_output<<EOF" >> $GITHUB_ENV
           echo "$FMT_OUTPUT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
@@ -166,7 +155,7 @@ jobs:
             #### Terraform fmt 🖌\`${{ steps.fmt.outcome }}\`
             <details>
             <summary>Show fmt</summary>
-            \n\`\`\`\nterraform/aws/environments/${{ matrix.envs_changed_dir }}/${process.env.FMT}\`\`\`
+            \n\`\`\`\nterraform/aws/environments/${{ matrix.envs_changed_dir }}/\n${process.env.FMT}\`\`\`
             </details>`;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
