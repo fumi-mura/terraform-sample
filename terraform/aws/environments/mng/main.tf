@@ -1,9 +1,10 @@
+# OIDC
 module "oidc_provider" {
-  source = "../../../modules/iam/oidc"
+  source = "../../modules/iam/oidc"
 }
 
 module "oidc_iam_role" {
-  source               = "../../../modules/iam/role"
+  source               = "../../modules/iam/role"
   env                  = local.env
   name                 = local.name
   role                 = "oidc"
@@ -34,7 +35,7 @@ module "oidc_iam_role" {
 }
 
 module "oidc_iam_policy" {
-  source = "../../../modules/iam/policy"
+  source = "../../modules/iam/policy"
   env    = local.env
   name   = local.name
   role   = "oidc"
@@ -48,9 +49,22 @@ module "oidc_iam_policy" {
   }
 }
 
-module "s3_bucket_test" {
-  source = "../../../modules/s3/bucket/"
-  env    = local.env
-  name   = local.name
-  role    = "test"
+# IAM Identity Center
+data "aws_organizations_organization" "this" {}
+
+data "aws_ssm_parameter" "this" {
+  name = "email_local_pert"
+}
+
+module "identity_center" {
+  source            = "../../modules/identity_center"
+  env               = local.env
+  name              = local.name
+  master_account_id = data.aws_organizations_organization.this.master_account_id
+  email_local_pert  = data.aws_ssm_parameter.this.value
+}
+
+# Organizations
+module "organizations" {
+  source = "../../modules/organizations"
 }
