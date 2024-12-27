@@ -5,7 +5,7 @@ module "oidc_provider" {
 
 module "oidc_iam_role" {
   source               = "../../modules/iam/role"
-  iam_role_name = "${local.env}-${local.name}-oidc-iam-role"
+  iam_role_name        = "${local.env}-${local.name}-oidc-iam-role"
   managed_policy_arns  = [module.oidc_iam_policy.iam_policy_arn]
   max_session_duration = 3600
   policy_statement = {
@@ -33,7 +33,7 @@ module "oidc_iam_role" {
 }
 
 module "oidc_iam_policy" {
-  source = "../../modules/iam/policy"
+  source          = "../../modules/iam/policy"
   iam_policy_name = "${local.env}-${local.name}-oidc-iam-policy"
   policy_statement = {
     1 = {
