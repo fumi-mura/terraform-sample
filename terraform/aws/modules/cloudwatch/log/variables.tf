@@ -1,16 +1,4 @@
-variable "env" {
-  type = string
-}
-
-variable "name" {
-  type = string
-}
-
-variable "role" {
-  type = string
-}
-
-variable "prefix" {
+variable "cwlogs_name" {
   type = string
 }
 

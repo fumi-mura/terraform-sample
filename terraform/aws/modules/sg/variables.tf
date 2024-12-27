@@ -1,12 +1,4 @@
-variable "env" {
-  type = string
-}
-
-variable "name" {
-  type = string
-}
-
-variable "role" {
+variable "sg_name" {
   type = string
 }
 

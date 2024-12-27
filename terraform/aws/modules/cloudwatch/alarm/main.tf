@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_metric_alarm" "this" {
-  alarm_name                = "${var.env}-${var.name}-${var.role}-cw-alarm"
+  alarm_name                = var.alarm_name
   comparison_operator       = var.comparison_operator
   evaluation_periods        = var.evaluation_periods
   metric_name               = var.metric_name
@@ -10,6 +10,6 @@ resource "aws_cloudwatch_metric_alarm" "this" {
   alarm_actions             = var.alarm_actions
   insufficient_data_actions = var.insufficient_data_actions
   tags = {
-    Name = "${var.env}-${var.name}-${var.role}-cw-alarm"
+    Name = var.alarm_name
   }
 }

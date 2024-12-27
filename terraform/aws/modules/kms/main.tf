@@ -34,12 +34,12 @@ resource "aws_kms_key" "this" {
   deletion_window_in_days = 7    # Requires 7-30 days waiting period before deletion.
 
   tags = {
-    Name = "${var.env}-${var.name}-${var.role}-kms"
+    Name = var.kms_name
   }
 }
 
 resource "aws_kms_alias" "this" {
-  name          = "alias/${var.env}-${var.name}-${var.role}-kms"
+  name          = "alias/${var.kms_name}"
   target_key_id = aws_kms_key.this.key_id
 }
 

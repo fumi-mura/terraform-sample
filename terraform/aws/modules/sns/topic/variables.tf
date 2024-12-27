@@ -1,21 +1,7 @@
-variable "env" {
+variable "topic_name" {
   type = string
 }
-variable "name" {
-  type = string
-}
-variable "role" {
-  type = string
-}
+
 variable "sns_policy" {
   type = map(string)
-}
-variable "sns_protocol" {
-  type = string
-}
-variable "sns_endpoint" {
-  type = string
-}
-variable "function_name" {
-  type = string
 }

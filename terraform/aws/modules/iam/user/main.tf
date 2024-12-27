@@ -1,9 +1,9 @@
 resource "aws_iam_user" "this" {
-  name = "${var.env}-${var.name}-${var.role}-iam-user"
+  name = var.iam_user_name
   path = "/"
 
   tags = {
-    Name = "${var.env}-${var.name}-${var.role}-iam-user"
+    Name = var.iam_user_name
   }
 }
 
