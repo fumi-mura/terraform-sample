@@ -1,12 +1,4 @@
-variable "env" {
-  type = string
-}
-
-variable "name" {
-  type = string
-}
-
-variable "role" {
+variable "iam_user_name" {
   type = string
 }
 
