@@ -1,16 +1,8 @@
-variable "env" {
+variable "vpce_name" {
   type = string
 }
 
-variable "name" {
-  type = string
-}
-
-variable "role" {
-  type = string
-}
-
-variable "vpc_endpoint_type" {
+variable "vpce_type" {
   type = string
 }
 
