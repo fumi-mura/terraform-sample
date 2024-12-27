@@ -97,10 +97,11 @@ jobs:
           AQUA_CONFIG: aqua.yaml
           AQUA_DISABLE_COSIGN: true
           AQUA_DISABLE_SLSA: true
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.9.0
+      # If delete this step, the name of the file to be changed will not be output in the fmt comment... Cause unknown.
+      # - name: Setup Terraform
+      #   uses: hashicorp/setup-terraform@v2
+      #   with:
+      #     terraform_version: 1.9.0
       ##################################################
       # TFLint
       ##################################################
