@@ -8,8 +8,6 @@ identity_center:
   - terraform/aws/modules/identity_center/**
 kms:
   - terraform/aws/modules/kms/**
-oidc:
-  - terraform/aws/modules/oidc/**
 organizations:
   - terraform/aws/modules/organizations/**
 s3:
