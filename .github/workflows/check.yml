@@ -97,11 +97,6 @@ jobs:
           AQUA_CONFIG: aqua.yaml
           AQUA_DISABLE_COSIGN: true
           AQUA_DISABLE_SLSA: true
-      # If delete this step, the name of the file to be changed will not be output in the fmt comment... Cause unknown.
-      # - name: Setup Terraform
-      #   uses: hashicorp/setup-terraform@v2
-      #   with:
-      #     terraform_version: 1.9.0
       ##################################################
       # TFLint
       ##################################################
@@ -137,14 +132,13 @@ jobs:
         id: fmt
         working-directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
         continue-on-error: true
-        # run: terraform fmt -check -recursive # Output a list of filenames whose files are not properly formatted.
         run: |
           FMT_OUTPUT=$(terraform fmt -check -recursive | sed 's/^//')
           echo "fmt_output<<EOF" >> $GITHUB_ENV
           echo "$FMT_OUTPUT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
       - name: Comment fmt
-        # if: ${{ steps.fmt.outputs.stdout }} != ''
+        if: ${{ steps.fmt.outputs.stdout }} != ''
         uses: actions/github-script@v7
         env:
           FMT: ${{ env.fmt_output }}
