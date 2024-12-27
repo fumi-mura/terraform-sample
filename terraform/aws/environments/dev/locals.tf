@@ -1,4 +1,4 @@
 locals {
-  env  = "test"
+  env  = "dev"
   name = "fumis-portfolio"
 }

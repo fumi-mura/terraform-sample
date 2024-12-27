@@ -83,7 +83,7 @@ module "{purpose}_{resource_name}" {
 ## Outside source code control
 
 - S3 bucket for terraform.tfstate
-  - If use CFn(terraform/aws/tfstate/s3.yml)
+  - If use CFn(terraform/aws/tfstate/tfstate_s3_bucket.yml)
 - AWS Organizations
   - Enable Organizations
   - Terraform not yet supported
@@ -99,7 +99,6 @@ module "{purpose}_{resource_name}" {
 ## Tools
 
 - tfenv(manage Terraform version)
-- tgenv(manage Terragrunt version)
 - tflint
 - tfsec
 - terraform-docs
