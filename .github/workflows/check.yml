@@ -23,7 +23,7 @@ jobs:
     environment: mng
     outputs:
       envs_changed_dirs: ${{ steps.get_envs_dirs.outputs.env_dirs }}
-      modules_changed_dirs: ${{ steps.moudles_filter.outputs.changes }}
+      modules_changed_dirs: ${{ steps.modules_filter.outputs.changes }}
     steps:
       ##################################################
       # setup
@@ -39,11 +39,11 @@ jobs:
         id: envs_filter
         with:
           filters: .github/envs-path-filter.yml
-      - name: Get changed moudles files
+      - name: Get changed modules files
         uses: dorny/paths-filter@v3
-        id: moudles_filter
+        id: modules_filter
         with:
-          filters: .github/moudles-path-filter.yml
+          filters: .github/modules-path-filter.yml
       - name: Get changed envs directories
         id: get_envs_dirs
         run: |
@@ -67,7 +67,7 @@ jobs:
           echo "prd: ${{ steps.envs_filter.outputs.prd }}"
       - name: Debug changed modules directories
         run: |
-          echo "module: ${{ steps.moudles_filter.outputs.changes }}"
+          echo "module: ${{ steps.modules_filter.outputs.changes }}"
       - name: Upload workspace
         uses: actions/upload-artifact@v4
         with:
