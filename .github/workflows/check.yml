@@ -20,7 +20,6 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     # Use environment variables registered in Environments Secrets on GitHub.
-    environment: mng
     outputs:
       envs_changed_dirs: ${{ steps.envs_filter.outputs.changes }}
       modules_changed_dirs: ${{ steps.modules_filter.outputs.changes }}
@@ -65,18 +64,11 @@ jobs:
     strategy:
       matrix:
         envs_changed_dir: ${{ fromJSON(needs.setup.outputs.envs_changed_dirs) }}
-    environment: mng
     steps:
       - name: Download workspace
         uses: actions/download-artifact@v4
         with:
           name: workspace
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.OIDC_ROLE_ARN }}
-          aws-region: ap-northeast-1
 
       - name: Setup aqua
         uses: aquaproj/aqua-installer@v3.0.1
@@ -121,18 +113,11 @@ jobs:
     strategy:
       matrix:
         envs_changed_dir: ${{ fromJSON(needs.setup.outputs.modules_changed_dirs) }}
-    environment: mng
     steps:
       - name: Download workspace
         uses: actions/download-artifact@v4
         with:
           name: workspace
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.OIDC_ROLE_ARN }}
-          aws-region: ap-northeast-1
 
       - name: Setup aqua
         uses: aquaproj/aqua-installer@v3.0.1
