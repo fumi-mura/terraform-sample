@@ -61,23 +61,20 @@ If there are many directories, it may be easier to manage them by creating a int
     └── ecs/
 ```
 
-## Setting local environment
+## Naming rule
 
-## Rules
+### Resource name
 
-### AWS resource name
-
-{env}-{service_name}-{purpose}-{resource_name}  
-ex: dev-fumis-portfolio-terraform-tfstate-s3-bucket
+```sh
+name = {env}-{service_name}-{role}-{resource_name} # ex: dev-fumis-portfolio-oidc-iam-role
+```
 
 ### Module user side name
 
-Follow AWS resource name rule.
+Follow resource name rule.
 
-```
-module "{purpose}_{resource_name}" {
-  source = "module"
-}
+```sh
+module "{role}_{resource_name}" # ex: module "oidc_iam_role"
 ```
 
 ## Outside source code control

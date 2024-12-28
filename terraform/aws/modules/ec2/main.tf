@@ -26,7 +26,7 @@ resource "aws_instance" "this" {
   user_data                   = templatefile("${path.module}/scripts/user_data.sh", {})
 
   root_block_device {
-    volume_size = 100
+    volume_size = 50
     volume_type = "gp3"
 
     tags = {
