@@ -186,10 +186,10 @@ jobs:
       - name: Debug matrix
         run: |
           echo "Matrix values: ${{ fromJSON(needs.setup.outputs.modules_changed_dirs) }}"
-          - name: Download workspace
-          uses: actions/download-artifact@v4
-          with:
-            name: workspace
+      - name: Download workspace
+        uses: actions/download-artifact@v4
+        with:
+          name: workspace
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
