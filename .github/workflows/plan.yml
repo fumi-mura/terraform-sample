@@ -39,7 +39,7 @@ jobs:
           if [ ${{ github.base_ref }} == 'main' ]; then
             TARGET_DIRS+=("prd")
           fi
-          elif [ ${{ github.base_ref }} == 'develop' ]; then
+          if [ ${{ github.base_ref }} == 'develop' ]; then
             TARGET_DIRS+=("dev")
           fi
           JSON=$(printf "%s " "${TARGET_DIRS[@]}" | sed 's/ $//' | jq -R -s -c 'split(" ")')
