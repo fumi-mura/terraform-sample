@@ -22,7 +22,7 @@ jobs:
     # Use environment variables registered in Environments Secrets on GitHub.
     environment: mng
     outputs:
-      envs_changed_dirs: ${{ steps.get_envs_dirs.outputs.env_dirs }}
+      envs_changed_dirs: ${{ steps.envs_filter.outputs.changes }}
       modules_changed_dirs: ${{ steps.modules_filter.outputs.changes }}
     steps:
       - name: Checkout repository
@@ -45,25 +45,26 @@ jobs:
         with:
           filters: .github/modules-path-filter.yml
 
-      - name: Get changed envs directories
-        id: get_envs_dirs
-        run: |
-          ENV_DIRS=()
-          if [ ${{ steps.envs_filter.outputs.dev }} == 'true' ]; then
-            ENV_DIRS+=("dev")
-          fi
-          if [ ${{ steps.envs_filter.outputs.mng }} == 'true' ]; then
-            ENV_DIRS+=("mng")
-          fi
-          if [ ${{ steps.envs_filter.outputs.prd }} == 'true' ]; then
-            ENV_DIRS+=("prd")
-          fi
-          JSON=$(printf "%s " "${ENV_DIRS[@]}" | sed 's/ $//' | jq -R -s -c 'split(" ")')
-          echo "env_dirs=${JSON}" >> $GITHUB_OUTPUT
+      # - name: Get changed envs directories
+      #   id: get_envs_dirs
+      #   run: |
+      #     ENV_DIRS=()
+      #     if [ ${{ steps.envs_filter.outputs.dev }} == 'true' ]; then
+      #       ENV_DIRS+=("dev")
+      #     fi
+      #     if [ ${{ steps.envs_filter.outputs.mng }} == 'true' ]; then
+      #       ENV_DIRS+=("mng")
+      #     fi
+      #     if [ ${{ steps.envs_filter.outputs.prd }} == 'true' ]; then
+      #       ENV_DIRS+=("prd")
+      #     fi
+      #     JSON=$(printf "%s " "${ENV_DIRS[@]}" | sed 's/ $//' | jq -R -s -c 'split(" ")')
+      #     echo "env_dirs=${JSON}" >> $GITHUB_OUTPUT
 
       - name: Debug changed envs directories
         run: |
-          echo "Changed directories: ${{ steps.get_envs_dirs.outputs.env_dirs }}"
+          # echo "Changed directories: ${{ steps.get_envs_dirs.outputs.env_dirs }}"
+          echo "Changed directories: ${{ steps.envs_filter.outputs.changes }}"
           echo "dev: ${{ steps.envs_filter.outputs.dev }}"
           echo "mng: ${{ steps.envs_filter.outputs.mng }}"
           echo "prd: ${{ steps.envs_filter.outputs.prd }}"
