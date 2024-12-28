@@ -8,6 +8,10 @@ identity_center:
   - terraform/aws/modules/identity_center/**
 kms:
   - terraform/aws/modules/kms/**
+lambda:
+  - terraform/aws/modules/lambda/**
+network:
+  - terraform/aws/modules/network/**
 organizations:
   - terraform/aws/modules/organizations/**
 s3:
@@ -18,7 +22,3 @@ sns:
   - terraform/aws/modules/sns/**
 ssm:
   - terraform/aws/modules/ssm/**
-vpc:
-  - terraform/aws/modules/vpc/**
-vpc_endpoint:
-  - terraform/aws/modules/vpc_endpoint/**

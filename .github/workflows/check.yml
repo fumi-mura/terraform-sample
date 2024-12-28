@@ -23,6 +23,7 @@ jobs:
     environment: mng
     outputs:
       envs_changed_dirs: ${{ steps.get_envs_dirs.outputs.env_dirs }}
+      modules_changed_dirs: ${{ steps.moudles_filter.outputs.changes }}
     steps:
       ##################################################
       # setup
@@ -38,6 +39,11 @@ jobs:
         id: envs_filter
         with:
           filters: .github/envs-path-filter.yml
+      - name: Get changed moudles files
+        uses: dorny/paths-filter@v3
+        id: moudles_filter
+        with:
+          filters: .github/moudles-path-filter.yml
       - name: Get changed envs directories
         id: get_envs_dirs
         run: |
@@ -59,6 +65,9 @@ jobs:
           echo "dev: ${{ steps.envs_filter.outputs.dev }}"
           echo "mng: ${{ steps.envs_filter.outputs.mng }}"
           echo "prd: ${{ steps.envs_filter.outputs.prd }}"
+      - name: Debug changed modules directories
+        run: |
+          echo "module: ${{ steps.moudles_filter.outputs.changes }}"
       - name: Upload workspace
         uses: actions/upload-artifact@v4
         with:
@@ -164,3 +173,67 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: tfcmt -var target:${{ matrix.envs_changed_dir }} plan -patch -- terraform plan -no-color -input=false
+
+  modules-ci:
+    needs: setup
+    if: ${{ fromJSON(needs.setup.outputs.modules_changed_dirs)[0] != null }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        envs_changed_dir: ${{ fromJSON(needs.setup.outputs.modules_changed_dirs) }}
+    environment: mng
+    steps:
+      - name: Debug matrix
+        run: |
+          echo "Matrix values: ${{ fromJSON(needs.setup.outputs.modules_changed_dirs) }}"
+          - name: Download workspace
+          uses: actions/download-artifact@v4
+          with:
+            name: workspace
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.OIDC_ROLE_ARN }}
+          aws-region: ap-northeast-1
+      - name: Setup aqua
+        uses: aquaproj/aqua-installer@v3.0.1
+        with:
+          aqua_version: v2.28.0
+          aqua_opts: ""
+        env:
+          AQUA_CONFIG: aqua.yaml
+          AQUA_DISABLE_COSIGN: true
+          AQUA_DISABLE_SLSA: true
+      ##################################################
+      # TFLint
+      ##################################################
+      - name: TFlint
+        working-directory: terraform/aws/modules/${{ matrix.envs_changed_dir }}
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tflint --init --config ${{ github.workspace }}/terraform/.tflint.hcl
+          tflint --recursive --config ${{ github.workspace }}/terraform/.tflint.hcl --format=checkstyle | \
+          reviewdog -f=checkstyle \
+                    -name="tflint" \
+                    -reporter=github-pr-review \
+                    -filter-mode=nofilter \
+                    -fail-on-error=false \
+                    -level=warning
+      ##################################################
+      # tfsec
+      ##################################################
+      - name: tfsec
+        uses: tfsec/tfsec-pr-commenter-action@main
+        with:
+          working_directory: terraform/aws/modules/${{ matrix.envs_changed_dir }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      ##################################################
+      # fmt
+      ##################################################
+      - name: Terraform fmt
+        id: fmt
+        working-directory: terraform/aws/modules/${{ matrix.envs_changed_dir }}
+        run: terraform fmt -check -recursive
