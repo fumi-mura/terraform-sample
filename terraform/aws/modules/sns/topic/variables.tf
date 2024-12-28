@@ -2,6 +2,6 @@ variable "topic_name" {
   type = string
 }
 
-variable "sns_policy" {
+variable "topic_policy" {
   type = map(string)
 }

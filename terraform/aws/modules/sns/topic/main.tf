@@ -7,5 +7,5 @@ resource "aws_sns_topic" "this" {
 
 resource "aws_sns_topic_policy" "this" {
   arn    = aws_sns_topic.this.arn
-  policy = jsonencode(var.sns_policy)
+  policy = jsonencode(var.topic_policy)
 }
