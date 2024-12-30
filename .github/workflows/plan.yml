@@ -84,8 +84,8 @@ jobs:
           AQUA_DISABLE_SLSA: true
 
       - name: Terraform init
-        run: terraform init
         working-directory: terraform/aws/environments/${{ matrix.target_dir }}
+        run: terraform init
 
       - name: Terraform plan
         working-directory: terraform/aws/environments/${{ matrix.target_dir }}
