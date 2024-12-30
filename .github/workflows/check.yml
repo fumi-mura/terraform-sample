@@ -98,6 +98,10 @@ jobs:
           working_directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Terraform validate
+        working-directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
+        run: terraform validate -no-color
+
       - name: Terraform fmt
         id: fmt
         working-directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
@@ -109,7 +113,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        envs_changed_dir: ${{ fromJSON(needs.setup.outputs.modules_changed_dirs) }}
+        modules_changed_dir: ${{ fromJSON(needs.setup.outputs.modules_changed_dirs) }}
     steps:
       - name: Download workspace
         uses: actions/download-artifact@v4
@@ -127,7 +131,7 @@ jobs:
           AQUA_DISABLE_SLSA: true
 
       - name: TFlint
-        working-directory: terraform/aws/modules/${{ matrix.envs_changed_dir }}
+        working-directory: terraform/aws/modules/${{ matrix.modules_changed_dir }}
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -144,12 +148,16 @@ jobs:
       - name: tfsec
         uses: tfsec/tfsec-pr-commenter-action@main
         with:
-          working_directory: terraform/aws/modules/${{ matrix.envs_changed_dir }}
+          working_directory: terraform/aws/modules/${{ matrix.modules_changed_dir }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Terraform validate
+        working-directory: terraform/aws/modules/${{ matrix.modules_changed_dir }}
+        run: terraform validate -no-color
 
       - name: Terraform fmt
         id: fmt
-        working-directory: terraform/aws/modules/${{ matrix.envs_changed_dir }}
+        working-directory: terraform/aws/modules/${{ matrix.modules_changed_dir }}
         run: terraform fmt -check -recursive
 
       # When install terraform using aqua, can't receive the standard output of fmt, so comment it out... Cause unknown.
