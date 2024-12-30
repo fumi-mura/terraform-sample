@@ -98,6 +98,10 @@ jobs:
           working_directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Terraform validate
+        working-directory: terraform/aws/modules/${{ matrix.envs_changed_dir }}
+        run: terraform validate -no-color
+
       - name: Terraform fmt
         id: fmt
         working-directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
@@ -146,6 +150,10 @@ jobs:
         with:
           working_directory: terraform/aws/modules/${{ matrix.envs_changed_dir }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Terraform validate
+        working-directory: terraform/aws/modules/${{ matrix.envs_changed_dir }}
+        run: terraform validate -no-color
 
       - name: Terraform fmt
         id: fmt
