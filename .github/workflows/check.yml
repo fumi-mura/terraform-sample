@@ -99,7 +99,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Terraform validate
-        working-directory: terraform/aws/modules/${{ matrix.envs_changed_dir }}
+        working-directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
         run: terraform validate -no-color
 
       - name: Terraform fmt
