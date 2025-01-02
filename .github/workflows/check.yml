@@ -33,13 +33,13 @@ jobs:
         uses: dorny/paths-filter@v3
         id: envs_filter
         with:
-          filters: .github/envs-path-filter.yml
+          filters: .github/paths-filter/envs-path-filter.yml
 
       - name: Get changed modules files
         uses: dorny/paths-filter@v3
         id: modules_filter
         with:
-          filters: .github/modules-path-filter.yml
+          filters: .github/paths-filter/modules-path-filter.yml
 
       - name: Check changed directories
         run: |
