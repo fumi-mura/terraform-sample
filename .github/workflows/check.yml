@@ -43,8 +43,8 @@ jobs:
 
       - name: Check changed directories
         run: |
-          echo "Changed env directories: ${{ steps.envs_filter.outputs.changes }}"
-          echo "Changed module directories: ${{ steps.modules_filter.outputs.changes }}"
+          echo "Changed envs directories: ${{ steps.envs_filter.outputs.changes }}"
+          echo "Changed modules directories: ${{ steps.modules_filter.outputs.changes }}"
 
       - name: Upload workspace
         uses: actions/upload-artifact@v4
