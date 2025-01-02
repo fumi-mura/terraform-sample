@@ -1,0 +1,106 @@
+name: Plan
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    types:
+      - opened
+      - synchronize
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+  id-token: write
+  pull-requests: write
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      target_dirs: ${{ steps.set_target_dirs.outputs.target_dirs }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check branch
+        run: |
+          echo "Current branch: ${{ GITHUB.HEAD_REF }}"
+          echo "Merge Target Branch: ${{ GITHUB.BASE_REF }}"
+
+      - name: Set target directories
+        id: set_target_dirs
+        run: |
+          TARGET_DIRS=()
+          if [ ${{ github.base_ref }} == 'main' ]; then
+            TARGET_DIRS+=("prd")
+          fi
+          if [ ${{ github.base_ref }} == 'develop' ]; then
+            TARGET_DIRS+=("dev")
+          fi
+          JSON=$(printf "%s " "${TARGET_DIRS[@]}" | sed 's/ $//' | jq -R -s -c 'split(" ")')
+          echo "target_dirs=${JSON}" >> $GITHUB_OUTPUT
+
+      - name: Check target directories
+        run: |
+          echo "Target directories: ${{ steps.set_target_dirs.outputs.target_dirs }}"
+
+      - name: Upload workspace
+        uses: actions/upload-artifact@v4
+        with:
+          name: workspace
+          path: .
+          include-hidden-files: true
+          retention-days: 1
+
+  plan:
+    needs: setup
+    if: ${{ fromJSON(needs.setup.outputs.target_dirs)[0] != null }}
+    runs-on: ubuntu-latest
+    environment: mng
+    strategy:
+      matrix:
+        target_dir: ${{ fromJSON(needs.setup.outputs.target_dirs) }}
+    steps:
+      - name: Download workspace
+        uses: actions/download-artifact@v4
+        with:
+          name: workspace
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.OIDC_ROLE_ARN }}
+          aws-region: ap-northeast-1
+
+      - name: Setup aqua
+        uses: aquaproj/aqua-installer@v3.0.1
+        with:
+          aqua_version: v2.28.0
+          aqua_opts: ""
+        env:
+          AQUA_CONFIG: aqua.yaml
+          AQUA_DISABLE_COSIGN: true
+          AQUA_DISABLE_SLSA: true
+
+      - name: Create Terraform plugin cache dir
+        run: |
+          echo 'plugin_cache_dir="~/.terraform.d/plugin-cache"' > ~/.terraformrc
+          mkdir -p ~/.terraform.d/plugin-cache
+
+      - name: Cache Terraform Plugins
+        uses: actions/cache@v4
+        with:
+          path: ~/.terraform.d/plugin-cache
+          key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
+          restore-keys: ${{ runner.os }}-terraform-
+
+      - name: Terraform init
+        working-directory: terraform/aws/environments/${{ matrix.target_dir }}
+        run: terraform init
+
+      - name: Terraform Apply
+        working-directory: terraform/aws/environments/${{ matrix.target_dir }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: tfcmt -var target:${{ matrix.target_dir }} apply -- terraform apply -auto-approve
