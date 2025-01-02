@@ -15,6 +15,7 @@ on:
         options:
           - dev
           - prd
+          - mng
 permissions:
   contents: read
   id-token: write
