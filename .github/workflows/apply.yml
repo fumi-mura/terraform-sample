@@ -7,18 +7,6 @@ on:
     types:
       - closed
   workflow_dispatch:
-    inputs:
-      head_ref:
-        description: 'Source branch (e.g., feature/add_new_resource)'
-        required: true
-        type: string
-      base_ref:
-        description: 'Target branch (main or develop)'
-        required: true
-        type: choice
-        options:
-          - main
-          - develop
 permissions:
   contents: read
   id-token: write
