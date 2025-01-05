@@ -14,6 +14,7 @@ env:
   WORKING_DIRECTORY: terraform/aws/environments
 jobs:
   setup:
+    if: ${{ github.event.pull_request.merged == true }}
     runs-on: ubuntu-latest
     outputs:
       target_dirs: ${{ steps.set_target_dirs.outputs.target_dirs }}
