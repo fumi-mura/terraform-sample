@@ -17,7 +17,7 @@ resource "aws_ssoadmin_managed_policy_attachment" "main" {
   permission_set_arn = each.value.arn
 }
 
-# Create user
+# User
 resource "aws_identitystore_user" "this" {
   for_each = toset(var.create_users)
 
@@ -35,7 +35,7 @@ resource "aws_identitystore_user" "this" {
   }
 }
 
-# Create group
+# Group
 resource "aws_identitystore_group" "this" {
   for_each = toset(var.create_groups)
 
