@@ -7,7 +7,6 @@ resource "aws_organizations_account" "accounts" {
 
   name      = each.key
   email     = "381704fumi+${each.key}@gmail.com"
-  role_name = "OrganizationAccountAccessRole"
 }
 
 # resource "aws_organizations_organizational_unit" "example" {
