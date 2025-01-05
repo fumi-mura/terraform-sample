@@ -14,6 +14,9 @@ permissions:
   contents: read
   id-token: write
   pull-requests: write
+env:
+  ENVS_WORKING_DIRECTORY: terraform/aws/environments
+  MODULES_WORKING_DIRECTORY: terraform/aws/modules
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -78,7 +81,7 @@ jobs:
           AQUA_DISABLE_SLSA: true
 
       - name: TFlint
-        working-directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
+        working-directory: ${{ env.ENVS_WORKING_DIRECTORY }}/${{ matrix.envs_changed_dir }}
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -95,16 +98,16 @@ jobs:
       - name: tfsec
         uses: tfsec/tfsec-pr-commenter-action@main
         with:
-          working_directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
+          working_directory: ${{ env.ENVS_WORKING_DIRECTORY }}/${{ matrix.envs_changed_dir }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Terraform validate
-        working-directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
+        working-directory: ${{ env.ENVS_WORKING_DIRECTORY }}/${{ matrix.envs_changed_dir }}
         run: terraform validate -no-color
 
       - name: Terraform fmt
         id: fmt
-        working-directory: terraform/aws/environments/${{ matrix.envs_changed_dir }}
+        working-directory: ${{ env.ENVS_WORKING_DIRECTORY }}/${{ matrix.envs_changed_dir }}
         run: terraform fmt -check -recursive
 
   modules-ci:
@@ -131,7 +134,7 @@ jobs:
           AQUA_DISABLE_SLSA: true
 
       - name: TFlint
-        working-directory: terraform/aws/modules/${{ matrix.modules_changed_dir }}
+        working-directory: ${{ env.MODULES_WORKING_DIRECTORY }}/${{ matrix.modules_changed_dir }}
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -148,16 +151,16 @@ jobs:
       - name: tfsec
         uses: tfsec/tfsec-pr-commenter-action@main
         with:
-          working_directory: terraform/aws/modules/${{ matrix.modules_changed_dir }}
+          working_directory: ${{ env.MODULES_WORKING_DIRECTORY }}/${{ matrix.modules_changed_dir }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Terraform validate
-        working-directory: terraform/aws/modules/${{ matrix.modules_changed_dir }}
+        working-directory: ${{ env.MODULES_WORKING_DIRECTORY }}/${{ matrix.modules_changed_dir }}
         run: terraform validate -no-color
 
       - name: Terraform fmt
         id: fmt
-        working-directory: terraform/aws/modules/${{ matrix.modules_changed_dir }}
+        working-directory: ${{ env.MODULES_WORKING_DIRECTORY }}/${{ matrix.modules_changed_dir }}
         run: terraform fmt -check -recursive
 
       # When install terraform using aqua, can't receive the standard output of fmt, so comment it out... Cause unknown.
@@ -173,7 +176,7 @@ jobs:
       #       #### Terraform fmt 🖌\`${{ steps.fmt.outcome }}\`
       #       <details>
       #       <summary>Show fmt</summary>
-      #       \n\`\`\`\nterraform/aws/environments/${{ matrix.target_dir }}/${process.env.FMT}\n\`\`\`
+      #       \n\`\`\`\n${{ env.WORKING_DIRECTORY }}/environments/${{ matrix.target_dir }}/${process.env.FMT}\n\`\`\`
       #       </details>`;
       #       github.rest.issues.createComment({
       #         issue_number: context.issue.number,
