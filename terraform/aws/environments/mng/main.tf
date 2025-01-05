@@ -45,6 +45,12 @@ module "oidc_iam_policy" {
   }
 }
 
+# Organizations
+module "organizations" {
+  source        = "../../modules/organizations"
+  account_names = ["prd", "dev"]
+}
+
 # IAM Identity Center
 # data "aws_organizations_organization" "this" {}
 
@@ -58,9 +64,4 @@ module "oidc_iam_policy" {
 #   name              = local.name
 #   master_account_id = data.aws_organizations_organization.this.master_account_id
 #   email_local_pert  = data.aws_ssm_parameter.this.value
-# }
-
-# Organizations
-# module "organizations" {
-#   source = "../../modules/organizations"
 # }
