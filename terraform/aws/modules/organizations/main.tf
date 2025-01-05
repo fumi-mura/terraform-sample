@@ -2,7 +2,7 @@
 data "aws_organizations_organization" "main" {}
 
 # Make account
-resource "aws_organizations_account" "accounts" {
+resource "aws_organizations_account" "this" {
   for_each = toset(var.account_names)
 
   name  = each.key
