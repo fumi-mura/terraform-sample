@@ -69,10 +69,10 @@ module "sdlc_organizations" {
 data "aws_organizations_organization" "this" {}
 
 module "identity_center" {
-  source            = "../../modules/identity_center"
-  env               = local.env
-  name              = local.name
-  email             = data.aws_ssm_parameter.this.value
+  source = "../../modules/identity_center"
+  env    = local.env
+  name   = local.name
+  email  = data.aws_ssm_parameter.this.value
   account_ids = [
     module.prod_organizations.member_account_id[0]
   ]
