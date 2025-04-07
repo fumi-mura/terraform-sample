@@ -101,6 +101,10 @@ jobs:
           working_directory: ${{ env.ENVS_WORKING_DIRECTORY }}/${{ matrix.envs_changed_dir }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Terraform init
+        working-directory: ${{ env.MODULES_WORKING_DIRECTORY }}/${{ matrix.modules_changed_dir }}
+        run: terraform init
+
       - name: Terraform validate
         working-directory: ${{ env.ENVS_WORKING_DIRECTORY }}/${{ matrix.envs_changed_dir }}
         run: terraform validate -no-color
