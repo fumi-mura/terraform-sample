@@ -48,13 +48,13 @@ module "oidc_iam_policy" {
 # Organizations
 module "prod_organizations" {
   source        = "../../modules/organizations"
-  account_names = ["prd01"]
+  account_names = ["prd01"] # 過去に作成したアドレスが残っていてエラーになるため環境名に数字を追加している
   ou_name       = "prod"
 }
 
 module "sdlc_organizations" {
   source        = "../../modules/organizations"
-  account_names = ["dev01"]
+  account_names = ["dev01"] # 過去に作成したアドレスが残っていてエラーになるため環境名に数字を追加している
   ou_name       = "sdlc"
 }
 
