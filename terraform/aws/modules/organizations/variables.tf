@@ -3,6 +3,10 @@ variable "account_names" {
   type        = list(string)
 }
 
+variable "email" {
+  type = string
+}
+
 variable "ou_name" {
   type = string
 }
