@@ -66,12 +66,15 @@ module "sdlc_organizations" {
 }
 
 # IAM Identity Center
-# data "aws_organizations_organization" "this" {}
+data "aws_organizations_organization" "this" {}
 
-# module "identity_center" {
-#   source            = "../../modules/identity_center"
-#   env               = local.env
-#   name              = local.name
-#   master_account_id = data.aws_organizations_organization.this.master_account_id
-#   email_local_pert  = data.aws_ssm_parameter.this.value
-# }
+module "identity_center" {
+  source            = "../../modules/identity_center"
+  env               = local.env
+  name              = local.name
+  master_account_id = data.aws_organizations_organization.this.master_account_id
+  email_local_pert  = data.aws_ssm_parameter.this.value
+  account_ids = [
+    module.prod_organizations.member_account_id[0]
+  ]
+}

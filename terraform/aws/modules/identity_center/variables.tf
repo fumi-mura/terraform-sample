@@ -25,3 +25,7 @@ variable "master_account_id" {
 variable "email_local_pert" {
   type = string
 }
+
+variable "account_ids" {
+  type = list(string)
+}
