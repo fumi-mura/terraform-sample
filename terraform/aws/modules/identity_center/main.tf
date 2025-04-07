@@ -31,7 +31,7 @@ resource "aws_identitystore_user" "this" {
   }
 
   emails {
-    value = "${var.email_local_pert}+${var.env}-${each.key}@gmail.com"
+    value = "${var.email}+${var.env}-${each.key}@gmail.com"
   }
 }
 

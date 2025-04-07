@@ -72,7 +72,7 @@ module "identity_center" {
   source            = "../../modules/identity_center"
   env               = local.env
   name              = local.name
-  email_local_pert  = data.aws_ssm_parameter.this.value
+  email             = data.aws_ssm_parameter.this.value
   account_ids = [
     module.prod_organizations.member_account_id[0]
   ]

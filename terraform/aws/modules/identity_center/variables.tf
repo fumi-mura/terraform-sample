@@ -24,7 +24,7 @@ variable "create_groups" {
   default     = ["Admin", "ReadOnly"]
 }
 
-variable "email_local_pert" {
+variable "email" {
   type = string
 }
 
