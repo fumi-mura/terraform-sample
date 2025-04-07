@@ -19,9 +19,6 @@ variable "create_groups" {
   type        = list(string)
   default     = ["Admin", "ReadOnly"]
 }
-variable "master_account_id" {
-  type = string
-}
 variable "email_local_pert" {
   type = string
 }

@@ -54,13 +54,12 @@ resource "aws_identitystore_group_membership" "this" {
 
 # Apply IAM Identity Center (SSO) settings to each account
 resource "aws_ssoadmin_account_assignment" "this" {
-  # for_each = aws_organizations_account.accounts
   for_each = toset(var.account_ids)
 
   instance_arn       = tolist(data.aws_ssoadmin_instances.this.arns)[0]
   permission_set_arn = aws_ssoadmin_permission_set.this["AdministratorAccess"].arn
   principal_id       = aws_identitystore_user.this["Admin"].user_id
   principal_type     = "USER"
-  target_id          = var.master_account_id
+  target_id          = each.value
   target_type        = "AWS_ACCOUNT"
 }
