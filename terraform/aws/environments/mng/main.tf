@@ -46,10 +46,16 @@ module "oidc_iam_policy" {
 }
 
 # Organizations
-module "workload_organizations" {
+module "prod_organizations" {
   source        = "../../modules/organizations"
-  account_names = ["prd", "dev"]
-  ou_name       = "workload"
+  account_names = ["prd01"]
+  ou_name       = "prod"
+}
+
+module "sdlc_organizations" {
+  source        = "../../modules/organizations"
+  account_names = ["dev01"]
+  ou_name       = "sdlc"
 }
 
 # IAM Identity Center
