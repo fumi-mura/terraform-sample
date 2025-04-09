@@ -66,7 +66,7 @@ module "sdlc_organizations" {
 }
 
 # IAM Identity Center
-module "member_account_identity_center" {
+module "iam_identity_center" {
   source = "../../modules/identity_center"
   env    = local.env
   name   = local.name
