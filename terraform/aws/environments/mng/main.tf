@@ -74,6 +74,7 @@ module "member_account_identity_center" {
   name   = local.name
   email  = data.aws_ssm_parameter.this.value
   account_ids = [
+    data.aws_caller_identity.current.account_id,
     module.prod_organizations.member_account_id[0],
     module.sdlc_organizations.member_account_id[0]
   ]
