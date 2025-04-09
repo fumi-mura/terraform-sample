@@ -1,9 +1,9 @@
 # Refer to root account
-data "aws_organizations_organization" "main" {}
+data "aws_organizations_organization" "this" {}
 
 resource "aws_organizations_organizational_unit" "this" {
   name      = var.ou_name
-  parent_id = data.aws_organizations_organization.main.roots[0].id
+  parent_id = data.aws_organizations_organization.this.roots[0].id
 }
 
 # Make account
