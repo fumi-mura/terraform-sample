@@ -68,7 +68,7 @@ module "sdlc_organizations" {
 # IAM Identity Center
 data "aws_organizations_organization" "this" {}
 
-module "identity_center" {
+module "member_account_identity_center" {
   source = "../../modules/identity_center"
   env    = local.env
   name   = local.name
