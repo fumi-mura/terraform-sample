@@ -9,7 +9,7 @@ resource "aws_ssoadmin_permission_set" "this" {
   session_duration = "PT8H"
 }
 
-resource "aws_ssoadmin_managed_policy_attachment" "main" { # todo rename
+resource "aws_ssoadmin_managed_policy_attachment" "this" {
   for_each = aws_ssoadmin_permission_set.this
 
   instance_arn       = tolist(data.aws_ssoadmin_instances.this.arns)[0]
