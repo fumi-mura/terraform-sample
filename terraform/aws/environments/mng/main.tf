@@ -45,22 +45,35 @@ module "oidc_iam_policy" {
   }
 }
 
-# IAM Identity Center
-# data "aws_organizations_organization" "this" {}
-
-# data "aws_ssm_parameter" "this" {
-#   name = "email_local_pert"
-# }
-
-# module "identity_center" {
-#   source            = "../../modules/identity_center"
-#   env               = local.env
-#   name              = local.name
-#   master_account_id = data.aws_organizations_organization.this.master_account_id
-#   email_local_pert  = data.aws_ssm_parameter.this.value
-# }
+# SSM
+data "aws_ssm_parameter" "this" {
+  name = "email_local_pert"
+}
 
 # Organizations
-# module "organizations" {
-#   source = "../../modules/organizations"
-# }
+module "prod_organizations" {
+  source        = "../../modules/organizations"
+  email         = data.aws_ssm_parameter.this.value
+  account_names = ["prd01"] # 過去に作成したアドレスが残っていてエラーになるため環境名に数字を追加している
+  ou_name       = "prod"
+}
+
+module "sdlc_organizations" {
+  source        = "../../modules/organizations"
+  email         = data.aws_ssm_parameter.this.value
+  account_names = ["dev01"] # 過去に作成したアドレスが残っていてエラーになるため環境名に数字を追加している
+  ou_name       = "sdlc"
+}
+
+# IAM Identity Center
+module "iam_identity_center" {
+  source = "../../modules/identity_center"
+  env    = local.env
+  name   = local.name
+  email  = data.aws_ssm_parameter.this.value
+  account_ids = [
+    data.aws_caller_identity.current.account_id,
+    module.prod_organizations.member_account_id[0],
+    module.sdlc_organizations.member_account_id[0]
+  ]
+}

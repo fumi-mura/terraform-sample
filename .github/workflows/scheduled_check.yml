@@ -1,0 +1,65 @@
+name: Scheduled full check
+on:
+  schedule:
+    - cron: '0 1 * * 1' # Every monday ad AM.10(Asia/Tokyo)
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+  id-token: write
+  pull-requests: write
+env:
+  WORKING_DIRECTORY: terraform/aws
+jobs:
+  full-ci:
+    if: ${{ github.ref }} == 'refs/heads/main' || ${{ github.ref }} == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check branch
+        run: |
+          echo "Current branch: ${{ GITHUB.HEAD_REF }}"
+
+      - name: Setup aqua
+        uses: aquaproj/aqua-installer@v3.0.1
+        with:
+          aqua_version: v2.28.0
+          aqua_opts: ""
+        env:
+          AQUA_CONFIG: aqua.yaml
+          AQUA_DISABLE_COSIGN: true
+          AQUA_DISABLE_SLSA: true
+
+      - name: TFlint
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tflint --init --config ${{ github.workspace }}/terraform/.tflint.hcl
+          tflint --recursive --config ${{ github.workspace }}/terraform/.tflint.hcl --format=checkstyle | \
+          reviewdog -f=checkstyle \
+                    -name="tflint" \
+                    -reporter=github-pr-review \
+                    -filter-mode=nofilter \
+                    -fail-on-error=false \
+                    -level=warning
+
+      - name: tfsec
+        uses: tfsec/tfsec-pr-commenter-action@main
+        with:
+          working_directory: ${{ env.WORKING_DIRECTORY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Terraform validate
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: terraform validate -no-color
+
+      - name: Terraform fmt
+        id: fmt
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: terraform fmt -check -recursive
