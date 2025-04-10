@@ -14,7 +14,7 @@ env:
   WORKING_DIRECTORY: terraform/aws
 jobs:
   full-ci:
-    if: ${{ github.ref }} == 'refs/heads/main' || ${{ github.ref }} == 'refs/heads/develop'
+    if: ${{ github.ref }} == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
