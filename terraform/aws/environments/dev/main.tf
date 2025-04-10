@@ -44,3 +44,10 @@ module "oidc_iam_policy" {
     }
   }
 }
+
+
+module "test_s3" {
+  source = "../../modules/s3/bucket"
+  bucket_name = "test-s3-bucket"
+  
+}
