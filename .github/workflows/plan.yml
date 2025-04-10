@@ -20,7 +20,8 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      target_dirs: ${{ steps.set_target_dirs.outputs.target_dirs }}
+      # target_dirs: ${{ steps.set_target_dirs.outputs.target_dirs }}
+      target_dirs: ${{ steps.set_target_dirs.outputs.changes }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
