@@ -17,7 +17,7 @@ jobs:
     if: ${{ github.event.pull_request.merged == true }}
     runs-on: ubuntu-latest
     outputs:
-      target_dirs: ${{ steps.set_target_dirs.outputs.target_dirs }}
+      target_dirs: ${{ steps.set_target_dirs.outputs.dirs }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,22 +27,33 @@ jobs:
           echo "Current branch: ${{ GITHUB.HEAD_REF }}"
           echo "Merge Target Branch: ${{ GITHUB.BASE_REF }}"
 
+      - name: Get changed envs files
+        uses: dorny/paths-filter@v3
+        id: envs_filter
+        with:
+          filters: .github/paths-filter/envs-path-filter.yml
+
+      - name: Get changed modules files
+        uses: dorny/paths-filter@v3
+        id: modules_filter
+        with:
+          filters: .github/paths-filter/modules-path-filter.yml
+
+      - name: Check changed directories
+        run: |
+          echo "Changed envs directories: ${{ steps.envs_filter.outputs.changes }}"
+          echo "Changed modules directories: ${{ steps.modules_filter.outputs.changes }}"
+
       - name: Set target directories
         id: set_target_dirs
         run: |
-          TARGET_DIRS=()
-          if [ ${{ github.base_ref }} == 'main' ]; then
-            TARGET_DIRS+=("prd")
+          if [ "${{ steps.modules_filter.outputs.changes }}" != "[]" ]; then
+            echo "dirs=[\"mng\", \"prd\", \"dev\"]" >> $GITHUB_OUTPUT
+          elif [ "${{ steps.envs_filter.outputs.changes }}" != "[]" ]; then
+            echo "dirs=${{ steps.envs_filter.outputs.changes }}" >> $GITHUB_OUTPUT
+          else
+            echo "dirs=[]" >> $GITHUB_OUTPUT
           fi
-          if [ ${{ github.base_ref }} == 'develop' ]; then
-            TARGET_DIRS+=("dev")
-          fi
-          JSON=$(printf "%s " "${TARGET_DIRS[@]}" | sed 's/ $//' | jq -R -s -c 'split(" ")')
-          echo "target_dirs=${JSON}" >> $GITHUB_OUTPUT
-
-      - name: Check target directories
-        run: |
-          echo "Target directories: ${{ steps.set_target_dirs.outputs.target_dirs }}"
 
       - name: Upload workspace
         uses: actions/upload-artifact@v4
@@ -56,7 +67,7 @@ jobs:
     needs: setup
     if: ${{ fromJSON(needs.setup.outputs.target_dirs)[0] != null }}
     runs-on: ubuntu-latest
-    environment: mng
+    environment: ${{ matrix.target_dir }}
     strategy:
       matrix:
         target_dir: ${{ fromJSON(needs.setup.outputs.target_dirs) }}

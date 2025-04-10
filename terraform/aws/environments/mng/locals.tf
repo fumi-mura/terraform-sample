@@ -1,4 +1,6 @@
+data "aws_caller_identity" "current" {}
+
 locals {
   env  = "mng"
-  name = "fumis-portfolio"
+  name = "fumis-pf"
 }

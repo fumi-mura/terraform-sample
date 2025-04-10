@@ -61,7 +61,7 @@ jobs:
     needs: setup
     if: ${{ fromJSON(needs.setup.outputs.envs_changed_dirs)[0] != null }}
     runs-on: ubuntu-latest
-    environment: mng
+    environment: ${{ matrix.envs_changed_dir }}
     strategy:
       matrix:
         envs_changed_dir: ${{ fromJSON(needs.setup.outputs.envs_changed_dirs) }}
