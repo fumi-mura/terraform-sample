@@ -20,7 +20,8 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      target_dirs: ${{ steps.set_target_dirs.outputs.changes }}
+      envs_changed_dirs: ${{ steps.envs_filter.outputs.changes }}
+      modules_changed_dirs: ${{ steps.modules_filter.outputs.changes }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,15 +31,22 @@ jobs:
           echo "Current branch: ${{ GITHUB.HEAD_REF }}"
           echo "Merge Target Branch: ${{ GITHUB.BASE_REF }}"
 
-      - name: Get changed files
+      - name: Get changed envs files
         uses: dorny/paths-filter@v3
-        id: set_target_dirs
+        id: envs_filter
         with:
           filters: .github/paths-filter/envs-path-filter.yml
 
-      - name: Check target directories
+      - name: Get changed modules files
+        uses: dorny/paths-filter@v3
+        id: modules_filter
+        with:
+          filters: .github/paths-filter/modules-path-filter.yml
+
+      - name: Check changed directories
         run: |
-          echo "Target directories: ${{ steps.set_target_dirs.outputs.target_dirs }}"
+          echo "Changed envs directories: ${{ steps.envs_filter.outputs.changes }}"
+          echo "Changed modules directories: ${{ steps.modules_filter.outputs.changes }}"
 
       - name: Upload workspace
         uses: actions/upload-artifact@v4
@@ -50,12 +58,12 @@ jobs:
 
   plan:
     needs: setup
-    if: ${{ fromJSON(needs.setup.outputs.target_dirs)[0] != null }}
+    if: ${{ fromJSON(needs.setup.outputs.envs_changed_dirs)[0] != null }} || ${{ fromJSON(needs.setup.outputs.modules_changed_dirs)[0] != null }}
     runs-on: ubuntu-latest
     environment: ${{ matrix.target_dir }}
     strategy:
       matrix:
-        target_dir: ${{ fromJSON(needs.setup.outputs.target_dirs) }}
+        target_dir: ${{ fromJSON(needs.setup.outputs.envs_changed_dirs) }}
     steps:
       - name: Download workspace
         uses: actions/download-artifact@v4
