@@ -53,7 +53,7 @@ jobs:
           if [ "${{ steps.modules_filter.outputs.changes }}" != "[]" ]; then
             echo 'dirs=["mng", "prd", "dev"]' >> $GITHUB_OUTPUT
           elif [ "${{ steps.envs_filter.outputs.changes }}" != "[]" ]; then
-            echo "dirs=$(${{ steps.envs_filter.outputs.changes }} | jq -c .)" >> $GITHUB_OUTPUT
+            echo "dirs=$(echo '${{ steps.envs_filter.outputs.changes }}' | jq -c .)" >> $GITHUB_OUTPUT
           else
             echo "dirs=[]" >> $GITHUB_OUTPUT
           fi
