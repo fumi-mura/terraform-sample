@@ -20,6 +20,7 @@ runs:
                   -filter-mode=nofilter \
                   -fail-on-error=false \
                   -level=warning
+      shell: bash
 
     - name: tfsec
       uses: tfsec/tfsec-pr-commenter-action@main
@@ -30,8 +31,10 @@ runs:
     - name: Terraform validate
       working-directory: ${{ inputs.working_directory }}
       run: terraform validate -no-color
+      shell: bash
 
     - name: Terraform fmt
       id: fmt
       working-directory: ${{ inputs.working_directory }}
       run: terraform fmt -check -recursive
+      shell: bash
