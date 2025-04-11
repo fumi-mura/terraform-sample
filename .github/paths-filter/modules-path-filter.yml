@@ -1,3 +1,5 @@
+budgets:
+  - terraform/aws/modules/budgets/**
 cloudwatch:
   - terraform/aws/modules/cloudwatch/**
 ec2:
