@@ -83,8 +83,8 @@ jobs:
       - name: Setup Terraform
         uses: ./.github/actions/setup
         with:
-          oidc_role_arn: ${{ secrets.OIDC_ROLE_ARN }}
           working_directory: ${{ env.ENVS_WORKING_DIRECTORY }}/${{ matrix.envs_changed_dir }}
+          oidc_role_arn: ${{ secrets.OIDC_ROLE_ARN }}
 
       - name: TFlint
         working-directory: ${{ env.ENVS_WORKING_DIRECTORY }}/${{ matrix.envs_changed_dir }}
