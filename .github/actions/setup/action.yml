@@ -1,8 +1,8 @@
 name: 'Terraform setup'
 inputs:
-  # working_directory:
-  #   description: 'working_directory'
-  #   required: true
+  working_directory:
+    description: 'working_directory'
+    required: true
   oidc_role_arn:
     description: 'oidc_role_arn'
     required: true
@@ -42,3 +42,8 @@ runs:
         path: ~/.terraform.d/plugin-cache
         key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
         restore-keys: ${{ runner.os }}-terraform-
+
+    - name: Terraform init
+      working-directory: ${{ inputs.working_directory }}
+      run: terraform init
+      shell: bash
