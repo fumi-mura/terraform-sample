@@ -142,8 +142,8 @@ jobs:
       - name: Setup Terraform
         uses: ./.github/actions/setup
         with:
-          oidc_role_arn: ${{ secrets.OIDC_ROLE_ARN }}
           working_directory: ${{ env.MODULES_WORKING_DIRECTORY }}/${{ matrix.modules_changed_dir }}
+          skip_configure_aws: true
 
       # - name: Setup aqua
       #   uses: aquaproj/aqua-installer@v3.0.1
