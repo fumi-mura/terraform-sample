@@ -29,7 +29,7 @@ runs:
       run: |
         echo 'plugin_cache_dir="~/.terraform.d/plugin-cache"' > ~/.terraformrc
         mkdir -p ~/.terraform.d/plugin-cache
-        shell: bash
+      shell: bash
 
     - name: Cache Terraform Plugins
       uses: actions/cache@v4
