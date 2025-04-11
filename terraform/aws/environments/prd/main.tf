@@ -14,7 +14,7 @@ module "oidc_iam_role" {
       actions = ["sts:AssumeRoleWithWebIdentity"]
       principals = [{
         type        = "Federated"
-        identifiers = ["${module.oidc_provider.oidc_arn}"]
+        identifiers = [module.oidc_provider.oidc_arn]
       }]
       condition = [{
         test     = "StringEquals"
