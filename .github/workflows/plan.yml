@@ -108,7 +108,7 @@ jobs:
       #     restore-keys: ${{ runner.os }}-terraform-
 
       - name: Setup Terraform
-        uses: ./.github/actions/setup/action.yml
+        uses: ./.github/actions/setup
         with:
           oidc_role_arn: ${{ secrets.OIDC_ROLE_ARN }}
 
