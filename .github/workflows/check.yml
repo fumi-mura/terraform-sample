@@ -139,15 +139,21 @@ jobs:
         with:
           name: workspace
 
-      - name: Setup aqua
-        uses: aquaproj/aqua-installer@v3.0.1
+      - name: Setup Terraform
+        uses: ./.github/actions/setup
         with:
-          aqua_version: v2.28.0
-          aqua_opts: ""
-        env:
-          AQUA_CONFIG: aqua.yaml
-          AQUA_DISABLE_COSIGN: true
-          AQUA_DISABLE_SLSA: true
+          oidc_role_arn: ${{ secrets.OIDC_ROLE_ARN }}
+          working_directory: ${{ env.MODULES_WORKING_DIRECTORY }}/${{ matrix.modules_changed_dir }}
+
+      # - name: Setup aqua
+      #   uses: aquaproj/aqua-installer@v3.0.1
+      #   with:
+      #     aqua_version: v2.28.0
+      #     aqua_opts: ""
+      #   env:
+      #     AQUA_CONFIG: aqua.yaml
+      #     AQUA_DISABLE_COSIGN: true
+      #     AQUA_DISABLE_SLSA: true
 
       - name: TFlint
         working-directory: ${{ env.MODULES_WORKING_DIRECTORY }}/${{ matrix.modules_changed_dir }}
@@ -170,9 +176,9 @@ jobs:
           working_directory: ${{ env.MODULES_WORKING_DIRECTORY }}/${{ matrix.modules_changed_dir }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Terraform init
-        working-directory: ${{ env.MODULES_WORKING_DIRECTORY }}/${{ matrix.modules_changed_dir }}
-        run: terraform init
+      # - name: Terraform init
+      #   working-directory: ${{ env.MODULES_WORKING_DIRECTORY }}/${{ matrix.modules_changed_dir }}
+      #   run: terraform init
 
       - name: Terraform validate
         working-directory: ${{ env.MODULES_WORKING_DIRECTORY }}/${{ matrix.modules_changed_dir }}
