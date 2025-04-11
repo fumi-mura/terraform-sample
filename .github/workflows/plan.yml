@@ -74,10 +74,10 @@ jobs:
       matrix:
         target_dir: ${{ fromJSON(needs.setup.outputs.target_dirs) }}
     steps:
-      # - name: Download workspace
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: workspace
+      - name: Download workspace
+        uses: actions/download-artifact@v4
+        with:
+          name: workspace
 
       # - name: Configure AWS credentials
       #   uses: aws-actions/configure-aws-credentials@v4
