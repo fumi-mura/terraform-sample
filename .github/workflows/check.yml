@@ -19,9 +19,9 @@ env:
 jobs:
   setup:
     runs-on: ubuntu-latest
-    outputs:
-      envs_changed_dirs: ${{ steps.envs_filter.outputs.changes }}
-      modules_changed_dirs: ${{ steps.modules_filter.outputs.changes }}
+    # outputs:
+    #   envs_changed_dirs: ${{ steps.envs_filter.outputs.changes }}
+    #   modules_changed_dirs: ${{ steps.modules_filter.outputs.changes }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

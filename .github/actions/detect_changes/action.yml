@@ -1,4 +1,14 @@
 name: 'Terraform check'
+outputs:
+  envs_changed_dirs:
+    description: 'List of changed environment directories'
+    value: ${{ steps.envs_filter.outputs.changes }}
+  modules_changed_dirs:
+    description: 'List of changed module directories'
+    value: ${{ steps.modules_filter.outputs.changes }}
+  target_dirs:
+    description: 'Target directories based on changed files'
+    value: ${{ steps.set_target_dirs.outputs.dirs }}
 runs:
   using: "composite"
   steps:
