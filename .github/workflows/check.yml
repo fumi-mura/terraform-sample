@@ -20,8 +20,10 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      envs_changed_dirs: ${{ steps.envs_filter.outputs.changes }}
-      modules_changed_dirs: ${{ steps.modules_filter.outputs.changes }}
+      # envs_changed_dirs: ${{ steps.envs_filter.outputs.changes }}
+      # modules_changed_dirs: ${{ steps.modules_filter.outputs.changes }}
+      envs_changed_dirs: ${{ steps.detect_changes.outputs.envs_changed_dirs }}
+      modules_changed_dirs: ${{ steps.detect_changes.outputs.modules_changed_dirs }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -56,6 +58,7 @@ jobs:
       #     include-hidden-files: true
       #     retention-days: 1
       - name: Detect changes
+        id: detect_changes
         uses: ./.github/actions/detect_changes
 
   envs-ci:
