@@ -19,51 +19,56 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      target_dirs: ${{ steps.set_target_dirs.outputs.dirs }}
+      # target_dirs: ${{ steps.set_target_dirs.outputs.dirs }}
+      target_dirs: ${{ steps.detect_changes.outputs.target_dirs }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check branch
-        run: |
-          echo "Current branch: ${{ GITHUB.HEAD_REF }}"
-          echo "Merge Target Branch: ${{ GITHUB.BASE_REF }}"
+      # - name: Check branch
+      #   run: |
+      #     echo "Current branch: ${{ GITHUB.HEAD_REF }}"
+      #     echo "Merge Target Branch: ${{ GITHUB.BASE_REF }}"
 
-      - name: Get changed envs files
-        uses: dorny/paths-filter@v3
-        id: envs_filter
-        with:
-          filters: .github/paths-filter/envs-path-filter.yml
+      # - name: Get changed envs files
+      #   uses: dorny/paths-filter@v3
+      #   id: envs_filter
+      #   with:
+      #     filters: .github/paths-filter/envs-path-filter.yml
 
-      - name: Get changed modules files
-        uses: dorny/paths-filter@v3
-        id: modules_filter
-        with:
-          filters: .github/paths-filter/modules-path-filter.yml
+      # - name: Get changed modules files
+      #   uses: dorny/paths-filter@v3
+      #   id: modules_filter
+      #   with:
+      #     filters: .github/paths-filter/modules-path-filter.yml
 
-      - name: Check changed directories
-        run: |
-          echo "Changed envs directories: ${{ steps.envs_filter.outputs.changes }}"
-          echo "Changed modules directories: ${{ steps.modules_filter.outputs.changes }}"
+      # - name: Check changed directories
+      #   run: |
+      #     echo "Changed envs directories: ${{ steps.envs_filter.outputs.changes }}"
+      #     echo "Changed modules directories: ${{ steps.modules_filter.outputs.changes }}"
 
-      - name: Set target directories
-        id: set_target_dirs
-        run: |
-          if [ "${{ steps.modules_filter.outputs.changes }}" != "[]" ]; then
-            echo 'dirs=["mng", "prd", "dev"]' >> $GITHUB_OUTPUT
-          elif [ "${{ steps.envs_filter.outputs.changes }}" != "[]" ]; then
-            echo "dirs=$(echo '${{ steps.envs_filter.outputs.changes }}' | jq -c .)" >> $GITHUB_OUTPUT
-          else
-            echo "dirs=[]" >> $GITHUB_OUTPUT
-          fi
+      # - name: Set target directories
+      #   id: set_target_dirs
+      #   run: |
+      #     if [ "${{ steps.modules_filter.outputs.changes }}" != "[]" ]; then
+      #       echo 'dirs=["mng", "prd", "dev"]' >> $GITHUB_OUTPUT
+      #     elif [ "${{ steps.envs_filter.outputs.changes }}" != "[]" ]; then
+      #       echo "dirs=$(echo '${{ steps.envs_filter.outputs.changes }}' | jq -c .)" >> $GITHUB_OUTPUT
+      #     else
+      #       echo "dirs=[]" >> $GITHUB_OUTPUT
+      #     fi
 
-      - name: Upload workspace
-        uses: actions/upload-artifact@v4
-        with:
-          name: workspace
-          path: .
-          include-hidden-files: true
-          retention-days: 1
+      # - name: Upload workspace
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: workspace
+      #     path: .
+      #     include-hidden-files: true
+      #     retention-days: 1
+
+      - name: Detect changes
+        id: detect_changes
+        uses: ./.github/actions/detect_changes
 
   plan:
     needs: setup

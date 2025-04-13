@@ -36,6 +36,18 @@ runs:
         echo "Changed modules directories: ${{ steps.modules_filter.outputs.changes }}"
       shell: bash
 
+    - name: Set target directories
+      id: set_target_dirs
+      run: |
+        if [ "${{ steps.modules_filter.outputs.changes }}" != "[]" ]; then
+          echo 'dirs=["mng", "prd", "dev"]' >> $GITHUB_OUTPUT
+        elif [ "${{ steps.envs_filter.outputs.changes }}" != "[]" ]; then
+          echo "dirs=$(echo '${{ steps.envs_filter.outputs.changes }}' | jq -c .)" >> $GITHUB_OUTPUT
+        else
+          echo "dirs=[]" >> $GITHUB_OUTPUT
+        fi
+      shell: bash
+
     - name: Upload workspace
       uses: actions/upload-artifact@v4
       with:
