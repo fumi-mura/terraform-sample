@@ -16,7 +16,7 @@ permissions:
 env:
   WORKING_DIRECTORY: terraform/aws/environments
 jobs:
-  setup:
+  detect:
     runs-on: ubuntu-latest
     outputs:
       # target_dirs: ${{ steps.set_target_dirs.outputs.dirs }}
@@ -71,21 +71,21 @@ jobs:
         uses: ./.github/actions/detect_changes
 
   plan:
-    needs: setup
-    if: ${{ fromJSON(needs.setup.outputs.target_dirs)[0] != null }}
+    needs: detect
+    if: ${{ fromJSON(needs.detect.outputs.target_dirs)[0] != null }}
     runs-on: ubuntu-latest
     environment: ${{ matrix.target_dir }}
     strategy:
       matrix:
-        target_dir: ${{ fromJSON(needs.setup.outputs.target_dirs) }}
+        target_dir: ${{ fromJSON(needs.detect.outputs.target_dirs) }}
     steps:
       - name: Download workspace
         uses: actions/download-artifact@v4
         with:
           name: workspace
 
-      - name: Setup Terraform
-        uses: ./.github/actions/setup
+      - name: Setup library
+        uses: ./.github/actions/setup_library
         with:
           working_directory: ${{ env.WORKING_DIRECTORY }}/${{ matrix.target_dir }}
           oidc_role_arn: ${{ secrets.OIDC_ROLE_ARN }}

@@ -17,7 +17,7 @@ env:
   ENVS_WORKING_DIRECTORY: terraform/aws/environments
   MODULES_WORKING_DIRECTORY: terraform/aws/modules
 jobs:
-  setup:
+  detect:
     runs-on: ubuntu-latest
     outputs:
       # envs_changed_dirs: ${{ steps.envs_filter.outputs.changes }}
@@ -62,21 +62,21 @@ jobs:
         uses: ./.github/actions/detect_changes
 
   envs-ci:
-    needs: setup
-    if: ${{ fromJSON(needs.setup.outputs.envs_changed_dirs)[0] != null }}
+    needs: detect
+    if: ${{ fromJSON(needs.detect.outputs.envs_changed_dirs)[0] != null }}
     runs-on: ubuntu-latest
     environment: ${{ matrix.envs_changed_dir }}
     strategy:
       matrix:
-        envs_changed_dir: ${{ fromJSON(needs.setup.outputs.envs_changed_dirs) }}
+        envs_changed_dir: ${{ fromJSON(needs.detect.outputs.envs_changed_dirs) }}
     steps:
       - name: Download workspace
         uses: actions/download-artifact@v4
         with:
           name: workspace
 
-      - name: Setup Terraform
-        uses: ./.github/actions/setup
+      - name: Setup library
+        uses: ./.github/actions/setup_library
         with:
           working_directory: ${{ env.ENVS_WORKING_DIRECTORY }}/${{ matrix.envs_changed_dir }}
           oidc_role_arn: ${{ secrets.OIDC_ROLE_ARN }}
@@ -87,20 +87,20 @@ jobs:
           working_directory: ${{ env.ENVS_WORKING_DIRECTORY }}/${{ matrix.envs_changed_dir }}
 
   modules-ci:
-    needs: setup
-    if: ${{ fromJSON(needs.setup.outputs.modules_changed_dirs)[0] != null }}
+    needs: detect
+    if: ${{ fromJSON(needs.detect.outputs.modules_changed_dirs)[0] != null }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        modules_changed_dir: ${{ fromJSON(needs.setup.outputs.modules_changed_dirs) }}
+        modules_changed_dir: ${{ fromJSON(needs.detect.outputs.modules_changed_dirs) }}
     steps:
       - name: Download workspace
         uses: actions/download-artifact@v4
         with:
           name: workspace
 
-      - name: Setup Terraform
-        uses: ./.github/actions/setup
+      - name: Setup library
+        uses: ./.github/actions/setup_library
         with:
           working_directory: ${{ env.MODULES_WORKING_DIRECTORY }}/${{ matrix.modules_changed_dir }}
           skip_configure_aws: true
