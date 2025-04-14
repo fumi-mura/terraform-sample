@@ -20,43 +20,12 @@ jobs:
   detect:
     runs-on: ubuntu-latest
     outputs:
-      # envs_changed_dirs: ${{ steps.envs_filter.outputs.changes }}
-      # modules_changed_dirs: ${{ steps.modules_filter.outputs.changes }}
       envs_changed_dirs: ${{ steps.detect_changes.outputs.envs_changed_dirs }}
       modules_changed_dirs: ${{ steps.detect_changes.outputs.modules_changed_dirs }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # - name: Check branch
-      #   run: |
-      #     echo "Current branch: ${{ GITHUB.HEAD_REF }}"
-      #     echo "Merge Target Branch: ${{ GITHUB.BASE_REF }}"
-
-      # - name: Get changed envs files
-      #   uses: dorny/paths-filter@v3
-      #   id: envs_filter
-      #   with:
-      #     filters: .github/paths-filter/envs-path-filter.yml
-
-      # - name: Get changed modules files
-      #   uses: dorny/paths-filter@v3
-      #   id: modules_filter
-      #   with:
-      #     filters: .github/paths-filter/modules-path-filter.yml
-
-      # - name: Check changed directories
-      #   run: |
-      #     echo "Changed envs directories: ${{ steps.envs_filter.outputs.changes }}"
-      #     echo "Changed modules directories: ${{ steps.modules_filter.outputs.changes }}"
-
-      # - name: Upload workspace
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: workspace
-      #     path: .
-      #     include-hidden-files: true
-      #     retention-days: 1
       - name: Detect changes
         id: detect_changes
         uses: ./.github/actions/detect_changes
