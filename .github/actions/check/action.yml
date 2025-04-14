@@ -7,6 +7,10 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - uses: gitleaks/gitleaks-action@v2
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+
     - name: TFlint
       working-directory: ${{ inputs.working_directory }}
       env:
