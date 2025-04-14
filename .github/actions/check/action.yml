@@ -1,4 +1,5 @@
 name: 'Check Terraform'
+description: 'Check Terraform'
 inputs:
   working_directory:
     description: 'working_directory'

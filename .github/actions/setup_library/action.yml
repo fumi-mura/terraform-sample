@@ -1,4 +1,5 @@
 name: 'Setup library'
+description: 'Setup library'
 inputs:
   oidc_role_arn:
     description: 'oidc_role_arn'

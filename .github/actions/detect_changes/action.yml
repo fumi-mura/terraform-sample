@@ -1,4 +1,5 @@
 name: 'Detect changes'
+description: 'Detect changes in the repository'
 outputs:
   envs_changed_dirs:
     description: 'List of changed environment directories'
@@ -6,7 +7,7 @@ outputs:
   modules_changed_dirs:
     description: 'List of changed module directories'
     value: ${{ steps.modules_filter.outputs.changes }}
-  target_dirs:
+  target_dirs: # For plan and apply jobs.
     description: 'Target directories based on changed files'
     value: ${{ steps.set_target_dirs.outputs.dirs }}
 runs:
