@@ -37,10 +37,10 @@ jobs:
       matrix:
         target_dir: ${{ fromJSON(needs.detect.outputs.target_dirs) }}
     steps:
-      - name: Download workspace
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: workspace
+          name: artifact
 
       - name: Setup library
         uses: ./.github/actions/setup_library

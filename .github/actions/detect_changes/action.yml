@@ -48,10 +48,10 @@ runs:
         fi
       shell: bash
 
-    - name: Upload workspace
+    - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: workspace
+        name: artifact
         path: .
         include-hidden-files: true
         retention-days: 1
