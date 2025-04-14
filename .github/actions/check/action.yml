@@ -32,7 +32,7 @@ runs:
         output: trivy-scan-result.txt
 
     - name: Commnet trivy result
-      uses: actions/sticky-pull-request-comment@v2
+      uses: marocchino/sticky-pull-request-comment@v2
       with:
         GITHUB_TOKEN: ${{ github.token }}
         path: trivy-scan-result.txt
