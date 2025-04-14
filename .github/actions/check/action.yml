@@ -36,7 +36,7 @@ runs:
         if [ -s trivy-scan-result.md ]; then
           echo -e "## trivy scan result\n<details><summary>Scan Result (Click me)</summary>\n\n\`\`\`\n$(cat trivy-scan-result.md)\n\`\`\`\n</details>" > formatted-trivy-result.md
         else
-          echo -e "## trivy scan result\n脆弱性が検知されませんでした。" > formatted-trivy-result.md
+          echo -e "## trivy scan result\n No vulnerabilities were detected." > formatted-trivy-result.md
         fi
       shell: bash
 
