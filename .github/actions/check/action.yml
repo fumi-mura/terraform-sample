@@ -34,8 +34,8 @@ runs:
     - name: Commnet trivy result
       uses: actions/sticky-pull-request-comment@v2
       with:
-          GITHUB_TOKEN: ${{ github.token }}
-          path: trivy-scan-result.txt
+        GITHUB_TOKEN: ${{ github.token }}
+        path: trivy-scan-result.txt
 
     - name: Terraform validate
       working-directory: ${{ inputs.working_directory }}
