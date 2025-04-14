@@ -26,13 +26,16 @@ runs:
     - name: trivy
       uses: aquasecurity/trivy-action@master
       with:
-        # scan-type: "config"
-        # severity: "HIGH,CRITICAL"
-        # scan-ref: "."
-        # output: trivy-scan-result.txt
-        github_token: ${{ github.token }}
-        working_directory: ${{ inputs.working_directory }}
-        format: github-pr-review  # PRにコメントとして結果を出力
+        scan-type: "config"
+        severity: "HIGH,CRITICAL"
+        scan-ref: ${{ inputs.working_directory }}
+        output: trivy-scan-result.txt
+
+    - name: Commnet trivy result
+      uses: actions/sticky-pull-request-comment@v2
+      with:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+          path: trivy-scan-result.txt
 
     - name: Terraform validate
       working-directory: ${{ inputs.working_directory }}
