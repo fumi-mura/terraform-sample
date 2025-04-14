@@ -1,4 +1,4 @@
-name: 'Terraform setup'
+name: 'Setup library'
 inputs:
   oidc_role_arn:
     description: 'oidc_role_arn'
