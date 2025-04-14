@@ -23,11 +23,16 @@ runs:
                   -level=warning
       shell: bash
 
-    - name: tfsec
-      uses: tfsec/tfsec-pr-commenter-action@main
+    - name: trivy
+      uses: aquasecurity/trivy-action@master
       with:
-        working_directory: ${{ inputs.working_directory }}
+        # scan-type: "config"
+        # severity: "HIGH,CRITICAL"
+        # scan-ref: "."
+        # output: trivy-scan-result.txt
         github_token: ${{ github.token }}
+        working_directory: ${{ inputs.working_directory }}
+        format: github-pr-review  # PRにコメントとして結果を出力
 
     - name: Terraform validate
       working-directory: ${{ inputs.working_directory }}

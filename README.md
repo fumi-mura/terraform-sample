@@ -97,7 +97,7 @@ module "{role}_{resource_name}" # ex: module "oidc_iam_role"
 
 - tfenv(manage Terraform version)
 - tflint
-- tfsec
+- trivy
 - terraform-docs
 - Infracost
 - direnv
