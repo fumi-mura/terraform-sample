@@ -30,8 +30,6 @@ runs:
         severity: 'HIGH,CRITICAL'
         scan-ref: ${{ inputs.working_directory }}
         output: trivy-scan-result.md
-        format: template
-        template: '@contrib/github-comment.tpl'
 
     - name: Commnet trivy result
       uses: marocchino/sticky-pull-request-comment@v2
