@@ -1,0 +1,49 @@
+name: 'Setup library'
+description: 'Setup library'
+inputs:
+  oidc_role_arn:
+    description: 'oidc_role_arn'
+    required: false
+  skip_configure_aws:
+    description: 'skip_configure_aws'
+    required: false
+  working_directory:
+    description: 'working_directory'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Setup aqua
+      uses: aquaproj/aqua-installer@v3.0.1
+      with:
+        aqua_version: v2.28.0
+        aqua_opts: ""
+      env:
+        AQUA_CONFIG: aqua.yaml
+        AQUA_DISABLE_COSIGN: true
+        AQUA_DISABLE_SLSA: true
+
+    - name: Create Terraform plugin cache dir
+      run: |
+        echo 'plugin_cache_dir="~/.terraform.d/plugin-cache"' > ~/.terraformrc
+        mkdir -p ~/.terraform.d/plugin-cache
+      shell: bash
+
+    - name: Cache Terraform Plugins
+      uses: actions/cache@v4
+      with:
+        path: ~/.terraform.d/plugin-cache
+        key: ${{ runner.os }}-terraform-${{ hashFiles('**/.terraform.lock.hcl') }}
+        restore-keys: ${{ runner.os }}-terraform-
+
+    - name: Configure AWS credentials
+      if: ${{ inputs.skip_configure_aws != 'true' && inputs.oidc_role_arn != '' }}
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ inputs.oidc_role_arn }}
+        aws-region: ap-northeast-1
+
+    - name: Terraform init
+      working-directory: ${{ inputs.working_directory }}
+      run: terraform init
+      shell: bash

@@ -1,0 +1,41 @@
+name: 'Check Terraform'
+description: 'Check Terraform'
+inputs:
+  working_directory:
+    description: 'working_directory'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: TFlint
+      working-directory: ${{ inputs.working_directory }}
+      env:
+        REVIEWDOG_GITHUB_API_TOKEN: ${{ github.token }}
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        tflint --init --config ${{ github.workspace }}/terraform/.tflint.hcl
+        tflint --recursive --config ${{ github.workspace }}/terraform/.tflint.hcl --format=checkstyle | \
+        reviewdog -f=checkstyle \
+                  -name="tflint" \
+                  -reporter=github-pr-review \
+                  -filter-mode=nofilter \
+                  -fail-on-error=false \
+                  -level=warning
+      shell: bash
+
+    - name: tfsec
+      uses: tfsec/tfsec-pr-commenter-action@main
+      with:
+        working_directory: ${{ inputs.working_directory }}
+        github_token: ${{ github.token }}
+
+    - name: Terraform validate
+      working-directory: ${{ inputs.working_directory }}
+      run: terraform validate -no-color
+      shell: bash
+
+    - name: Terraform fmt
+      id: fmt
+      working-directory: ${{ inputs.working_directory }}
+      run: terraform fmt -check -recursive
+      shell: bash

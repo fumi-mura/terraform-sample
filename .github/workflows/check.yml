@@ -17,165 +17,67 @@ env:
   ENVS_WORKING_DIRECTORY: terraform/aws/environments
   MODULES_WORKING_DIRECTORY: terraform/aws/modules
 jobs:
-  setup:
+  detect:
     runs-on: ubuntu-latest
     outputs:
-      envs_changed_dirs: ${{ steps.envs_filter.outputs.changes }}
-      modules_changed_dirs: ${{ steps.modules_filter.outputs.changes }}
+      envs_changed_dirs: ${{ steps.detect_changes.outputs.envs_changed_dirs }}
+      modules_changed_dirs: ${{ steps.detect_changes.outputs.modules_changed_dirs }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check branch
-        run: |
-          echo "Current branch: ${{ GITHUB.HEAD_REF }}"
-          echo "Merge Target Branch: ${{ GITHUB.BASE_REF }}"
-
-      - name: Get changed envs files
-        uses: dorny/paths-filter@v3
-        id: envs_filter
-        with:
-          filters: .github/paths-filter/envs-path-filter.yml
-
-      - name: Get changed modules files
-        uses: dorny/paths-filter@v3
-        id: modules_filter
-        with:
-          filters: .github/paths-filter/modules-path-filter.yml
-
-      - name: Check changed directories
-        run: |
-          echo "Changed envs directories: ${{ steps.envs_filter.outputs.changes }}"
-          echo "Changed modules directories: ${{ steps.modules_filter.outputs.changes }}"
-
-      - name: Upload workspace
-        uses: actions/upload-artifact@v4
-        with:
-          name: workspace
-          path: .
-          include-hidden-files: true
-          retention-days: 1
+      - name: Detect changes
+        id: detect_changes
+        uses: ./.github/actions/detect_changes
 
   envs-ci:
-    needs: setup
-    if: ${{ fromJSON(needs.setup.outputs.envs_changed_dirs)[0] != null }}
+    needs: detect
+    if: ${{ fromJSON(needs.detect.outputs.envs_changed_dirs)[0] != null }}
     runs-on: ubuntu-latest
     environment: ${{ matrix.envs_changed_dir }}
     strategy:
       matrix:
-        envs_changed_dir: ${{ fromJSON(needs.setup.outputs.envs_changed_dirs) }}
+        envs_changed_dir: ${{ fromJSON(needs.detect.outputs.envs_changed_dirs) }}
     steps:
-      - name: Download workspace
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: workspace
+          name: artifact
 
-      - name: Setup aqua
-        uses: aquaproj/aqua-installer@v3.0.1
-        with:
-          aqua_version: v2.28.0
-          aqua_opts: ""
-        env:
-          AQUA_CONFIG: aqua.yaml
-          AQUA_DISABLE_COSIGN: true
-          AQUA_DISABLE_SLSA: true
-
-      - name: TFlint
-        working-directory: ${{ env.ENVS_WORKING_DIRECTORY }}/${{ matrix.envs_changed_dir }}
-        env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          tflint --init --config ${{ github.workspace }}/terraform/.tflint.hcl
-          tflint --recursive --config ${{ github.workspace }}/terraform/.tflint.hcl --format=checkstyle | \
-          reviewdog -f=checkstyle \
-                    -name="tflint" \
-                    -reporter=github-pr-review \
-                    -filter-mode=nofilter \
-                    -fail-on-error=false \
-                    -level=warning
-
-      - name: tfsec
-        uses: tfsec/tfsec-pr-commenter-action@main
+      - name: Setup library
+        uses: ./.github/actions/setup_library
         with:
           working_directory: ${{ env.ENVS_WORKING_DIRECTORY }}/${{ matrix.envs_changed_dir }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          oidc_role_arn: ${{ secrets.OIDC_ROLE_ARN }}
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Check Terraform
+        uses: ./.github/actions/check
         with:
-          role-to-assume: ${{ secrets.OIDC_ROLE_ARN }}
-          aws-region: ap-northeast-1
-
-      - name: Terraform init
-        working-directory: ${{ env.ENVS_WORKING_DIRECTORY }}/${{ matrix.envs_changed_dir }}
-        run: terraform init
-
-      - name: Terraform validate
-        working-directory: ${{ env.ENVS_WORKING_DIRECTORY }}/${{ matrix.envs_changed_dir }}
-        run: terraform validate -no-color
-
-      - name: Terraform fmt
-        id: fmt
-        working-directory: ${{ env.ENVS_WORKING_DIRECTORY }}/${{ matrix.envs_changed_dir }}
-        run: terraform fmt -check -recursive
+          working_directory: ${{ env.ENVS_WORKING_DIRECTORY }}/${{ matrix.envs_changed_dir }}
 
   modules-ci:
-    needs: setup
-    if: ${{ fromJSON(needs.setup.outputs.modules_changed_dirs)[0] != null }}
+    needs: detect
+    if: ${{ fromJSON(needs.detect.outputs.modules_changed_dirs)[0] != null }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        modules_changed_dir: ${{ fromJSON(needs.setup.outputs.modules_changed_dirs) }}
+        modules_changed_dir: ${{ fromJSON(needs.detect.outputs.modules_changed_dirs) }}
     steps:
-      - name: Download workspace
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: workspace
+          name: artifact
 
-      - name: Setup aqua
-        uses: aquaproj/aqua-installer@v3.0.1
-        with:
-          aqua_version: v2.28.0
-          aqua_opts: ""
-        env:
-          AQUA_CONFIG: aqua.yaml
-          AQUA_DISABLE_COSIGN: true
-          AQUA_DISABLE_SLSA: true
-
-      - name: TFlint
-        working-directory: ${{ env.MODULES_WORKING_DIRECTORY }}/${{ matrix.modules_changed_dir }}
-        env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          tflint --init --config ${{ github.workspace }}/terraform/.tflint.hcl
-          tflint --recursive --config ${{ github.workspace }}/terraform/.tflint.hcl --format=checkstyle | \
-          reviewdog -f=checkstyle \
-                    -name="tflint" \
-                    -reporter=github-pr-review \
-                    -filter-mode=nofilter \
-                    -fail-on-error=false \
-                    -level=warning
-
-      - name: tfsec
-        uses: tfsec/tfsec-pr-commenter-action@main
+      - name: Setup library
+        uses: ./.github/actions/setup_library
         with:
           working_directory: ${{ env.MODULES_WORKING_DIRECTORY }}/${{ matrix.modules_changed_dir }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          skip_configure_aws: true
 
-      - name: Terraform init
-        working-directory: ${{ env.MODULES_WORKING_DIRECTORY }}/${{ matrix.modules_changed_dir }}
-        run: terraform init
-
-      - name: Terraform validate
-        working-directory: ${{ env.MODULES_WORKING_DIRECTORY }}/${{ matrix.modules_changed_dir }}
-        run: terraform validate -no-color
-
-      - name: Terraform fmt
-        id: fmt
-        working-directory: ${{ env.MODULES_WORKING_DIRECTORY }}/${{ matrix.modules_changed_dir }}
-        run: terraform fmt -check -recursive
+      - name: Check Terraform
+        uses: ./.github/actions/check
+        with:
+          working_directory: ${{ env.MODULES_WORKING_DIRECTORY }}/${{ matrix.modules_changed_dir }}
 
       # When install terraform using aqua, can't receive the standard output of fmt, so comment it out... Cause unknown.
       # - name: Comment fmt
