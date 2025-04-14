@@ -36,6 +36,7 @@ runs:
       with:
         GITHUB_TOKEN: ${{ github.token }}
         path: trivy-scan-result.md
+        recreate: true
 
     - name: Terraform validate
       working-directory: ${{ inputs.working_directory }}
