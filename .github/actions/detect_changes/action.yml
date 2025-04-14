@@ -1,4 +1,4 @@
-name: 'Terraform check'
+name: 'Detect changes'
 outputs:
   envs_changed_dirs:
     description: 'List of changed environment directories'
