@@ -31,7 +31,7 @@ runs:
         scan-ref: ${{ inputs.working_directory }}
         output: trivy-scan-result.md
 
-    - name: Format Trivy Scan Result
+    - name: Format trivy scan result
       run: |
         if [ -s trivy-scan-result.md ]; then
           echo -e "## trivy scan result\n<details><summary>Scan Result (Click me)</summary>\n\n\`\`\`\n$(cat trivy-scan-result.md)\n\`\`\`\n</details>" > formatted-trivy-result.md
