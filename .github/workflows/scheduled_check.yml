@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for Gitleaks scan.
 
       - name: Check branch
         run: |
@@ -34,3 +36,8 @@ jobs:
         uses: ./.github/actions/check
         with:
           working_directory: ${{ env.WORKING_DIRECTORY }}
+
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
