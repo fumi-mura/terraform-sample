@@ -40,7 +40,7 @@ runs:
         fi
       shell: bash
 
-    - name: Commnet trivy result
+    - name: Comment trivy result
       uses: marocchino/sticky-pull-request-comment@v2
       with:
         GITHUB_TOKEN: ${{ github.token }}
