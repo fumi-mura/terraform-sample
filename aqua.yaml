@@ -14,6 +14,6 @@ env:
 packages:
 - name: hashicorp/terraform@v1.9.0
 - name: terraform-linters/tflint@v0.53.0
-- name: aquasecurity/tfsec@v1.28.11
+- name: aquasecurity/trivy@v0.60.0
 - name: suzuki-shunsuke/tfcmt@v4.4.2
 - name: reviewdog/reviewdog@v0.14.2

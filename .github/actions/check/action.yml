@@ -23,11 +23,29 @@ runs:
                   -level=warning
       shell: bash
 
-    - name: tfsec
-      uses: tfsec/tfsec-pr-commenter-action@main
+    - name: trivy
+      uses: aquasecurity/trivy-action@master
       with:
-        working_directory: ${{ inputs.working_directory }}
-        github_token: ${{ github.token }}
+        scan-type: config
+        severity: 'HIGH,CRITICAL'
+        scan-ref: ${{ inputs.working_directory }}
+        output: trivy-scan-result.md
+
+    - name: Format trivy scan result
+      run: |
+        if [ -s trivy-scan-result.md ]; then
+          echo -e "## trivy scan result\n<details><summary>Scan Result (Click me)</summary>\n\n\`\`\`\n$(cat trivy-scan-result.md)\n\`\`\`\n</details>" > formatted-trivy-result.md
+        else
+          echo -e "## trivy scan result\n No vulnerabilities were detected." > formatted-trivy-result.md
+        fi
+      shell: bash
+
+    - name: Commnet trivy result
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        GITHUB_TOKEN: ${{ github.token }}
+        path: formatted-trivy-result.md
+        recreate: true
 
     - name: Terraform validate
       working-directory: ${{ inputs.working_directory }}
