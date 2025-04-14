@@ -29,15 +29,22 @@ runs:
         scan-type: config
         severity: 'HIGH,CRITICAL'
         scan-ref: ${{ inputs.working_directory }}
-        output: trivy-scan-result.md
-        format: template
-        template: '@/contrib/markdown.tpl'
+        output: trivy-scan-result.txt
+
+    - name: Format Trivy Scan Result
+      run: |
+        if [ -s trivy-scan-result.txt ]; then
+          echo -e "## 脆弱性スキャン結果\n<details><summary>詳細</summary>\n\n\`\`\`\n$(cat trivy-scan-result.txt)\n\`\`\`\n</details>" > formatted-trivy-result.md
+        else
+          echo -e "## 脆弱性スキャン結果\n脆弱性が検知されませんでした。" > formatted-trivy-result.md
+        fi
+      shell: bash
 
     - name: Commnet trivy result
       uses: marocchino/sticky-pull-request-comment@v2
       with:
         GITHUB_TOKEN: ${{ github.token }}
-        path: trivy-scan-result.md
+        path: formatted-trivy-result.md
         recreate: true
 
     - name: Terraform validate
