@@ -34,9 +34,9 @@ runs:
     - name: Format Trivy Scan Result
       run: |
         if [ -s trivy-scan-result.txt ]; then
-          echo -e "## 脆弱性スキャン結果\n<details><summary>詳細</summary>\n\n\`\`\`\n$(cat trivy-scan-result.txt)\n\`\`\`\n</details>" > formatted-trivy-result.md
+          echo -e "## trivy scan result\n<details><summary>詳細</summary>\n\n\`\`\`\n$(cat trivy-scan-result.txt)\n\`\`\`\n</details>" > formatted-trivy-result.md
         else
-          echo -e "## 脆弱性スキャン結果\n脆弱性が検知されませんでした。" > formatted-trivy-result.md
+          echo -e "## trivy scan result\n脆弱性が検知されませんでした。" > formatted-trivy-result.md
         fi
       shell: bash
 
