@@ -100,3 +100,11 @@ jobs:
       #         repo: context.repo.repo,
       #         body: output
       #       });
+
+  slack_notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify slack
+        uses: ./.github/actions/slack_notify
+        with:
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK }}

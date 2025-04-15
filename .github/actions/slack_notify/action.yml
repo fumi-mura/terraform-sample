@@ -1,0 +1,26 @@
+name: 'Slack notification'
+description: 'Slack notification'
+inputs:
+  slack_webhook:
+    description: 'slack_webhook'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Slack Notification on success
+      uses: rtCamp/action-slack-notify@v2
+      if: ${{ success() }}
+      env:
+        SLACK_WEBHOOK: ${{ inputs.slack_webhook }}
+        SLACK_TITLE: Success
+        SLACK_COLOR: good
+        SLACK_MESSAGE: デプロイ完了しました🚀
+
+    - name: Slack Notification on failure
+      uses: rtCamp/action-slack-notify@v2
+      if: ${{ failure() }}
+      env:
+        SLACK_WEBHOOK: ${{ inputs.slack_webhook }}
+        SLACK_TITLE: Failure
+        SLACK_COLOR: danger
+        SLACK_MESSAGE: デプロイ失敗しました😢
