@@ -102,6 +102,7 @@ jobs:
       #       });
 
   slack_notify:
+    if: always() && !cancelled()
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
