@@ -102,6 +102,7 @@ jobs:
       #       });
 
   slack_notify:
+    needs: [detect, envs-ci, modules-ci]
     if: always() && !cancelled()
     runs-on: ubuntu-latest
     steps:
