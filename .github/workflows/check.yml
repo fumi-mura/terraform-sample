@@ -112,3 +112,4 @@ jobs:
         uses: ./.github/actions/slack_notify
         with:
           slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
+          slack_message: ${{ github.workflow }}
