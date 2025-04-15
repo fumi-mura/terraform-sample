@@ -63,5 +63,5 @@ module "test_3_s3" {
 
 module "test_4_s3" {
   source      = "../../modules/s3/bucket"
-  bucket_name  = "${local.env}-${local.name}-test-4-s3-bucket"
+  bucket_name = "${local.env}-${local.name}-test-4-s3-bucket"
 }
