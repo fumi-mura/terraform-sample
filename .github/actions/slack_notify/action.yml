@@ -16,7 +16,7 @@ runs:
       env:
         SLACK_WEBHOOK: ${{ inputs.slack_webhook }}
         SLACK_TITLE: Success
-        SLACK_COLOR: ${{ job.status }}
+        SLACK_COLOR: ${{ inputs.status }}
         SLACK_MESSAGE: ${{ github.workflow }} success 🚀
 
     - name: Slack Notification on failure
@@ -25,5 +25,5 @@ runs:
       env:
         SLACK_WEBHOOK: ${{ inputs.slack_webhook }}
         SLACK_TITLE: Failure
-        SLACK_COLOR: ${{ job.status }}
+        SLACK_COLOR: ${{ inputs.status }}
         SLACK_MESSAGE: ${{ github.workflow }} failure 😢
