@@ -104,6 +104,11 @@ jobs:
   slack_notify:
     runs-on: ubuntu-latest
     steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: artifact
+
       - name: Notify slack
         uses: ./.github/actions/slack_notify
         with:
