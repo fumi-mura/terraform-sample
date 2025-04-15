@@ -12,18 +12,18 @@ runs:
 
     - name: Slack notification on success
       uses: rtCamp/action-slack-notify@v2
-      if: ${{ env.WORKFLOW_CONCLUSION == 'success' }}
+      # if: ${{ env.WORKFLOW_CONCLUSION == 'success' }}
       env:
         SLACK_WEBHOOK: ${{ inputs.slack_webhook }}
-        SLACK_TITLE: Success
+        SLACK_TITLE: ${{ env.WORKFLOW_CONCLUSION }}
         SLACK_COLOR: ${{ env.WORKFLOW_CONCLUSION }}
-        SLACK_MESSAGE: ${{ github.workflow }} success 🚀
+        SLACK_MESSAGE: ${{ github.workflow }} is ${{ env.WORKFLOW_CONCLUSION == 'success' && 'success 🚀' || 'failure 😢' }}
 
-    - name: Slack notification on failure
-      uses: rtCamp/action-slack-notify@v2
-      if: ${{ env.WORKFLOW_CONCLUSION == 'failure' }}
-      env:
-        SLACK_WEBHOOK: ${{ inputs.slack_webhook }}
-        SLACK_TITLE: Failure
-        SLACK_COLOR: ${{ env.WORKFLOW_CONCLUSION }}
-        SLACK_MESSAGE: ${{ github.workflow }} failure 😢
+    # - name: Slack notification on failure
+    #   uses: rtCamp/action-slack-notify@v2
+    #   if: ${{ env.WORKFLOW_CONCLUSION == 'failure' }}
+    #   env:
+    #     SLACK_WEBHOOK: ${{ inputs.slack_webhook }}
+    #     SLACK_TITLE: Failure
+    #     SLACK_COLOR: ${{ env.WORKFLOW_CONCLUSION }}
+    #     SLACK_MESSAGE: ${{ github.workflow }} failure 😢
