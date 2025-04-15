@@ -109,9 +109,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - uses: technote-space/workflow-conclusion-action@v3
+      - name: Get workflow status
+        uses: technote-space/workflow-conclusion-action@v3
 
-      - name: Notify slack
+      - name: Slack notification
         uses: ./.github/actions/slack_notify
         with:
           slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
