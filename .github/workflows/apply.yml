@@ -50,3 +50,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: tfcmt -var target:${{ matrix.target_dir }} apply -- terraform apply -auto-approve
+
+  notify_slack:
+    needs: [detect, apply]
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Notify slack
+        uses: ./.github/actions/notify_slack
+        with:
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK }}

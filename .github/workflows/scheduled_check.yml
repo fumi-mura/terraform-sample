@@ -41,3 +41,16 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  notify_slack:
+    needs: [full-ci]
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Notify slack
+        uses: ./.github/actions/notify_slack
+        with:
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
