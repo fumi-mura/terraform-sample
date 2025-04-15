@@ -4,26 +4,35 @@ inputs:
   slack_webhook:
     description: 'slack_webhook'
     required: true
-  status:
-    description: 'Workflow status'
-    required: true
+  # status:
+  #   description: 'Workflow status'
+  #   required: true
 runs:
   using: "composite"
   steps:
+    - name: Get workflow status
+      uses: technote-space/workflow-conclusion-action@v3
+
+    # - name: Slack notification
+    #   uses: ./.github/actions/slack_notify
+    #   with:
+    #     slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
+    #     status: ${{ env.WORKFLOW_CONCLUSION }}
+
     - name: Slack Notification on success
       uses: rtCamp/action-slack-notify@v2
-      if: ${{ inputs.status == 'success' }}
+      if: ${{ env.WORKFLOW_CONCLUSION == 'success' }}
       env:
         SLACK_WEBHOOK: ${{ inputs.slack_webhook }}
         SLACK_TITLE: Success
-        SLACK_COLOR: ${{ inputs.status }}
+        SLACK_COLOR: ${{ env.WORKFLOW_CONCLUSION }}
         SLACK_MESSAGE: ${{ github.workflow }} success 🚀
 
     - name: Slack Notification on failure
       uses: rtCamp/action-slack-notify@v2
-      if: ${{ inputs.status == 'failure' }}
+      if: ${{ env.WORKFLOW_CONCLUSION == 'failure' }}
       env:
         SLACK_WEBHOOK: ${{ inputs.slack_webhook }}
         SLACK_TITLE: Failure
-        SLACK_COLOR: ${{ inputs.status }}
+        SLACK_COLOR: ${{ env.WORKFLOW_CONCLUSION }}
         SLACK_MESSAGE: ${{ github.workflow }} failure 😢
