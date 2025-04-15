@@ -100,3 +100,16 @@ jobs:
       #         repo: context.repo.repo,
       #         body: output
       #       });
+
+  notify_slack:
+    needs: [detect, envs-ci, modules-ci]
+    if: always() && !cancelled()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Notify slack
+        uses: ./.github/actions/notify_slack
+        with:
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
