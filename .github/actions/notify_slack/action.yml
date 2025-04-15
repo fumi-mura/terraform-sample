@@ -1,5 +1,5 @@
-name: 'Slack notification'
-description: 'Slack notification'
+name: 'Notify slack'
+description: 'Notify slack'
 inputs:
   slack_webhook:
     description: 'slack_webhook'
@@ -10,7 +10,7 @@ runs:
     - name: Get workflow status
       uses: technote-space/workflow-conclusion-action@v3
 
-    - name: Slack notification
+    - name: Notify slack
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_WEBHOOK: ${{ inputs.slack_webhook }}
