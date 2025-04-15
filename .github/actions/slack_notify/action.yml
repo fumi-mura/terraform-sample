@@ -14,7 +14,7 @@ runs:
         SLACK_WEBHOOK: ${{ inputs.slack_webhook }}
         SLACK_TITLE: Success
         SLACK_COLOR: ${{ job.status }}
-        SLACK_MESSAGE: ${{ inputs.slack_message }} success 🚀
+        SLACK_MESSAGE: ${{ github.workflow }} success 🚀
 
     - name: Slack Notification on failure
       uses: rtCamp/action-slack-notify@v2
