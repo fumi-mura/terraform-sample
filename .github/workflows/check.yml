@@ -13,6 +13,7 @@ permissions:
   contents: read
   id-token: write
   pull-requests: write
+  issues: write
 env:
   ENVS_WORKING_DIRECTORY: terraform/aws/environments
   MODULES_WORKING_DIRECTORY: terraform/aws/modules

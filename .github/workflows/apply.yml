@@ -9,6 +9,7 @@ permissions:
   contents: read
   id-token: write
   pull-requests: write
+  issues: write
 env:
   WORKING_DIRECTORY: terraform/aws/environments
 jobs:
