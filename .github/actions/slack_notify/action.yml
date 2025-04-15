@@ -16,4 +16,4 @@ runs:
         SLACK_WEBHOOK: ${{ inputs.slack_webhook }}
         SLACK_COLOR: ${{ env.WORKFLOW_CONCLUSION }}
         SLACK_TITLE: ${{ env.WORKFLOW_CONCLUSION }}
-        SLACK_MESSAGE: "`${{ github.workflow }}` is ${{ env.WORKFLOW_CONCLUSION == 'success' && 'success 🚀' || 'failure 😢' }}"
+        SLACK_MESSAGE: "`${{ github.workflow }}` workflow is ${{ env.WORKFLOW_CONCLUSION == 'success' && 'success 🚀' || 'failure 😢' }}"
