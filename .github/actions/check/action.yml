@@ -45,7 +45,6 @@ runs:
       with:
         GITHUB_TOKEN: ${{ github.token }}
         path: formatted-trivy-result.md
-        # recreate: true
         header: trivy
 
     - name: Terraform validate
