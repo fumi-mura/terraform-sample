@@ -30,8 +30,8 @@ runs:
         severity: 'HIGH,CRITICAL'
         scan-ref: ${{ inputs.working_directory }}
         output: trivy-scan-result.md
-        trivy-config: ${{ github.workspace }}/test/trivy.yaml
-        # trivyignores: ${{ github.workspace }}/.trivyignore.yaml
+        # trivy-config: ${{ github.workspace }}/trivy.yaml
+        trivyignores: ${{ github.workspace }}/.trivyignore.yaml
 
     - name: Format trivy scan result
       run: |
