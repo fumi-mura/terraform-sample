@@ -80,28 +80,6 @@ jobs:
         with:
           working_directory: ${{ env.MODULES_WORKING_DIRECTORY }}/${{ matrix.modules_changed_dir }}
 
-      # When install terraform using aqua, can't receive the standard output of fmt, so comment it out... Cause unknown.
-      # - name: Comment fmt
-      #   if: ${{ steps.fmt.outputs.stdout }} != ''
-      #   uses: actions/github-script@v7
-      #   env:
-      #     FMT: ${{ steps.fmt.outputs.stdout }}
-      #   with:
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     script: |
-      #       const output = `
-      #       #### Terraform fmt 🖌\`${{ steps.fmt.outcome }}\`
-      #       <details>
-      #       <summary>Show fmt</summary>
-      #       \n\`\`\`\n${{ env.WORKING_DIRECTORY }}/environments/${{ matrix.target_dir }}/${process.env.FMT}\n\`\`\`
-      #       </details>`;
-      #       github.rest.issues.createComment({
-      #         issue_number: context.issue.number,
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         body: output
-      #       });
-
   notify_slack:
     needs: [detect, envs-ci, modules-ci]
     if: always() && !cancelled()
