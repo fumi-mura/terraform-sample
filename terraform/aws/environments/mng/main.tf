@@ -77,8 +77,3 @@ module "iam_identity_center" {
     module.sdlc_organizations.member_account_id[0]
   ]
 }
-
-module "test_1_s3" {
-  source      = "../../modules/s3/bucket"
-  bucket_name = "${local.env}-${local.name}-test-1-s3-bucket"
-}
