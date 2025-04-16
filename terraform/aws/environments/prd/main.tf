@@ -25,7 +25,7 @@ module "oidc_iam_role" {
           test     = "StringLike"
           variable = "token.actions.githubusercontent.com:sub"
           values = [
-            "repo:Fumi-Mura/infra_portfolio:*",
+            "repo:fumi-mura/infra_portfolio:*",
           ]
       }]
     }
@@ -43,4 +43,14 @@ module "oidc_iam_policy" {
       condition = []
     }
   }
+}
+
+module "test_1_s3" {
+  source      = "../../modules/s3/bucket"
+  bucket_name = "${local.env}-${local.name}-test-1-s3-bucket"
+}
+
+module "test_2_s3" {
+  source      = "../../modules/s3/bucket"
+  bucket_name = "${local.env}-${local.name}-test-2-s3-bucket"
 }
