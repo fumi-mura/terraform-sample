@@ -1,3 +1,0 @@
-misconfiguration:
-  ignore:
-    - id: AVD-AWS-0132 # Ignore warnings to use SSE-S3.
