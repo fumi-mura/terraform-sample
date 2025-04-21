@@ -16,7 +16,7 @@ runs:
         tflint --init --config ${{ github.workspace }}/terraform/.tflint.hcl
         tflint --recursive --config ${{ github.workspace }}/terraform/.tflint.hcl --format=checkstyle | \
         reviewdog -f=checkstyle \
-                  -name="tflint" \
+                  -name=tflint \
                   -reporter=github-pr-review \
                   -filter-mode=nofilter \
                   -fail-on-error=false \
