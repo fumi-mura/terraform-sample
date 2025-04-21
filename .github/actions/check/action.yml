@@ -7,7 +7,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: TFlint (PR Context)
+    - name: TFlint(PR Context)
       if: ${{ github.event_name == 'pull_request' }}
       working-directory: ${{ inputs.working_directory }}
       env:
@@ -24,7 +24,7 @@ runs:
                   -level=warning
       shell: bash
 
-    - name: TFlint (Non-PR Context)
+    - name: TFlint(Non-PR Context) # For scheduled jobs
       if: ${{ github.event_name != 'pull_request' }}
       working-directory: ${{ inputs.working_directory }}
       run: |
