@@ -7,6 +7,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Gitleaks
+      uses: gitleaks/gitleaks-action@v2
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+
     - name: TFlint(PR Context)
       if: ${{ github.event_name == 'pull_request' }}
       working-directory: ${{ inputs.working_directory }}
