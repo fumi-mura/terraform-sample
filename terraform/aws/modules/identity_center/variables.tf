@@ -6,10 +6,14 @@ variable "name" {
   type = string
 }
 
-variable "permission_sets" {
-  description = "Create IAM Identity Center permission set"
-  type        = list(string)
-  default     = ["AdministratorAccess", "ReadOnlyAccess"]
+# variable "permission_sets" {
+#   description = "Create IAM Identity Center permission set"
+#   type        = list(string)
+#   default     = ["AdministratorAccess", "ReadOnlyAccess"]
+# }
+
+variable "permission_set_arn" {
+
 }
 
 variable "create_users" {
@@ -31,3 +35,13 @@ variable "email" {
 variable "account_ids" {
   type = list(string)
 }
+
+
+# variable "account_assignments" {
+#   description = "アカウント、権限セット、プリンシパルの関連付け"
+#   type = map(object({
+#     target_id          = string
+#     permission_set_arn = string
+#     principal_id       = string
+#   }))
+# }

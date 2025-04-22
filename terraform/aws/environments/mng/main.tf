@@ -66,6 +66,12 @@ module "sdlc_organizations" {
 }
 
 # IAM Identity Center
+module "iic_permission_set" {
+  source = "../../modules/identity_center/permission_set"
+  ssoadmin_instances_arn = module.iam_identity_center.ssoadmin_instances_arn
+}
+
+
 module "iam_identity_center" {
   source = "../../modules/identity_center"
   env    = local.env
@@ -76,4 +82,24 @@ module "iam_identity_center" {
     module.prod_organizations.member_account_id[0],
     module.sdlc_organizations.member_account_id[0]
   ]
+
+  permission_set_arn = module.iic_permission_set.permission_set_arn
+
+  # account_assignments = {
+  #   # 1 = {
+  #   #   target_id          = data.aws_caller_identity.current.account_id,
+  #   #   permission_set_arn = module.iic_permission_set.permission_set_arn
+  #   #   principal_id       = module.iam_identity_center.user_id
+  #   # }
+  #   2 = {
+  #     target_id          = module.prod_organizations.member_account_id[0]
+  #     permission_set_arn = "arn:aws:sso:::permissionSet/ssoins-775858b230c132be/ps-016128be1f0d2c70"
+  #     principal_id       = "57344af8-5091-7024-7358-e523c32873a5"
+  #   }
+  #   # 3 = {
+  #   #   target_id          = module.sdlc_organizations.member_account_id[0]
+  #   #   permission_set_arn = module.iic_permission_set.permission_set_arn
+  #   #   principal_id       = module.iam_identity_center.user_id
+  #   # }
+  # }
 }
