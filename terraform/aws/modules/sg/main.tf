@@ -19,6 +19,10 @@ resource "aws_vpc_security_group_ingress_rule" "this" {
   cidr_ipv6                    = each.value.cidr_ipv6
   prefix_list_id               = each.value.prefix_list_id
   description                  = each.value.description
+
+  tags = {
+    Name = "${var.sg_name}-${each.key}-ingress-rule"
+  }
 }
 
 resource "aws_vpc_security_group_egress_rule" "this" {
@@ -33,4 +37,8 @@ resource "aws_vpc_security_group_egress_rule" "this" {
   cidr_ipv6                    = each.value.cidr_ipv6
   prefix_list_id               = each.value.prefix_list_ids
   description                  = each.value.description
+
+  tags = {
+    Name = "${var.sg_name}-${each.key}-egress-rule"
+  }
 }
