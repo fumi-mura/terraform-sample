@@ -52,7 +52,7 @@ runs:
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: artifact
+        name: artifact-${{ github.run_id }}
         path: .
         include-hidden-files: true
         retention-days: 1
