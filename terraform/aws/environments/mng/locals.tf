@@ -22,9 +22,7 @@ locals {
         family_name = "Test"
         given_name  = "Ichiro"
       }
-      groups = [
-        "mng_admin",
-      ]
+      groups = ["mng_admin",]
     }
     # prd
     test-jiro = {
@@ -32,9 +30,7 @@ locals {
         family_name = "Test"
         given_name  = "Jiro"
       }
-      groups = [
-        "dev_admin"
-      ]
+      groups = ["dev_admin"]
     }
     # dev
     test-saburo = {
@@ -42,9 +38,7 @@ locals {
         family_name = "Test"
         given_name  = "saburo"
       }
-      groups = [
-        "dev_admin"
-      ]
+      groups = ["dev_admin"]
     }
   }
 
