@@ -26,6 +26,16 @@ locals {
         "mng_admin",
       ]
     }
+    # prd
+    test-jiro = {
+      name = {
+        family_name = "Test"
+        given_name  = "Jiro"
+      }
+      groups = [
+        "dev_admin"
+      ]
+    }
     # dev
     test-saburo = {
       name = {
@@ -48,6 +58,14 @@ locals {
     }
     mng_readonly = {
       name        = "mng-Readonly"
+      description = "Readonly"
+    }
+    prd_admin = {
+      name        = "prd-Administrator"
+      description = "Administrator"
+    }
+    prd_readonly = {
+      name        = "prd-Readonly"
       description = "Readonly"
     }
     dev_admin = {
@@ -113,17 +131,17 @@ locals {
       group          = "mng_readonly"
       permission_set = "read_only"
     },
-    # # prd
-    # {
-    #   account_id     = local.account_ids.prd
-    #   group          = "prd_admin"
-    #   permission_set = "admin"
-    # },
-    # {
-    #   account_id     = local.account_ids.prd
-    #   group          = "prd_readonly"
-    #   permission_set = "read_only"
-    # },
+    # prd
+    {
+      account_id     = local.account_ids.prd
+      group          = "prd_admin"
+      permission_set = "admin"
+    },
+    {
+      account_id     = local.account_ids.prd
+      group          = "prd_readonly"
+      permission_set = "read_only"
+    },
     # dev
     {
       account_id     = local.account_ids.dev
