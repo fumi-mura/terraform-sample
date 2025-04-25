@@ -20,7 +20,11 @@ locals {
         family_name = "Test"
         given_name  = "Ichiro"
       }
-      groups = ["mng_admin"]
+      groups = [
+        "mng_admin",
+        "prd_admin",
+        "dev_admin"
+      ]
     }
     # prd
     test-jiro = {
