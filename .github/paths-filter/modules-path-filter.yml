@@ -1,3 +1,5 @@
+backup:
+  - terraform/aws/modules/backup/**
 budgets:
   - terraform/aws/modules/budgets/**
 cloudwatch:
