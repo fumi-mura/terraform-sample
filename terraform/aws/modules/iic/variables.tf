@@ -47,5 +47,10 @@ variable "permission_sets" {
 }
 
 variable "assignment_map" {
+  type = map(object({
+    account_id     = string
+    group          = string
+    permission_set = string
+  }))
   description = "Create iic assignment map"
 }
