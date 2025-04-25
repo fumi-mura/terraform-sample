@@ -15,6 +15,7 @@ locals {
   ########################
   # Users
   ########################
+  # mng
   users = {
     "test-taro" = {
       name = {
@@ -25,6 +26,7 @@ locals {
         "mng_admin",
       ]
     }
+    # dev
     "test-saburo" = {
       name = {
         family_name = "Test"
