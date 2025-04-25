@@ -3,5 +3,5 @@ variable "dashboard_name" {
 }
 
 variable "widgets" {
-  type = any
+  type = any # jsonで型定義ができないためanyとしている
 }
