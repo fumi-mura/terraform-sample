@@ -16,7 +16,7 @@ locals {
   # Users
   ########################
   users = {
-    "taro.test@example.com" = {
+    "test-taro" = {
       name = {
         family_name = "Test"
         given_name  = "Taro"
@@ -25,7 +25,7 @@ locals {
         "mng_admin",
       ]
     }
-    "saburo.test@example.com" = {
+    "test-saburo" = {
       name = {
         family_name = "Test"
         given_name  = "Saburo"
