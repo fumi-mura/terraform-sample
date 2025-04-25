@@ -115,7 +115,7 @@ locals {
     # },
     # {
     #   account_id     = local.account_ids.prd
-    #   group          = "prd_dev"
+    #   group          = "prd_readonly"
     #   permission_set = "read_only"
     # },
     # dev
@@ -126,7 +126,7 @@ locals {
     },
     # {
     #   account_id     = local.account_ids.dev
-    #   group          = "dev_dev"
+    #   group          = "dev_readonly"
     #   permission_set = "read_only"
     # },
   ]
