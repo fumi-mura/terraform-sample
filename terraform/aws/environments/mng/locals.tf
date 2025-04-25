@@ -17,7 +17,7 @@ locals {
   ########################
   users = {
     # mng
-    "test-taro" = {
+    test-taro = {
       name = {
         family_name = "Test"
         given_name  = "Taro"
@@ -27,7 +27,7 @@ locals {
       ]
     }
     # dev
-    "test-saburo" = {
+    test-saburo = {
       name = {
         family_name = "Test"
         given_name  = "Saburo"
@@ -86,12 +86,12 @@ locals {
   # Permissions
   ########################
   permission_sets = {
-    "admin" = {
+    admin = {
       name               = "AdministratorAccess"
       description        = "AdministratorAccess"
       managed_policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
     },
-    "read_only" = {
+    read_only = {
       name               = "ReadOnlyAccess"
       description        = "ReadOnlyAccess"
       managed_policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
