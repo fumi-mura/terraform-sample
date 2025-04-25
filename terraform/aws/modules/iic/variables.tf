@@ -33,5 +33,14 @@ variable "permission_sets" {
   description = "Create iic permission set"
 }
 
-variable "user_group_membership" {}
-variable "assignment_map" {}
+variable "user_group_membership" {
+  type        = map(object({
+    user  = string
+    group = string
+  }))
+  description = "Create iic user group membership"
+}
+
+variable "assignment_map" {
+  description = "Create iic assignment map"
+}
