@@ -102,7 +102,7 @@ locals {
       description        = "AdministratorAccess"
       managed_policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
     },
-    read_only = {
+    readonly = {
       name               = "ReadOnlyAccess"
       description        = "ReadOnlyAccess"
       managed_policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
@@ -120,7 +120,7 @@ locals {
     {
       account_id     = local.account_ids.mng
       group          = "mng_readonly"
-      permission_set = "read_only"
+      permission_set = "readonly"
     },
     # prd
     {
@@ -131,7 +131,7 @@ locals {
     {
       account_id     = local.account_ids.prd
       group          = "prd_readonly"
-      permission_set = "read_only"
+      permission_set = "readonly"
     },
     # dev
     {
@@ -142,7 +142,7 @@ locals {
     {
       account_id     = local.account_ids.dev
       group          = "dev_readonly"
-      permission_set = "read_only"
+      permission_set = "readonly"
     },
   ]
 
