@@ -23,14 +23,14 @@ variable "users" {
 
 variable "groups" {
   type = map(object({
-    name = string
+    name        = string
     description = string
   }))
   description = "Create iic group"
 }
 
 variable "user_group_membership" {
-  type        = map(object({
+  type = map(object({
     user  = string
     group = string
   }))
@@ -39,8 +39,8 @@ variable "user_group_membership" {
 
 variable "permission_sets" {
   type = map(object({
-    name            = string
-    description     = string
+    name               = string
+    description        = string
     managed_policy_arn = string
   }))
   description = "Create iic permission set"
