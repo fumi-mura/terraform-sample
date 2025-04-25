@@ -52,6 +52,10 @@ locals {
       name        = "dev-Administrator"
       description = "Administrator"
     }
+    dev_readonly = {
+      name        = "dev-Readonly"
+      description = "Readonly"
+    }
   }
 
   users_groups_combined = [
@@ -124,11 +128,11 @@ locals {
       group          = "dev_admin"
       permission_set = "admin"
     },
-    # {
-    #   account_id     = local.account_ids.dev
-    #   group          = "dev_readonly"
-    #   permission_set = "read_only"
-    # },
+    {
+      account_id     = local.account_ids.dev
+      group          = "dev_readonly"
+      permission_set = "read_only"
+    },
   ]
 
   assignment_map = {
