@@ -54,14 +54,14 @@ data "aws_ssm_parameter" "this" {
 module "prod_organizations" {
   source        = "../../modules/organizations"
   email         = data.aws_ssm_parameter.this.value
-  account_names = ["prd01"] # 過去に作成したアドレスが残っていてエラーになるため環境名に数字を追加している
+  account_names = ["prd01"] # 過去に作成したメールアドレスが残っていてエラーになるため環境名に数字を追加している
   ou_name       = "prod"
 }
 
 module "sdlc_organizations" {
   source        = "../../modules/organizations"
   email         = data.aws_ssm_parameter.this.value
-  account_names = ["dev01"] # 過去に作成したアドレスが残っていてエラーになるため環境名に数字を追加している
+  account_names = ["dev01"] # 過去に作成したメールアドレスが残っていてエラーになるため環境名に数字を追加している
   ou_name       = "sdlc"
 }
 
