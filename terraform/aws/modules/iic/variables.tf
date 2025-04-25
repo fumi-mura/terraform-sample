@@ -22,9 +22,5 @@ variable "email" {
   type = string
 }
 
-variable "account_ids" {
-  type = map(string)
-}
-
 variable "user_group_membership" {}
 variable "assignment_map" {}
