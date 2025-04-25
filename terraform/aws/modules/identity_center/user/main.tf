@@ -1,13 +1,13 @@
 resource "aws_identitystore_user" "this" {
-  for_each = toset(var.users)
+  for_each = var.users
 
   identity_store_id = var.identity_store_id
   user_name         = each.key # Use signin. can't change after.
-  display_name      = each.key
+  display_name      = "${each.value["name"]["given_name"]}-${each.value["name"]["family_name"]}"
 
   name {
-    given_name  = each.key
-    family_name = "user"
+    family_name = each.value["name"]["family_name"]
+    given_name  = each.value["name"]["given_name"]
   }
 
   emails {

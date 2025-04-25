@@ -1,7 +1,12 @@
 variable "users" {
   description = "Create IAM Identity Center users"
-  type        = list(string)
-  default     = ["Admin", "ReadOnly"]
+  type        = map(object({
+    name = object({
+      given_name  = string
+      family_name = string
+    })
+    groups = list(string)
+  }))
 }
 
 variable "email" {

@@ -74,14 +74,15 @@ module "iic_permission_set" {
 module "iic_user" {
   source = "../../modules/identity_center/user"
   env    = local.env
+  users  = local.users
   email  = data.aws_ssm_parameter.this.value
   identity_store_id = module.iam_identity_center.identity_store_id
 }
 
-
 module "iam_identity_center" {
   source = "../../modules/identity_center"
   env    = local.env
+  groups = local.groups
   name   = local.name
   # email  = data.aws_ssm_parameter.this.value
   member_id = {
