@@ -46,7 +46,7 @@ resource "aws_ssoadmin_permission_set" "this" {
   instance_arn = tolist(data.aws_ssoadmin_instances.this.arns)[0]
 
   tags = {
-    Name = "${var.env}-${var.name}-${each.key}-iic-permission-set"
+    Name = "${var.env}-${var.name}-${each.key}-permission-set"
   }
 }
 
