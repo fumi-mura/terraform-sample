@@ -37,6 +37,7 @@ resource "aws_identitystore_group_membership" "this" {
   member_id         = aws_identitystore_user.this[each.value["user"]].user_id
 }
 
+# Permission set
 resource "aws_ssoadmin_permission_set" "this" {
   for_each = var.permission_sets
 
