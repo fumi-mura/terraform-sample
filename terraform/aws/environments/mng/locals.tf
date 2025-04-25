@@ -67,7 +67,7 @@ locals {
   ########################
   # Membership
   ########################
-  users_groups_membership = zipmap(
+  user_group_membership = zipmap(
     flatten(
       [for item in local.users_groups_combined : keys(item)]
     ),

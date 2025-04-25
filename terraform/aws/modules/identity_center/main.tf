@@ -46,7 +46,7 @@ resource "aws_identitystore_group" "this" {
 
 # Attach user to group
 resource "aws_identitystore_group_membership" "this" {
-  for_each = var.users_groups_membership
+  for_each = var.user_group_membership
 
   identity_store_id = tolist(data.aws_ssoadmin_instances.this.identity_store_ids)[0]
   group_id          = aws_identitystore_group.this[each.value["group"]].group_id

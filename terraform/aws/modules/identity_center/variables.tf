@@ -26,5 +26,5 @@ variable "account_ids" {
   type = map(string)
 }
 
-variable "users_groups_membership" {}
+variable "user_group_membership" {}
 variable "assignment_map" {}
