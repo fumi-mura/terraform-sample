@@ -12,9 +12,7 @@ locals {
     dev = "${module.sdlc_organizations.member_account_id[0]}"
   }
 
-  ########################
   # Users
-  ########################
   users = {
     # mng
     test-ichiro = {
@@ -42,9 +40,7 @@ locals {
     }
   }
 
-  ########################
   # Groups
-  ########################
   groups = {
     # mng
     mng_admin = {
@@ -85,9 +81,7 @@ locals {
     }
   ]
 
-  ########################
   # Membership
-  ########################
   user_group_membership = zipmap(
     flatten(
       [for item in local.users_groups_combined : keys(item)]
@@ -97,9 +91,7 @@ locals {
     )
   )
 
-  ########################
   # Permissions
-  ########################
   permission_sets = {
     admin = {
       name               = "AdministratorAccess"
@@ -113,9 +105,7 @@ locals {
     }
   }
 
-  ################################################################################
-  # Account Assignments
-  ################################################################################
+  # Account assignments
   account_assignments = [
     # mng
     {
