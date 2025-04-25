@@ -28,7 +28,7 @@ locals {
         family_name = "Test"
         given_name  = "Jiro"
       }
-      groups = ["dev_admin"]
+      groups = ["prd_admin"]
     }
     # dev
     test-saburo = {
