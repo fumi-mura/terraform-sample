@@ -38,7 +38,7 @@ locals {
     test-saburo = {
       name = {
         family_name = "Test"
-        given_name  = "saburo"
+        given_name  = "Saburo"
       }
       groups = ["dev_admin"]
     }
