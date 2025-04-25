@@ -6,8 +6,8 @@ variable "name" {
   type = string
 }
 
-variable "permission_sets" {
-  description = "Create IIC permission set"
+variable "email" {
+  type = string
 }
 
 variable "users" {
@@ -18,8 +18,8 @@ variable "groups" {
   description = "Create IIC group"
 }
 
-variable "email" {
-  type = string
+variable "permission_sets" {
+  description = "Create IIC permission set"
 }
 
 variable "user_group_membership" {}
