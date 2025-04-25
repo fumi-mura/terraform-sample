@@ -8,20 +8,14 @@ variable "name" {
 
 variable "permission_sets" {
   description = "Create IAM Identity Center permission set"
-  type        = list(string)
-  default     = ["AdministratorAccess", "ReadOnlyAccess"]
 }
 
-variable "create_users" {
+variable "users" {
   description = "Create IAM Identity Center users"
-  type        = list(string)
-  default     = ["Admin", "ReadOnly"]
 }
 
-variable "create_groups" {
+variable "groups" {
   description = "Create IAM Identity Center group"
-  type        = list(string)
-  default     = ["Admin", "ReadOnly"]
 }
 
 variable "email" {
@@ -29,5 +23,8 @@ variable "email" {
 }
 
 variable "account_ids" {
-  type = list(string)
+  type = map(string)
 }
+
+variable "users_groups_membership" {}
+variable "assignment_map" {}

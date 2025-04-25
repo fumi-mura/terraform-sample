@@ -4,3 +4,135 @@ locals {
   env  = "mng"
   name = "fumis-pf"
 }
+
+locals {
+  account_ids = {
+    mng = "${data.aws_caller_identity.current.account_id}",
+    prd = "${module.prod_organizations.member_account_id[0]}",
+    dev = "${module.sdlc_organizations.member_account_id[0]}"
+  }
+
+  ########################
+  # Users
+  ########################
+  users = {
+    "taro.test@example.com" = {
+      name = {
+        family_name = "Test"
+        given_name  = "Taro"
+      }
+      groups = [
+        "mng_admin",
+      ]
+    }
+    "saburo.test@example.com" = {
+      name = {
+        family_name = "Test"
+        given_name  = "Saburo"
+      }
+      groups = [
+        "dev_admin"
+      ]
+    }
+  }
+
+  ########################
+  # Groups
+  ########################
+  groups = {
+    mng_admin = {
+      name        = "mng-Administrator"
+      description = "Administrator"
+    }
+    mng_readonly = {
+      name        = "mng-Readonly"
+      description = "Readonly"
+    }
+    dev_admin = {
+      name        = "dev-Administrator"
+      description = "Administrator"
+    }
+  }
+
+  users_groups_combined = [
+    for user, user_data in local.users : {
+      for group in user_data.groups :
+      "${user}_${group}" => {
+        "user"  = user
+        "group" = group
+      }
+    }
+  ]
+
+  ########################
+  # Membership
+  ########################
+  users_groups_membership = zipmap(
+    flatten(
+      [for item in local.users_groups_combined : keys(item)]
+    ),
+    flatten(
+      [for item in local.users_groups_combined : values(item)]
+    )
+  )
+
+  ########################
+  # Permissions
+  ########################
+  permission_sets = {
+    "admin" = {
+      name               = "AdministratorAccess"
+      description        = "AdministratorAccess"
+      managed_policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+    },
+    "read_only" = {
+      name               = "ReadOnlyAccess"
+      description        = "ReadOnlyAccess"
+      managed_policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
+    }
+  }
+
+  ################################################################################
+  # Account Assignments
+  ################################################################################
+  account_assignments = [
+    # mng
+    {
+      account_id     = local.account_ids.mng
+      group          = "mng_admin"
+      permission_set = "admin"
+    },
+    {
+      account_id     = local.account_ids.mng
+      group          = "mng_readonly"
+      permission_set = "read_only"
+    },
+    # # prd
+    # {
+    #   account_id     = local.account_ids.prd
+    #   group          = "prd_admin"
+    #   permission_set = "admin"
+    # },
+    # {
+    #   account_id     = local.account_ids.prd
+    #   group          = "prd_dev"
+    #   permission_set = "read_only"
+    # },
+    # dev
+    {
+      account_id     = local.account_ids.dev
+      group          = "dev_admin"
+      permission_set = "admin"
+    },
+    # {
+    #   account_id     = local.account_ids.dev
+    #   group          = "dev_dev"
+    #   permission_set = "read_only"
+    # },
+  ]
+
+  assignment_map = {
+    for a in local.account_assignments :
+    format("%v-%v-%v", a.account_id, local.groups[a.group].name, local.permission_sets[a.permission_set].name) => a
+  }
+}
