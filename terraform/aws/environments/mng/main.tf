@@ -76,5 +76,5 @@ module "iam_identity_center" {
   assignment_map          = local.assignment_map
   users_groups_membership = local.users_groups_membership
   email                   = data.aws_ssm_parameter.this.value
-  account_ids = local.account_ids
+  account_ids             = local.account_ids
 }
