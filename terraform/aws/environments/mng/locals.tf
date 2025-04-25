@@ -52,6 +52,7 @@ locals {
   # Groups
   ########################
   groups = {
+    # mng
     mng_admin = {
       name        = "mng-Administrator"
       description = "Administrator"
@@ -60,6 +61,7 @@ locals {
       name        = "mng-Readonly"
       description = "Readonly"
     }
+    # prd
     prd_admin = {
       name        = "prd-Administrator"
       description = "Administrator"
@@ -68,6 +70,7 @@ locals {
       name        = "prd-Readonly"
       description = "Readonly"
     }
+    # dev
     dev_admin = {
       name        = "dev-Administrator"
       description = "Administrator"
