@@ -5,6 +5,7 @@ locals {
   name = "fumis-pf"
 }
 
+# IIC
 locals {
   users = {
     Admin = {
@@ -18,6 +19,14 @@ locals {
         family_name = "ReadOnly"
         given_name  = "ReadOnly"
       }
+    }
+  }
+  groups = {
+    Admin = {
+      name = "Admin"
+    }
+    ReadOnly = {
+      name = "ReadOnly"
     }
   }
 }

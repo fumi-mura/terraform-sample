@@ -2,9 +2,9 @@ data "aws_ssoadmin_instances" "this" {}
 
 # Group
 resource "aws_identitystore_group" "this" {
-  for_each = toset(var.groups)
+  for_each = var.groups
 
-  display_name      = "${var.env}-${var.name}-${each.key}-iam-identity-center-group"
+  display_name      = "${var.env}-${var.name}-${each.value["name"]}-iic-group"
   identity_store_id = tolist(data.aws_ssoadmin_instances.this.identity_store_ids)[0]
 }
 

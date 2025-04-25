@@ -12,8 +12,9 @@ variable "permission_set_arn" {
 
 variable "groups" {
   description = "Create IAM Identity Center group"
-  type        = list(string)
-  default     = ["Admin", "ReadOnly"]
+  type        = map(object({
+    name = string
+  }))
 }
 
 variable "member_id" {
