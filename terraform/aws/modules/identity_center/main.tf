@@ -18,23 +18,23 @@ data "aws_ssoadmin_instances" "this" {}
 # }
 
 # User
-resource "aws_identitystore_user" "this" {
-  for_each = toset(var.create_users)
+# resource "aws_identitystore_user" "this" {
+#   for_each = toset(var.create_users)
 
-  identity_store_id = tolist(data.aws_ssoadmin_instances.this.identity_store_ids)[0]
-  user_name         = each.key # Use signin. can't change after.
-  display_name      = each.key
+#   identity_store_id = tolist(data.aws_ssoadmin_instances.this.identity_store_ids)[0]
+#   user_name         = each.key # Use signin. can't change after.
+#   display_name      = each.key
 
-  name {
-    given_name  = each.key
-    family_name = "user"
-  }
+#   name {
+#     given_name  = each.key
+#     family_name = "user"
+#   }
 
-  emails {
-    value   = "${var.email}+${var.env}-${each.key}@gmail.com"
-    primary = true
-  }
-}
+#   emails {
+#     value   = "${var.email}+${var.env}-${each.key}@gmail.com"
+#     primary = true
+#   }
+# }
 
 # Group
 resource "aws_identitystore_group" "this" {
@@ -46,11 +46,13 @@ resource "aws_identitystore_group" "this" {
 
 # Attach user to group
 resource "aws_identitystore_group_membership" "this" {
-  for_each = aws_identitystore_user.this
+  # for_each = aws_identitystore_user.this
+  for_each = var.member_id
 
   identity_store_id = tolist(data.aws_ssoadmin_instances.this.identity_store_ids)[0]
   group_id          = aws_identitystore_group.this[each.key].group_id
-  member_id         = aws_identitystore_user.this[each.key].user_id
+  # member_id         = aws_identitystore_user.this[each.key].user_id
+  member_id         = each.value
 }
 
 # Apply IAM Identity Center (SSO) settings to each account
@@ -62,7 +64,8 @@ resource "aws_ssoadmin_account_assignment" "this" {
   # permission_set_arn = aws_ssoadmin_permission_set.this["AdministratorAccess"].arn
   permission_set_arn = var.permission_set_arn
   # permission_set_arn = each.value.permission_set_arn
-  principal_id       = aws_identitystore_user.this["Admin"].user_id
+  # principal_id       = aws_identitystore_user.this["Admin"].user_id
+  principal_id       = var.principal_id
   # principal_id       = each.value.principal_id
   principal_type     = "USER"
   target_id          = each.value

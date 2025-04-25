@@ -71,12 +71,24 @@ module "iic_permission_set" {
   ssoadmin_instances_arn = module.iam_identity_center.ssoadmin_instances_arn
 }
 
+module "iic_user" {
+  source = "../../modules/identity_center/user"
+  env    = local.env
+  email  = data.aws_ssm_parameter.this.value
+  ssoadmin_instances_identity_store_ids = module.iam_identity_center.ssoadmin_instances_identity_store_ids
+}
+
 
 module "iam_identity_center" {
   source = "../../modules/identity_center"
   env    = local.env
   name   = local.name
-  email  = data.aws_ssm_parameter.this.value
+  # email  = data.aws_ssm_parameter.this.value
+  member_id = {
+    Admin = module.iic_user.user_id,
+    ReadOnly = module.iic_user.ReadOnly_user_id,
+  }
+  principal_id = module.iic_user.user_id
   account_ids = [
     data.aws_caller_identity.current.account_id,
     module.prod_organizations.member_account_id[0],
