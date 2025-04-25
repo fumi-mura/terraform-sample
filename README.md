@@ -1,4 +1,4 @@
-# This is my infra portfolio
+# This is my Terraform sample
 
 ## System configuration chart
 
@@ -66,7 +66,7 @@ If there are many directories, it may be easier to manage them by creating a int
 ### Resource name
 
 ```sh
-name = {env}-{service_name}-{role}-{resource_name} # ex: dev-fumis-portfolio-oidc-iam-role
+name = {env}-{service_name}-{role}-{resource_name} # ex: dev-fumis-pf-oidc-iam-role
 ```
 
 ### Module user side name
@@ -109,7 +109,7 @@ module "{role}_{resource_name}" # ex: module "oidc_iam_role"
 ### TFLint
 
 ```sh
-infra_portfolio $ tflint --recursive --format compact
+terraform-sample $ tflint --recursive --format compact
 # The error below appears in the module. Ignore it ok because it is specified on the use side. (Even if set the disable setting in tflint.hcl, the error appears...)
 # terraform_required_providers, terraform_required_version
 ```

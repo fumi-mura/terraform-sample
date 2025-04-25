@@ -25,7 +25,7 @@ module "oidc_iam_role" {
           test     = "StringLike"
           variable = "token.actions.githubusercontent.com:sub"
           values = [
-            "repo:fumi-mura/infra_portfolio:*",
+            "repo:fumi-mura/terraform-sample:*",
           ]
       }]
     }
