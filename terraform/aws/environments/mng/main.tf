@@ -67,14 +67,14 @@ module "sdlc_organizations" {
 
 # IAM Identity Center
 module "iam_identity_center" {
-  source                  = "../../modules/identity_center"
-  env                     = local.env
-  name                    = local.name
-  users                   = local.users
-  groups                  = local.groups
-  permission_sets         = local.permission_sets
-  assignment_map          = local.assignment_map
-  user_group_membership   = local.user_group_membership
-  email                   = data.aws_ssm_parameter.this.value
-  account_ids             = local.account_ids
+  source                = "../../modules/identity_center"
+  env                   = local.env
+  name                  = local.name
+  users                 = local.users
+  groups                = local.groups
+  permission_sets       = local.permission_sets
+  assignment_map        = local.assignment_map
+  user_group_membership = local.user_group_membership
+  email                 = data.aws_ssm_parameter.this.value
+  account_ids           = local.account_ids
 }
