@@ -10,7 +10,7 @@ variable "permission_set_arn" {
 
 }
 
-variable "create_groups" {
+variable "groups" {
   description = "Create IAM Identity Center group"
   type        = list(string)
   default     = ["Admin", "ReadOnly"]
