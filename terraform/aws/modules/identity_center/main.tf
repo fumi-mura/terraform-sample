@@ -19,7 +19,7 @@ data "aws_ssoadmin_instances" "this" {}
 
 # User
 # resource "aws_identitystore_user" "this" {
-#   for_each = toset(var.create_users)
+#   for_each = toset(var.users)
 
 #   identity_store_id = tolist(data.aws_ssoadmin_instances.this.identity_store_ids)[0]
 #   user_name         = each.key # Use signin. can't change after.

@@ -16,7 +16,7 @@ variable "permission_set_arn" {
 
 }
 
-# variable "create_users" {
+# variable "users" {
 #   description = "Create IAM Identity Center users"
 #   type        = list(string)
 #   default     = ["Admin", "ReadOnly"]
