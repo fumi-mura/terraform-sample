@@ -17,10 +17,10 @@ locals {
   ########################
   users = {
     # mng
-    test-taro = {
+    test-ichiro = {
       name = {
         family_name = "Test"
-        given_name  = "Taro"
+        given_name  = "Ichiro"
       }
       groups = [
         "mng_admin",
@@ -30,7 +30,7 @@ locals {
     test-saburo = {
       name = {
         family_name = "Test"
-        given_name  = "Saburo"
+        given_name  = "saburo"
       }
       groups = [
         "dev_admin"
