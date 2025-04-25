@@ -11,15 +11,26 @@ variable "email" {
 }
 
 variable "users" {
-  description = "Create IIC users"
+  type = map(object({
+    name = object({
+      family_name = string
+      given_name  = string
+    })
+    groups = list(string)
+  }))
+  description = "Create iic users"
 }
 
 variable "groups" {
-  description = "Create IIC group"
+  type = map(object({
+    name = string
+    description = string
+  }))
+  description = "Create iic group"
 }
 
 variable "permission_sets" {
-  description = "Create IIC permission set"
+  description = "Create iic permission set"
 }
 
 variable "user_group_membership" {}
