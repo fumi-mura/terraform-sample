@@ -53,7 +53,7 @@ resource "aws_identitystore_group_membership" "this" {
   member_id         = aws_identitystore_user.this[each.value["user"]].user_id
 }
 
-# Apply IAM Identity Center (SSO) settings to each account
+# Apply IIC settings to each account
 resource "aws_ssoadmin_account_assignment" "this" {
   for_each = var.assignment_map
 

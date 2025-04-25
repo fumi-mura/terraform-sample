@@ -84,8 +84,8 @@ module "{role}_{resource_name}" # ex: module "oidc_iam_role"
 - AWS Organizations
   - Enable Organizations
   - Terraform not yet supported
-- IAM Identity Center
-  - Enable IAM Identity Center
+- IIC
+  - Enable IIC
   - Enable sent OTP when Create UserAPI
   - Enable mfa
   - Sent verify Email(success sent email when manual make user...?)

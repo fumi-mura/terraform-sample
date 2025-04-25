@@ -65,9 +65,9 @@ module "sdlc_organizations" {
   ou_name       = "sdlc"
 }
 
-# IAM Identity Center
+# IIC
 module "iam_identity_center" {
-  source                = "../../modules/identity_center"
+  source                = "../../modules/iic"
   env                   = local.env
   name                  = local.name
   users                 = local.users

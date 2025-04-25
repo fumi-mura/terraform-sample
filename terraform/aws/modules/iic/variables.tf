@@ -7,15 +7,15 @@ variable "name" {
 }
 
 variable "permission_sets" {
-  description = "Create IAM Identity Center permission set"
+  description = "Create IIC permission set"
 }
 
 variable "users" {
-  description = "Create IAM Identity Center users"
+  description = "Create IIC users"
 }
 
 variable "groups" {
-  description = "Create IAM Identity Center group"
+  description = "Create IIC group"
 }
 
 variable "email" {
