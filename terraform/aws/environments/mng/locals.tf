@@ -7,9 +7,9 @@ locals {
 
 locals {
   account_ids = {
-    mng = "${data.aws_caller_identity.current.account_id}",
-    prd = "${module.prod_organizations.member_account_id[0]}",
-    dev = "${module.sdlc_organizations.member_account_id[0]}"
+    mng = data.aws_caller_identity.current.account_id,
+    prd = module.prod_organizations.member_account_id[0],
+    dev = module.sdlc_organizations.member_account_id[0]
   }
 
   # Users
