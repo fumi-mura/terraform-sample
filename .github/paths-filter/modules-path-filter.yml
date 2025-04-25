@@ -6,8 +6,8 @@ ec2:
   - terraform/aws/modules/ec2/**
 iam:
   - terraform/aws/modules/iam/**
-identity_center:
-  - terraform/aws/modules/identity_center/**
+iic:
+  - terraform/aws/modules/iic/**
 kms:
   - terraform/aws/modules/kms/**
 lambda:

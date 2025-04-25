@@ -65,15 +65,15 @@ module "sdlc_organizations" {
   ou_name       = "sdlc"
 }
 
-# IAM Identity Center
+# IIC
 module "iam_identity_center" {
-  source = "../../modules/identity_center"
-  env    = local.env
-  name   = local.name
-  email  = data.aws_ssm_parameter.this.value
-  account_ids = [
-    data.aws_caller_identity.current.account_id,
-    module.prod_organizations.member_account_id[0],
-    module.sdlc_organizations.member_account_id[0]
-  ]
+  source                = "../../modules/iic"
+  env                   = local.env
+  name                  = local.name
+  email                 = data.aws_ssm_parameter.this.value
+  users                 = local.users
+  groups                = local.groups
+  user_group_membership = local.user_group_membership
+  permission_sets       = local.permission_sets
+  assignment_map        = local.assignment_map
 }
