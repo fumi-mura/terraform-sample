@@ -15,8 +15,8 @@ locals {
   ########################
   # Users
   ########################
-  # mng
   users = {
+    # mng
     "test-taro" = {
       name = {
         family_name = "Test"
