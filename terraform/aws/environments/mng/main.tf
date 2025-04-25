@@ -75,7 +75,7 @@ module "iic_user" {
   source = "../../modules/identity_center/user"
   env    = local.env
   email  = data.aws_ssm_parameter.this.value
-  ssoadmin_instances_identity_store_ids = module.iam_identity_center.ssoadmin_instances_identity_store_ids
+  identity_store_id = module.iam_identity_center.identity_store_id
 }
 
 

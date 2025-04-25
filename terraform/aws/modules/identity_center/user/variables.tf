@@ -12,6 +12,6 @@ variable "env" {
   type = string
 }
 
-variable "ssoadmin_instances_identity_store_ids" {
+variable "identity_store_id" {
   type = string
 }

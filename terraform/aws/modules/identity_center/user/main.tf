@@ -1,7 +1,7 @@
 resource "aws_identitystore_user" "this" {
   for_each = toset(var.users)
 
-  identity_store_id = var.ssoadmin_instances_identity_store_ids
+  identity_store_id = var.identity_store_id
   user_name         = each.key # Use signin. can't change after.
   display_name      = each.key
 
