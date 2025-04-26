@@ -79,8 +79,8 @@ locals {
     for user, user_data in local.users : {
       for group in user_data.groups :
       "${user}_${group}" => {
-        "user"  = user
-        "group" = group
+        user  = user
+        group = group
       }
     }
   ]
