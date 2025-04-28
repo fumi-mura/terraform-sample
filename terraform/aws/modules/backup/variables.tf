@@ -10,10 +10,6 @@ variable "vault_name" {
   type = string
 }
 
-variable "account_id" {
-  type = string
-}
-
 variable "selection_name" {
   type = string
 }
