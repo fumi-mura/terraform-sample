@@ -50,7 +50,7 @@ module "test_1_cwlogs" {
   cwlogs_name = "test-1"
 }
 
-module "test_2_cwlogs" {
+module "test_3_cwlogs" {
   source      = "../../modules/cloudwatch/log"
-  cwlogs_name = "test-2"
+  cwlogs_name = "test-3"
 }
