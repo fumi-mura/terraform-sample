@@ -8,6 +8,9 @@
 # Exclude all .tfvars files
 *.tfvars
 
+# Build artifact
+terraform/aws/environments/*/payload
+
 # Local settings
 **/.vscode/*
 **/.envrc
