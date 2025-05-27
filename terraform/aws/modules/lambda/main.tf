@@ -16,7 +16,7 @@ resource "aws_lambda_function" "this" {
   layers           = var.layers
 
   dynamic "environment" {
-    for_each = length(keys(var.environment_variables)) == 0 ? 0 : 1
+    for_each = length(keys(var.environment_variables)) == 0 ? [] : [true]
     content {
       variables = var.environment_variables
     }
