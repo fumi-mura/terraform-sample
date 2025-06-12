@@ -35,7 +35,7 @@ resource "aws_vpc_security_group_egress_rule" "this" {
   ip_protocol                  = each.value.ip_protocol
   cidr_ipv4                    = each.value.cidr_ipv4
   cidr_ipv6                    = each.value.cidr_ipv6
-  prefix_list_id               = each.value.prefix_list_ids
+  prefix_list_id               = each.value.prefix_list_id
   description                  = each.value.description
 
   tags = {
