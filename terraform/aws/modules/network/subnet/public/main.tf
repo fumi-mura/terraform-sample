@@ -20,6 +20,7 @@ resource "aws_route_table" "public" {
     for_each = var.public_route_map
     content {
       cidr_block         = route.value.cidr_block
+      gateway_id         = route.value.gateway_id
       nat_gateway_id     = route.value.nat_gateway_id
       vpc_endpoint_id    = route.value.vpc_endpoint_id
       transit_gateway_id = route.value.transit_gateway_id
