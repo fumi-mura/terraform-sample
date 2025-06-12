@@ -45,16 +45,6 @@ module "oidc_iam_policy" {
   }
 }
 
-module "test_1_cwlogs" {
-  source      = "../../modules/cloudwatch/log"
-  cwlogs_name = "test-1"
-}
-
-module "test_3_cwlogs" {
-  source      = "../../modules/cloudwatch/log"
-  cwlogs_name = "test-3"
-}
-
 # VPC
 module "vpc" {
   source   = "../../modules/network/vpc"
