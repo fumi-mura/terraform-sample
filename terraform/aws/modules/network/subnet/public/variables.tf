@@ -16,6 +16,7 @@ variable "public_subnets" {
 variable "public_route_map" {
   type = map(object({
     cidr_block         = string
+    gateway_id         = string
     nat_gateway_id     = string
     vpc_endpoint_id    = string
     transit_gateway_id = string
