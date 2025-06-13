@@ -11,6 +11,9 @@
 # Build artifact
 terraform/aws/environments/*/payload
 
+# Pluralith
+*.pluralith
+
 # Local settings
 **/.vscode/*
 **/.envrc
