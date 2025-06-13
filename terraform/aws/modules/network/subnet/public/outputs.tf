@@ -1,15 +1,11 @@
-output "cidr_block_a" {
-  value = aws_subnet.public["a"].cidr_block
+output "public_subnet_ids" {
+  value = {
+    for k, v in aws_subnet.public : k => v.id
+  }
 }
 
-output "cidr_block_c" {
-  value = aws_subnet.public["c"].cidr_block
-}
-
-output "subnet_id_a" {
-  value = aws_subnet.public["a"].id
-}
-
-output "subnet_id_c" {
-  value = aws_subnet.public["c"].id
+output "public_subnet_cidr_blocks" {
+  value = {
+    for k, v in aws_subnet.public : k => v.cidr_block
+  }
 }
