@@ -14,9 +14,10 @@ runs:
     # https://github.com/slackapi/slack-github-action
 
     - name: Send initial Slack message
-      id: slack_notify
       uses: slackapi/slack-github-action@v2.1.0
+      id: deployment_message
       with:
+        method: chat.postMessage
         payload: |
           {
             "text": ":rocket: Terraformチェックが開始されました。",
@@ -37,7 +38,7 @@ runs:
         webhook-type: incoming-webhook
         payload: |
             {
-              "thread_ts": "${{ steps.slack_notify.outputs.ts }}",
+              "thread_ts": "${{ steps.deployment_message.outputs.ts }}",
               "blocks": [
                 {
                   "type": "section",
