@@ -22,7 +22,8 @@ runs:
             "text": ":rocket: Terraformチェックが開始されました。",
             "unfurl_links": false
           }
-        webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        webhook: ${{ inputs.slack_webhook_url }}
+        webhook-type: incoming-webhook
 
     - name: Send GitHub Action trigger data to Slack workflow
       uses: slackapi/slack-github-action@v2.1.0
