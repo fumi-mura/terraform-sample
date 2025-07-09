@@ -100,35 +100,35 @@ jobs:
         with:
           slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-      - name: Notify Slack
-        uses: slackapi/slack-github-action@v2.0.0
-        env:
-          STATUS_ICON: ${{ job.status == 'success' && ':white_check_mark:' || ':x:' }}
-          STATUS_TEXT: ${{ job.status == 'success' && '成功' || '失敗' }}
-          DEPLOY_STATUS: ${{ job.status == 'success' && 'CDKデプロイが完了しました！' || 'CDKデプロイに失敗しました。' }}
-          COMMIT_URL: ${{ github.event.pull_request.html_url || github.event.head_commit.url }}
-        with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            {
-              "text": "${{ env.STATUS_ICON }} *${{ env.STATUS_TEXT }}*: ${{ env.DEPLOY_STATUS }}",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "${{ env.STATUS_ICON }} *${{ env.STATUS_TEXT }}*: ${{ env.DEPLOY_STATUS }}\n*実行者*: ${{ github.actor }}\n*ブランチ*: ${{ github.ref_name }}\n*コミットメッセージ*: ${{ github.event.head_commit.message }}"
-                  }
-                },
-                {
-                  "type": "context",
-                  "elements": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "<${{ env.COMMIT_URL }}|詳細を確認する>"
-                    }
-                  ]
-                }
-              ]
-            }
+      # - name: Notify Slack
+      #   uses: slackapi/slack-github-action@v2.0.0
+      #   env:
+      #     STATUS_ICON: ${{ job.status == 'success' && ':white_check_mark:' || ':x:' }}
+      #     STATUS_TEXT: ${{ job.status == 'success' && '成功' || '失敗' }}
+      #     DEPLOY_STATUS: ${{ job.status == 'success' && 'CDKデプロイが完了しました！' || 'CDKデプロイに失敗しました。' }}
+      #     COMMIT_URL: ${{ github.event.pull_request.html_url || github.event.head_commit.url }}
+      #   with:
+      #     webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #     webhook-type: incoming-webhook
+      #     payload: |
+      #       {
+      #         "text": "${{ env.STATUS_ICON }} *${{ env.STATUS_TEXT }}*: ${{ env.DEPLOY_STATUS }}",
+      #         "blocks": [
+      #           {
+      #             "type": "section",
+      #             "text": {
+      #               "type": "mrkdwn",
+      #               "text": "${{ env.STATUS_ICON }} *${{ env.STATUS_TEXT }}*: ${{ env.DEPLOY_STATUS }}\n*実行者*: ${{ github.actor }}\n*ブランチ*: ${{ github.ref_name }}\n*コミットメッセージ*: ${{ github.event.head_commit.message }}"
+      #             }
+      #           },
+      #           {
+      #             "type": "context",
+      #             "elements": [
+      #               {
+      #                 "type": "mrkdwn",
+      #                 "text": "<${{ env.COMMIT_URL }}|詳細を確認する>"
+      #               }
+      #             ]
+      #           }
+      #         ]
+      #       }

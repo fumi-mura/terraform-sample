@@ -24,23 +24,23 @@ runs:
         webhook-type: incoming-webhook
         payload: |
             {
-              # "text": "test",
-              # "blocks": [
-              #   {
-              #     "type": "section",
-              #     "text": {
-              #       "type": "mrkdwn",
-              #       "text": "ビルド結果: test"
-              #     }
-              #   },
-              #   {
-              #     "type": "context",
-              #     "elements": [
-              #       {
-              #         "type": "mrkdwn",
-              #         "text": "Author: test"
-              #       }
-              #     ]
-              #   }
-              # ]
+              "text": "test",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "ビルド結果: test"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "Author: test"
+                    }
+                  ]
+                }
+              ]
             }
