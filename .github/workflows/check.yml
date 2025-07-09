@@ -94,16 +94,8 @@ jobs:
         uses: ./.github/actions/notify_slack
         with:
           slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
-  
-  notify_slack_official:
-    needs: [detect, envs-ci, modules-ci]
-    if: always() && !cancelled()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
 
-      - name: Notify slack
+      - name: Notify slack official
         uses: ./.github/actions/slack_webhook
         with:
           slack_webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
