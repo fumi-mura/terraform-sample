@@ -25,7 +25,7 @@ runs:
         webhook: ${{ inputs.slack_webhook_url }}
         webhook-type: incoming-webhook
 
-    - name: Send GitHub Action trigger data to Slack workflow
+    - name: Send threads
       uses: slackapi/slack-github-action@v2.1.0
       # env:
       #     STATUS_ICON: ${{ job.status == 'success' && ':white_check_mark:' || ':x:' }}
