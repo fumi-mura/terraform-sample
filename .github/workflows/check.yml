@@ -99,3 +99,22 @@ jobs:
         uses: ./.github/actions/slack_webhook
         with:
           slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Initiate a deployment
+        uses: slackapi/slack-github-action@v2.1.0
+        id: deployment_message
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: ${{ secrets.SLACK_CHANNEL_ID }}
+            text: "Deployment started :eyes:"
+      - name: Conclude the deployment
+        uses: slackapi/slack-github-action@v2.1.0
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: ${{ secrets.SLACK_CHANNEL_ID }}
+            thread_ts: "${{ steps.deployment_message.outputs.ts }}"
+            text: "Deployment finished! :rocket:"
