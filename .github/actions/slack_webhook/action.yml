@@ -21,7 +21,7 @@ runs:
       #     DEPLOY_STATUS: ${{ job.status == 'success' && 'CDKデプロイが完了しました！' || 'CDKデプロイに失敗しました。' }}
       #     COMMIT_URL: ${{ github.event.pull_request.html_url || github.event.head_commit.url }}
       with:
-        webhook: ${{ inputs.SLACK_WEBHOOK_URL }}
+        webhook: ${{ inputs.slack_webhook_url }}
         webhook-type: incoming-webhook
         payload: |
             {
