@@ -95,10 +95,10 @@ jobs:
       #   with:
       #     slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
 
-      - name: Notify slack official
-        uses: ./.github/actions/slack_webhook
-        with:
-          slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+      # - name: Notify slack official
+      #   uses: ./.github/actions/slack_webhook
+      #   with:
+      #     slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Initiate a deployment
         uses: slackapi/slack-github-action@v2.1.0
