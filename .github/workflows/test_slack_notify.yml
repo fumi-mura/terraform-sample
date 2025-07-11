@@ -50,7 +50,7 @@ jobs:
       - name: Save thread_ts to file
         if: steps.read_thread.outputs.thread_ts == ''
         run: |
-          echo "${{ steps.slack_post.outputs.ts }}" > thread_ts.txt
+          echo "${{ steps.deployment_message.outputs.ts }}" > thread_ts.txt
 
       - name: Upload thread_ts as artifact
         if: steps.read_thread.outputs.thread_ts == ''
@@ -68,6 +68,6 @@ jobs:
           payload: |
             {
               channel: ${{ secrets.SLACK_CHANNEL_ID }},
-              thread_ts: "${{ steps.read_thread.outputs.thread_ts || steps.slack_post.outputs.ts }}",
+              thread_ts: "${{ steps.read_thread.outputs.thread_ts || steps.deployment_message.outputs.ts }}",
               text: ":white_check_mark: GitHub Actions が実行されました（成功 or 失敗）"
             }
