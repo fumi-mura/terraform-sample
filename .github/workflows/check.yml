@@ -118,3 +118,4 @@ jobs:
             channel: ${{ secrets.SLACK_CHANNEL_ID }}
             thread_ts: "${{ steps.deployment_message.outputs.ts }}"
             text: "Deployment finished! :rocket:"
+ 
