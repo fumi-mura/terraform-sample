@@ -38,6 +38,7 @@ jobs:
         if: steps.read_thread.outputs.thread_ts == ''
         uses: slackapi/slack-github-action@v2.1.0
         with:
+          method: chat.postMessage
           payload: |
             {
               "channel": "#cicd_notify",
@@ -63,6 +64,7 @@ jobs:
       - name: Post Slack thread reply
         uses: slackapi/slack-github-action@v2.1.0
         with:
+          method: chat.postMessage
           payload: |
             {
               "channel": "#cicd_notify",
