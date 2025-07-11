@@ -40,7 +40,7 @@ jobs:
         with:
           payload: |
             {
-              "channel": "#ci-cd-notify",
+              "channel": "#cicd_notify",
               "text": ":sparkles: PR #${{ github.event.pull_request.number }} が更新されました！"
             }
         env:
@@ -65,7 +65,7 @@ jobs:
         with:
           payload: |
             {
-              "channel": "#ci-cd-notify",
+              "channel": "#cicd_notify",
               "thread_ts": "${{ steps.read_thread.outputs.thread_ts || steps.slack_post.outputs.ts }}",
               "text": ":white_check_mark: GitHub Actions が実行されました（成功 or 失敗）"
             }
