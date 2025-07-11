@@ -1,0 +1,73 @@
+name: Notify Slack with Thread per PR
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+  workflow_run:
+    workflows: ["CI"]  # 任意のWorkflow名
+    types:
+      - completed
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ↓ artifacts から thread_ts を読み込む
+      - name: Try to download thread_ts artifact
+        id: download
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: slack-thread-ts-${{ github.event.pull_request.number }}
+
+      - name: Read thread_ts if exists
+        id: read_thread
+        if: steps.download.outputs.download-path != ''
+        run: |
+          if [[ -f "thread_ts.txt" ]]; then
+            echo "thread_ts=$(cat thread_ts.txt)" >> "$GITHUB_OUTPUT"
+          fi
+
+      # ↓ thread_ts が存在しなければ新しくSlackに投稿（親メッセージ）
+      - name: Post to Slack (initial or fallback)
+        id: slack_post
+        if: steps.read_thread.outputs.thread_ts == ''
+        uses: slackapi/slack-github-action@v2.1.0
+        with:
+          payload: |
+            {
+              "channel": "#ci-cd-notify",
+              "text": ":sparkles: PR #${{ github.event.pull_request.number }} が更新されました！"
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+      # ↓ thread_ts を保存（初回 or fallback のみ）
+      - name: Save thread_ts to file
+        if: steps.read_thread.outputs.thread_ts == ''
+        run: |
+          echo "${{ steps.slack_post.outputs.ts }}" > thread_ts.txt
+
+      - name: Upload thread_ts as artifact
+        if: steps.read_thread.outputs.thread_ts == ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: slack-thread-ts-${{ github.event.pull_request.number }}
+          path: thread_ts.txt
+
+      # ↓ スレッドに返信
+      - name: Post Slack thread reply
+        uses: slackapi/slack-github-action@v2.1.0
+        with:
+          payload: |
+            {
+              "channel": "#ci-cd-notify",
+              "thread_ts": "${{ steps.read_thread.outputs.thread_ts || steps.slack_post.outputs.ts }}",
+              "text": ":white_check_mark: GitHub Actions が実行されました（成功 or 失敗）"
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
