@@ -47,29 +47,29 @@ jobs:
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
-      # ↓ thread_ts を保存（初回 or fallback のみ）
-      - name: Save thread_ts to file
-        if: steps.read_thread.outputs.thread_ts == ''
-        run: |
-          echo "${{ steps.slack_post.outputs.ts }}" > thread_ts.txt
+      # # ↓ thread_ts を保存（初回 or fallback のみ）
+      # - name: Save thread_ts to file
+      #   if: steps.read_thread.outputs.thread_ts == ''
+      #   run: |
+      #     echo "${{ steps.slack_post.outputs.ts }}" > thread_ts.txt
 
-      - name: Upload thread_ts as artifact
-        if: steps.read_thread.outputs.thread_ts == ''
-        uses: actions/upload-artifact@v4
-        with:
-          name: slack-thread-ts-${{ github.event.pull_request.number }}
-          path: thread_ts.txt
+      # - name: Upload thread_ts as artifact
+      #   if: steps.read_thread.outputs.thread_ts == ''
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: slack-thread-ts-${{ github.event.pull_request.number }}
+      #     path: thread_ts.txt
 
-      # ↓ スレッドに返信
-      - name: Post Slack thread reply
-        uses: slackapi/slack-github-action@v2.1.0
-        with:
-          method: chat.postMessage
-          payload: |
-            {
-              "channel": "#cicd_notify",
-              "thread_ts": "${{ steps.read_thread.outputs.thread_ts || steps.slack_post.outputs.ts }}",
-              "text": ":white_check_mark: GitHub Actions が実行されました（成功 or 失敗）"
-            }
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      # # ↓ スレッドに返信
+      # - name: Post Slack thread reply
+      #   uses: slackapi/slack-github-action@v2.1.0
+      #   with:
+      #     method: chat.postMessage
+      #     payload: |
+      #       {
+      #         "channel": "#cicd_notify",
+      #         "thread_ts": "${{ steps.read_thread.outputs.thread_ts || steps.slack_post.outputs.ts }}",
+      #         "text": ":white_check_mark: GitHub Actions が実行されました（成功 or 失敗）"
+      #       }
+      #   env:
+      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
