@@ -90,10 +90,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # - name: Notify slack
-      #   uses: ./.github/actions/notify_slack
-      #   with:
-      #     slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
+      - name: Notify slack
+        uses: ./.github/actions/notify_slack
+        with:
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
 
       # - name: Notify slack official
       #   uses: ./.github/actions/slack_webhook
