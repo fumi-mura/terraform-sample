@@ -34,18 +34,17 @@ jobs:
 
       # ↓ thread_ts が存在しなければ新しくSlackに投稿（親メッセージ）
       - name: Post to Slack (initial or fallback)
-        id: slack_post
+        id: deployment_message
         if: steps.read_thread.outputs.thread_ts == ''
         uses: slackapi/slack-github-action@v2.1.0
         with:
           method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
           payload: |
             {
-              "channel": "#cicd_notify",
+              channel: ${{ secrets.SLACK_CHANNEL_ID }},
               "text": ":sparkles: PR #${{ github.event.pull_request.number }} が更新されました！"
             }
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
       # # ↓ thread_ts を保存（初回 or fallback のみ）
       # - name: Save thread_ts to file
