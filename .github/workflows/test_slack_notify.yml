@@ -23,15 +23,15 @@ jobs:
         run: |
           gist_id="${{ secrets.SLACK_THREADS_GIST_ID }}"
           filename="pr-${{ github.event.pull_request.number }}.txt"
-
+          
           response=$(curl -s \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/gists/$gist_id")
-
+          
           thread_ts=$(echo "$response" | jq -r --arg filename "$filename" \
             '.files[$filename].content // empty')
-
+          
           if [[ -n "$thread_ts" ]]; then
             echo "$thread_ts" > thread_ts.txt
             echo "download-path=." >> "$GITHUB_OUTPUT"
@@ -42,7 +42,9 @@ jobs:
         if: steps.download.outputs.download-path != ''
         run: |
           if [[ -f "thread_ts.txt" ]]; then
-            echo "thread_ts=$(cat thread_ts.txt)" >> "$GITHUB_OUTPUT"
+            thread_ts=$(cat thread_ts.txt)
+            echo "thread_ts=$thread_ts" >> "$GITHUB_OUTPUT"
+            echo "Read thread_ts from file: $thread_ts"
           fi
 
       # ↓ thread_ts が存在しなければ新しくSlackに投稿（親メッセージ）
@@ -55,8 +57,8 @@ jobs:
           token: ${{ secrets.SLACK_BOT_TOKEN }}
           payload: |
             {
-              channel: ${{ secrets.SLACK_CHANNEL_ID }},
-              text: ":sparkles: PR #${{ github.event.pull_request.number }} が更新されました！"
+              "channel": "${{ secrets.SLACK_CHANNEL_ID }}",
+              "text": ":sparkles: PR #${{ github.event.pull_request.number }} が更新されました！"
             }
 
       # ↓ thread_ts を保存（初回 or fallback のみ）
@@ -71,7 +73,7 @@ jobs:
           gist_id="${{ secrets.SLACK_THREADS_GIST_ID }}"
           filename="pr-${{ github.event.pull_request.number }}.txt"
           thread_ts="${{ steps.deployment_message.outputs.ts }}"
-
+          
           curl -X PATCH \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
@@ -92,7 +94,7 @@ jobs:
           token: ${{ secrets.SLACK_BOT_TOKEN }}
           payload: |
             {
-              channel: ${{ secrets.SLACK_CHANNEL_ID }},
-              thread_ts: "${{ steps.read_thread.outputs.thread_ts || steps.deployment_message.outputs.ts }}",
-              text: ":white_check_mark: GitHub Actions が実行されました（成功 or 失敗）"
+              "channel": "${{ secrets.SLACK_CHANNEL_ID }}",
+              "thread_ts": "${{ steps.read_thread.outputs.thread_ts || steps.deployment_message.outputs.ts }}",
+              "text": ":white_check_mark: GitHub Actions が実行されました（成功 or 失敗）"
             }
