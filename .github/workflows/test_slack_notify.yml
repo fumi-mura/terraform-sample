@@ -39,7 +39,7 @@ jobs:
 
       - name: Read thread_ts if exists
         id: read_thread
-        if: steps.download.outputs.download-path != ''
+        # if: steps.download.outputs.download-path != ''
         run: |
           if [[ -f "thread_ts.txt" ]]; then
             thread_ts=$(cat thread_ts.txt)
