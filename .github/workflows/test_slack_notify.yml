@@ -65,7 +65,8 @@ jobs:
           filename="pr-${{ github.event.pull_request.number }}.txt"
           thread_ts="${{ steps.slack_post.outputs.ts }}"
 
-          curl -X PATCH \
+          echo "Saving thread_ts to Gist..."
+          curl -v -X PATCH \
             -H "Authorization: token ${{ steps.app_token.outputs.token }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/gists/$gist_id" \
