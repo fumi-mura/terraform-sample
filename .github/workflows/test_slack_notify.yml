@@ -1,13 +1,9 @@
-name: Notify Slack with Thread per PR
+name: Notify Slack with Thread per PR (via GitHub App token)
 
 on:
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened]
-  workflow_run:
-    workflows: ["CI"]  # 任意のWorkflow名
-    types:
-      - completed
 
 jobs:
   notify:
@@ -16,16 +12,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ↓ Gistから thread_ts を読み込む
-      - name: Try to get thread_ts from Gist
-        id: download
-        continue-on-error: true
+      # 1. GitHub App Token を取得
+      - name: Create GitHub App token
+        id: app_token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.TERRAFORM_GITHUB_APP_ID }}
+          private-key: ${{ secrets.TERRAFORM_GITHUB_PRIVATE_KEY }}
+
+      # 2. Gist から thread_ts を取得
+      - name: Get thread_ts from Gist
+        id: read_thread
         run: |
           gist_id="${{ secrets.SLACK_THREADS_GIST_ID }}"
           filename="pr-${{ github.event.pull_request.number }}.txt"
           
           response=$(curl -s \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Authorization: token ${{ steps.app_token.outputs.token }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/gists/$gist_id")
           
@@ -33,49 +36,34 @@ jobs:
             '.files[$filename].content // empty')
           
           if [[ -n "$thread_ts" ]]; then
-            echo "$thread_ts" > thread_ts.txt
-            echo "download-path=." >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Read thread_ts if exists
-        id: read_thread
-        # if: steps.download.outputs.download-path != ''
-        run: |
-          if [[ -f "thread_ts.txt" ]]; then
-            thread_ts=$(cat thread_ts.txt)
             echo "thread_ts=$thread_ts" >> "$GITHUB_OUTPUT"
-            echo "Read thread_ts from file: $thread_ts"
+            echo "Found existing thread_ts: $thread_ts"
+          else
+            echo "thread_ts=" >> "$GITHUB_OUTPUT"
           fi
 
-      # ↓ thread_ts が存在しなければ新しくSlackに投稿（親メッセージ）
-      - name: Post to Slack (initial or fallback)
-        id: deployment_message
+      # 3. thread_ts がない場合は Slack に新規投稿
+      - name: Post to Slack (initial message)
+        id: slack_post
         if: steps.read_thread.outputs.thread_ts == ''
         uses: slackapi/slack-github-action@v2.1.0
         with:
           method: chat.postMessage
-          token: ${{ secrets.SLACK_BOT_TOKEN }}
-          payload: |
-            {
-              "channel": "${{ secrets.SLACK_CHANNEL_ID }}",
-              "text": ":sparkles: PR #${{ github.event.pull_request.number }} が更新されました！"
-            }
+          channel: ${{ secrets.SLACK_CHANNEL_ID }}
+          text: ":sparkles: PR #${{ github.event.pull_request.number }} が更新されました！"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
-      # ↓ thread_ts を保存（初回 or fallback のみ）
-      - name: Save thread_ts to file
-        if: steps.read_thread.outputs.thread_ts == ''
-        run: |
-          echo "${{ steps.deployment_message.outputs.ts }}" > thread_ts.txt
-
-      - name: Upload thread_ts to Gist
+      # 4. thread_ts を Gist に保存（新規メッセージのときのみ）
+      - name: Save thread_ts to Gist
         if: steps.read_thread.outputs.thread_ts == ''
         run: |
           gist_id="${{ secrets.SLACK_THREADS_GIST_ID }}"
           filename="pr-${{ github.event.pull_request.number }}.txt"
-          thread_ts="${{ steps.deployment_message.outputs.ts }}"
-          
+          thread_ts="${{ steps.slack_post.outputs.ts }}"
+
           curl -X PATCH \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Authorization: token ${{ steps.app_token.outputs.token }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/gists/$gist_id" \
             -d "{
@@ -86,15 +74,13 @@ jobs:
               }
             }"
 
-      # ↓ スレッドに返信
-      - name: Post Slack thread reply
+      # 5. Slack スレッドに返信
+      - name: Post to Slack thread
         uses: slackapi/slack-github-action@v2.1.0
         with:
           method: chat.postMessage
-          token: ${{ secrets.SLACK_BOT_TOKEN }}
-          payload: |
-            {
-              "channel": "${{ secrets.SLACK_CHANNEL_ID }}",
-              "thread_ts": "${{ steps.read_thread.outputs.thread_ts || steps.deployment_message.outputs.ts }}",
-              "text": ":white_check_mark: GitHub Actions が実行されました（成功 or 失敗）"
-            }
+          channel: ${{ secrets.SLACK_CHANNEL_ID }}
+          thread_ts: "${{ steps.read_thread.outputs.thread_ts || steps.slack_post.outputs.ts }}"
+          text: ":white_check_mark: GitHub Actions 実行完了 :rocket:"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
