@@ -1,4 +1,4 @@
-name: Notify Slack with Thread per PR (via GitHub App token)
+name: Notify Slack with Thread per PR (via PAT)
 
 on:
   pull_request:
@@ -12,29 +12,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 1. GitHub App Token を取得
-      - name: Create GitHub App token
-        id: app_token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.TERRAFORM_GITHUB_APP_ID }}
-          private-key: ${{ secrets.TERRAFORM_GITHUB_PRIVATE_KEY }}
-
-      # 2. Gist から thread_ts を取得
+      # 1. Gist から thread_ts を取得
       - name: Get thread_ts from Gist
         id: read_thread
         run: |
           gist_id="${{ secrets.SLACK_THREADS_GIST_ID }}"
           filename="pr-${{ github.event.pull_request.number }}.txt"
-          
+
           response=$(curl -s \
-            -H "Authorization: token ${{ steps.app_token.outputs.token }}" \
+            -H "Authorization: token ${{ secrets.TERRAFORM_GITHUB_PAT }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/gists/$gist_id")
-          
+
           thread_ts=$(echo "$response" | jq -r --arg filename "$filename" \
             '.files[$filename].content // empty')
-          
+
           if [[ -n "$thread_ts" ]]; then
             echo "thread_ts=$thread_ts" >> "$GITHUB_OUTPUT"
             echo "Found existing thread_ts: $thread_ts"
@@ -42,7 +34,7 @@ jobs:
             echo "thread_ts=" >> "$GITHUB_OUTPUT"
           fi
 
-      # 3. thread_ts がない場合は Slack に新規投稿
+      # 2. thread_ts がない場合は Slack に新規投稿
       - name: Post to Slack (initial message)
         id: slack_post
         if: steps.read_thread.outputs.thread_ts == ''
@@ -56,8 +48,7 @@ jobs:
               "text": ":sparkles: PR #${{ github.event.pull_request.number }} が更新されました！"
             }
 
-
-      # 4. thread_ts を Gist に保存（新規メッセージのときのみ）
+      # 3. thread_ts を Gist に保存(新規メッセージのみ)
       - name: Save thread_ts to Gist
         if: steps.read_thread.outputs.thread_ts == ''
         run: |
@@ -67,7 +58,7 @@ jobs:
 
           echo "Saving thread_ts to Gist..."
           curl -v -X PATCH \
-            -H "Authorization: token ${{ steps.app_token.outputs.token }}" \
+            -H "Authorization: token ${{ secrets.TERRAFORM_GITHUB_PAT }}" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/gists/$gist_id" \
             -d "{
@@ -78,7 +69,7 @@ jobs:
               }
             }"
 
-      # 5. Slack スレッドに返信
+      # 4. スレッドに返信
       - name: Post to Slack thread
         uses: slackapi/slack-github-action@v2.1.0
         with:
