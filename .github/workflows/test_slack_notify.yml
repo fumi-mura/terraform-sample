@@ -49,10 +49,13 @@ jobs:
         uses: slackapi/slack-github-action@v2.1.0
         with:
           method: chat.postMessage
-          channel: ${{ secrets.SLACK_CHANNEL_ID }}
-          text: ":sparkles: PR #${{ github.event.pull_request.number }} が更新されました！"
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            {
+              "channel": "${{ secrets.SLACK_CHANNEL_ID }}",
+              "text": ":sparkles: PR #${{ github.event.pull_request.number }} が更新されました！"
+            }
+
 
       # 4. thread_ts を Gist に保存（新規メッセージのときのみ）
       - name: Save thread_ts to Gist
@@ -79,8 +82,10 @@ jobs:
         uses: slackapi/slack-github-action@v2.1.0
         with:
           method: chat.postMessage
-          channel: ${{ secrets.SLACK_CHANNEL_ID }}
-          thread_ts: "${{ steps.read_thread.outputs.thread_ts || steps.slack_post.outputs.ts }}"
-          text: ":white_check_mark: GitHub Actions 実行完了 :rocket:"
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            {
+              "channel": "${{ secrets.SLACK_CHANNEL_ID }}",
+              "thread_ts": "${{ steps.read_thread.outputs.thread_ts || steps.deployment_message.outputs.ts }}",
+              "text": ":white_check_mark: GitHub Actions が実行されました（成功 or 失敗）"
+            }
