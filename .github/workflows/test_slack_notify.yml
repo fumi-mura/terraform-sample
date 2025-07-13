@@ -28,17 +28,15 @@ jobs:
         run: |
           pr_number=${{ github.event.pull_request.number }}
           repo="${{ github.repository }}"
-          owner=$(echo "$repo" | cut -d'/' -f1)
-          repo_name=$(echo "$repo" | cut -d'/' -f2)
 
-          echo "Fetching thread_ts from PR #$pr_number comments via REST API..."
+          echo "Fetching thread_ts from PR #$pr_number comments..."
 
-          comments=$(gh api repos/$owner/$repo_name/issues/$pr_number/comments)
-
-          thread_ts=$(echo "$comments" | jq -r '.[].body' \
-            | grep -oE '<!-- slack_thread_ts: [0-9]+\.[0-9]+ -->' \
+          # コメントを取得し、thread_tsを抽出（エラーハンドリングを追加）
+          thread_ts=$(gh pr view "$pr_number" --repo "$repo" --json comments 2>/dev/null \
+            | jq -r '.comments[]?.body // empty' 2>/dev/null \
+            | grep -oE '<!-- slack_thread_ts: [0-9]+\.[0-9]+ -->' 2>/dev/null \
             | tail -n1 \
-            | grep -oE '[0-9]+\.[0-9]+')
+            | grep -oE '[0-9]+\.[0-9]+' 2>/dev/null || true)
 
           if [[ -n "$thread_ts" ]]; then
             echo "thread_ts=$thread_ts" >> "$GITHUB_OUTPUT"
@@ -66,7 +64,7 @@ jobs:
       - name: Save thread_ts to PR comment
         if: steps.read_thread.outputs.thread_ts == ''
         env:
-          GH_TOKEN: ${{ steps.slack_post.outputs.ts && steps.app_token.outputs.token }}
+          GH_TOKEN: ${{ steps.app_token.outputs.token }}
         run: |
           pr_number=${{ github.event.pull_request.number }}
           repo="${{ github.repository }}"
