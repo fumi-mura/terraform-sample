@@ -91,7 +91,7 @@ jobs:
             {
               channel: ${{ secrets.SLACK_CHANNEL_ID }},
               thread_ts: ${{ steps.read_thread.outputs.thread_ts || steps.slack_post.outputs.ts }},
-              text: "<${{ github.event.pull_request.html_url }}|#${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}> PR created\n\n
+              text: "<${{ github.event.pull_request.html_url }}|Pull request #${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}> created\n\n
                     Opened by <${{ github.event.pull_request.user.html_url }}|${{ github.event.pull_request.user.login }}>\n
                     <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Actions link>",
               unfurl_links: false,
