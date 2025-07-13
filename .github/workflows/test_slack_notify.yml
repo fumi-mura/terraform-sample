@@ -94,7 +94,7 @@ jobs:
               text: "#${{ github.event.pull_request.number }} <${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}> PR created\n\n
                     opened by <${{ github.event.pull_request.user.html_url }}|${{ github.event.pull_request.user.login }}> on ${{ github.event.pull_request.created_at }}\n
                     *Commit:* <${{ github.event.pull_request.head.repo.html_url }}/commit/${{ github.event.pull_request.head.sha }}|${{ github.event.pull_request.head.sha }}>\n
-                    <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Actions link>\n
+                    <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Actions link>\n,
               "unfurl_links": false,
               "unfurl_media": false
             }
