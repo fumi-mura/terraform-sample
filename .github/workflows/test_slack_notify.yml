@@ -93,7 +93,7 @@ jobs:
               thread_ts: ${{ steps.read_thread.outputs.thread_ts || steps.slack_post.outputs.ts }},
               text: "Pull request <${{ github.event.pull_request.html_url }}|#${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}> ${{ github.event.action == 'opened' && 'opened' || github.event.action == 'synchronize' && 'updated' || github.event.action == 'reopened' && 'reopened' || 'modified' }}\n\n
                     Opened by <${{ github.event.pull_request.user.html_url }}|${{ github.event.pull_request.user.login }}>\n
-                    <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Actions link>",
+                    <${{ github.server_url }}/${{ github.repository }}/actions|Actions link>",
               unfurl_links: false,
               unfurl_media: false
             }
