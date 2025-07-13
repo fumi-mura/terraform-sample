@@ -92,10 +92,10 @@ jobs:
               channel: ${{ secrets.SLACK_CHANNEL_ID }},
               thread_ts: ${{ steps.read_thread.outputs.thread_ts || steps.slack_post.outputs.ts }},
               text: "PR #${{ github.event.pull_request.number }} が作成されました！\n
-              :page_facing_up: *Title:* <${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}>\n
-              :hash: *Commit:* <${{ github.event.pull_request.head.repo.html_url }}/commit/${{ github.event.pull_request.head.sha }}|${{ github.event.pull_request.head.sha }}>\n
-              :gear: *Actions URL:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|GitHub Actions>\n
-              :information_source: *Event:* ${{ github.event.action }}",
+                    :page_facing_up: *Title:* <${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}>\n
+                    :hash: *Commit:* <${{ github.event.pull_request.head.repo.html_url }}/commit/${{ github.event.pull_request.head.sha }}|${{ github.event.pull_request.head.sha }}>\n
+                    :gear: *Actions URL:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|GitHub Actions>\n
+                    :information_source: *Event:* ${{ github.event.action }}",
               "unfurl_links": false,
               "unfurl_media": false
             }
