@@ -94,8 +94,3 @@ jobs:
         uses: ./.github/actions/notify_slack
         with:
           slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
-
-      # - name: Notify slack official
-      #   uses: ./.github/actions/slack_webhook
-      #   with:
-      #     slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
