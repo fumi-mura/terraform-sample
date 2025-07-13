@@ -28,11 +28,14 @@ jobs:
         run: |
           pr_number=${{ github.event.pull_request.number }}
           repo="${{ github.repository }}"
+          owner=$(echo "$repo" | cut -d'/' -f1)
+          repo_name=$(echo "$repo" | cut -d'/' -f2)
 
-          echo "Fetching thread_ts from PR #$pr_number comments..."
+          echo "Fetching thread_ts from PR #$pr_number comments via REST API..."
 
-          thread_ts=$(gh pr view "$pr_number" --repo "$repo" --json comments \
-            | jq -r '.comments[].body' \
+          comments=$(gh api repos/$owner/$repo_name/issues/$pr_number/comments)
+
+          thread_ts=$(echo "$comments" | jq -r '.[].body' \
             | grep -oE '<!-- slack_thread_ts: [0-9]+\.[0-9]+ -->' \
             | tail -n1 \
             | grep -oE '[0-9]+\.[0-9]+')
