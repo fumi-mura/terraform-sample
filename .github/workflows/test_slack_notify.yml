@@ -1,9 +1,11 @@
-name: Notify Slack with Thread per PR (via PAT)
+name: Notify Slack with Thread per PR
 
 on:
   pull_request:
     branches: [main]
-    types: [opened, synchronize, reopened]
+    types: [opened, reopened]
+  issue_comment:
+    types: [created]
 
 jobs:
   notify:
@@ -12,29 +14,40 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 1. Gist から thread_ts を取得
-      - name: Get thread_ts from Gist
+      # 1. GitHub App Token を取得
+      - name: Create GitHub App token
+        id: app_token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.TERRAFORM_GITHUB_APP_ID }}
+          private-key: ${{ secrets.TERRAFORM_GITHUB_PRIVATE_KEY }}
+
+      # 2. PR コメントから thread_ts を取得
+      - name: Get thread_ts from PR comments
         id: read_thread
+        env:
+          GH_TOKEN: ${{ steps.app_token.outputs.token }}
         run: |
-          gist_id="${{ secrets.SLACK_THREADS_GIST_ID }}"
-          filename="pr-${{ github.event.pull_request.number }}.txt"
+          pr_number=${{ github.event.pull_request.number }}
+          repo="${{ github.repository }}"
 
-          response=$(curl -s \
-            -H "Authorization: token ${{ secrets.TERRAFORM_GITHUB_PAT }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/gists/$gist_id")
+          echo "Fetching thread_ts from PR #$pr_number comments..."
 
-          thread_ts=$(echo "$response" | jq -r --arg filename "$filename" \
-            '.files[$filename].content // empty')
+          thread_ts=$(gh pr view "$pr_number" --repo "$repo" --json comments 2>/dev/null \
+            | jq -r '.comments[]?.body // empty' 2>/dev/null \
+            | grep -oE '<!-- slack_thread_ts: [0-9]+\.[0-9]+ -->' 2>/dev/null \
+            | tail -n1 \
+            | grep -oE '[0-9]+\.[0-9]+' 2>/dev/null || true)
 
           if [[ -n "$thread_ts" ]]; then
             echo "thread_ts=$thread_ts" >> "$GITHUB_OUTPUT"
             echo "Found existing thread_ts: $thread_ts"
           else
             echo "thread_ts=" >> "$GITHUB_OUTPUT"
+            echo "No thread_ts found"
           fi
 
-      # 2. thread_ts がない場合は Slack に新規投稿
+      # 3. thread_ts がない場合は Slack に新規投稿
       - name: Post to Slack (initial message)
         id: slack_post
         if: steps.read_thread.outputs.thread_ts == ''
@@ -44,32 +57,30 @@ jobs:
           token: ${{ secrets.SLACK_BOT_TOKEN }}
           payload: |
             {
-              "channel": "${{ secrets.SLACK_CHANNEL_ID }}",
-              "text": ":sparkles: PR #${{ github.event.pull_request.number }} が更新されました！"
+              channel: ${{ secrets.SLACK_CHANNEL_ID }},
+              text: "Pull request <${{ github.event.pull_request.html_url }}|#${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}> ${{ github.event.action == 'opened' && 'opened' || github.event.action == 'reopened' && 'reopened' || 'modified' }}\n\n
+                    Opened by <${{ github.event.pull_request.user.html_url }}|${{ github.event.pull_request.user.login }}>\n
+                    <${{ github.server_url }}/${{ github.repository }}/actions|Actions link>",
+              unfurl_links: false,
+              unfurl_media: false
             }
 
-      # 3. thread_ts を Gist に保存(新規メッセージのみ)
-      - name: Save thread_ts to Gist
+      # 4. thread_ts を PR にコメント(新規メッセージのみ)
+      - name: Save thread_ts to PR comment
         if: steps.read_thread.outputs.thread_ts == ''
+        env:
+          GH_TOKEN: ${{ steps.app_token.outputs.token }}
         run: |
-          gist_id="${{ secrets.SLACK_THREADS_GIST_ID }}"
-          filename="pr-${{ github.event.pull_request.number }}.txt"
+          pr_number=${{ github.event.pull_request.number }}
+          repo="${{ github.repository }}"
           thread_ts="${{ steps.slack_post.outputs.ts }}"
 
-          echo "Saving thread_ts to Gist..."
-          curl -v -X PATCH \
-            -H "Authorization: token ${{ secrets.TERRAFORM_GITHUB_PAT }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/gists/$gist_id" \
-            -d "{
-              \"files\": {
-                \"$filename\": {
-                  \"content\": \"$thread_ts\"
-                }
-              }
-            }"
+          echo "Saving thread_ts to PR comment..."
+          gh pr comment "$pr_number" \
+            --repo "$repo" \
+            --body "<!-- slack_thread_ts: $thread_ts -->"
 
-      # 4. スレッドに返信
+      # 5. スレッドに投稿
       - name: Post to Slack thread
         uses: slackapi/slack-github-action@v2.1.0
         with:
@@ -77,7 +88,25 @@ jobs:
           token: ${{ secrets.SLACK_BOT_TOKEN }}
           payload: |
             {
+              channel: ${{ secrets.SLACK_CHANNEL_ID }},
+              thread_ts: ${{ steps.read_thread.outputs.thread_ts || steps.slack_post.outputs.ts }},
+              text: "Pull request <${{ github.event.pull_request.html_url }}|#${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}> ${{ github.event.action == 'opened' && 'opened' || github.event.action == 'reopened' && 'reopened' || 'modified' }}\n\n
+                    Opened by <${{ github.event.pull_request.user.html_url }}|${{ github.event.pull_request.user.login }}>\n
+                    <${{ github.server_url }}/${{ github.repository }}/actions|Actions link>",
+              unfurl_links: false,
+              unfurl_media: false
+            }
+
+      # Slack にコメントを転送
+      - name: Send comment to Slack thread
+        if: steps.read_thread.outputs.thread_ts != '' && github.event.action == 'created'
+        uses: slackapi/slack-github-action@v2.1.0
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            {
               "channel": "${{ secrets.SLACK_CHANNEL_ID }}",
-              "thread_ts": "${{ steps.read_thread.outputs.thread_ts || steps.slack_post.outputs.ts }}",
-              "text": ":white_check_mark: GitHub Actions が実行されました（成功 or 失敗）"
+              "thread_ts": "${{ steps.read_thread.outputs.thread_ts }}",
+              "text": "*New comment on PR <${{ github.event.issue.html_url }}|#${{ github.event.issue.number }}> by <${{ github.event.comment.user.html_url }}|${{ github.event.comment.user.login }}>*:\n\n${{ github.event.comment.body }}"
             }
