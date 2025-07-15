@@ -3,7 +3,9 @@ name: Notify Slack with Thread per PR
 on:
   pull_request:
     branches: [main]
-    types: [opened, synchronize, reopened]
+    types: [opened, reopened]
+  issue_comment:
+    types: [created]
 
 jobs:
   notify:
@@ -56,7 +58,11 @@ jobs:
           payload: |
             {
               channel: ${{ secrets.SLACK_CHANNEL_ID }},
-              text: "PR #${{ github.event.pull_request.number }} が作成されました！\n\n:page_facing_up: *Title:* <${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}>\n:hash: *Commit:* <${{ github.event.pull_request.head.repo.html_url }}/commit/${{ github.event.pull_request.head.sha }}|${{ github.event.pull_request.head.sha }}>\n:gear: *Actions URL:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|GitHub Actions>\n:information_source: *Event:* ${{ github.event.action }}"
+              text: "Pull request <${{ github.event.pull_request.html_url }}|#${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}> ${{ github.event.action == 'opened' && 'opened' || github.event.action == 'reopened' && 'reopened' || 'modified' }}\n\n
+                    Opened by <${{ github.event.pull_request.user.html_url }}|${{ github.event.pull_request.user.login }}>\n
+                    <${{ github.server_url }}/${{ github.repository }}/actions|Actions link>",
+              unfurl_links: false,
+              unfurl_media: false
             }
 
       # 4. thread_ts を PR にコメント(新規メッセージのみ)
@@ -77,13 +83,6 @@ jobs:
       # 5. スレッドに投稿
       - name: Post to Slack thread
         uses: slackapi/slack-github-action@v2.1.0
-        # env:
-        #   PR_TITLE: ${{ github.event.pull_request.title }}
-        #   PR_URL: ${{ github.event.pull_request.html_url }}
-        #   COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
-        #   COMMIT_URL: ${{ github.event.pull_request.head.repo.html_url }}/commit/${{ github.event.pull_request.head.sha }}
-        #   ACTIONS_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        #   EVENT_ACTION: ${{ github.event.action }}
         with:
           method: chat.postMessage
           token: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -91,9 +90,23 @@ jobs:
             {
               channel: ${{ secrets.SLACK_CHANNEL_ID }},
               thread_ts: ${{ steps.read_thread.outputs.thread_ts || steps.slack_post.outputs.ts }},
-              text: "Pull request <${{ github.event.pull_request.html_url }}|#${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}> ${{ github.event.action == 'opened' && 'opened' || github.event.action == 'synchronize' && 'updated' || github.event.action == 'reopened' && 'reopened' || 'modified' }}\n\n
+              text: "Pull request <${{ github.event.pull_request.html_url }}|#${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}> ${{ github.event.action == 'opened' && 'opened' || github.event.action == 'reopened' && 'reopened' || 'modified' }}\n\n
                     Opened by <${{ github.event.pull_request.user.html_url }}|${{ github.event.pull_request.user.login }}>\n
                     <${{ github.server_url }}/${{ github.repository }}/actions|Actions link>",
               unfurl_links: false,
               unfurl_media: false
+            }
+
+      # Slack にコメントを転送
+      - name: Send comment to Slack thread
+        if: steps.read_thread.outputs.thread_ts != '' && github.event.action == 'created'
+        uses: slackapi/slack-github-action@v2.1.0
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            {
+              "channel": "${{ secrets.SLACK_CHANNEL_ID }}",
+              "thread_ts": "${{ steps.read_thread.outputs.thread_ts }}",
+              "text": "*New comment on PR <${{ github.event.issue.html_url }}|#${{ github.event.issue.number }}> by <${{ github.event.comment.user.html_url }}|${{ github.event.comment.user.login }}>*:\n\n${{ github.event.comment.body }}"
             }
