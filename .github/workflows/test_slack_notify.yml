@@ -16,7 +16,6 @@ jobs:
 
       # 1. GitHub App Token を取得
       - name: Create GitHub App token
-        if: github.event_name == 'pull_request'
         id: app_token
         uses: actions/create-github-app-token@v1
         with:
@@ -25,7 +24,6 @@ jobs:
 
       # 2. PR コメントから thread_ts を取得
       - name: Get thread_ts from PR comments
-        if: github.event_name == 'pull_request'
         id: read_thread
         env:
           GH_TOKEN: ${{ steps.app_token.outputs.token }}
@@ -51,8 +49,8 @@ jobs:
 
       # 3. thread_ts がない場合は Slack に新規投稿
       - name: Post to Slack (initial message)
-        if: github.event_name == 'pull_request' && steps.read_thread.outputs.thread_ts == ''
         id: slack_post
+        if: steps.read_thread.outputs.thread_ts == ''
         uses: slackapi/slack-github-action@v2.1.0
         with:
           method: chat.postMessage
@@ -69,7 +67,7 @@ jobs:
 
       # 4. thread_ts を PR にコメント(新規メッセージのみ)
       - name: Save thread_ts to PR comment
-        if: github.event_name == 'pull_request' && steps.read_thread.outputs.thread_ts == ''
+        if: steps.read_thread.outputs.thread_ts == ''
         env:
           GH_TOKEN: ${{ steps.app_token.outputs.token }}
         run: |
@@ -84,7 +82,6 @@ jobs:
 
       # 5. スレッドに投稿
       - name: Post to Slack thread
-        if: github.event_name == 'pull_request'
         uses: slackapi/slack-github-action@v2.1.0
         with:
           method: chat.postMessage
@@ -102,7 +99,7 @@ jobs:
 
       # Slack にコメントを転送
       - name: Send comment to Slack thread
-        if: github.event_name == 'issue_comment' && github.event.issue.pull_request && steps.read_thread.outputs.thread_ts != ''
+        if: steps.read_thread.outputs.thread_ts != '' && github.event.action == 'created'
         uses: slackapi/slack-github-action@v2.1.0
         with:
           method: chat.postMessage
@@ -113,4 +110,3 @@ jobs:
               "thread_ts": "${{ steps.read_thread.outputs.thread_ts }}",
               "text": "*New comment on PR <${{ github.event.issue.html_url }}|#${{ github.event.issue.number }}> by <${{ github.event.comment.user.html_url }}|${{ github.event.comment.user.login }}>*:\n\n${{ github.event.comment.body }}"
             }
- 
