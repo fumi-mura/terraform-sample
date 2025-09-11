@@ -80,7 +80,7 @@ module "{role}_{resource_name}" # ex: module "oidc_iam_role"
 ## Outside source code control
 
 - S3 bucket for terraform.tfstate
-  - If use CFn(terraform/aws/tfstate/tfstate_s3_bucket.yml)
+  - If use CFn(https://github.com/fumi-mura/cfn-sample/blob/main/terraform/tfstate_s3_bucket.yml)
 - AWS Organizations
   - Enable Organizations
   - Terraform not yet supported
