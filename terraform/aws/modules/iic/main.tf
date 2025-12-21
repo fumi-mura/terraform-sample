@@ -58,7 +58,7 @@ resource "aws_ssoadmin_managed_policy_attachment" "this" {
   permission_set_arn = aws_ssoadmin_permission_set.this[each.key].arn
 }
 
-# Apply IIC settings to each account
+# Apply IDC settings to each account
 resource "aws_ssoadmin_account_assignment" "this" {
   for_each = var.assignment_map
 

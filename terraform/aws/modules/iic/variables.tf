@@ -18,7 +18,7 @@ variable "users" {
     })
     groups = list(string)
   }))
-  description = "Create iic users"
+  description = "Create idc users"
 }
 
 variable "groups" {
@@ -26,7 +26,7 @@ variable "groups" {
     name        = string
     description = string
   }))
-  description = "Create iic group"
+  description = "Create idc group"
 }
 
 variable "user_group_membership" {
@@ -34,7 +34,7 @@ variable "user_group_membership" {
     user  = string
     group = string
   }))
-  description = "Create iic user group membership"
+  description = "Create idc user group membership"
 }
 
 variable "permission_sets" {
@@ -43,7 +43,7 @@ variable "permission_sets" {
     description        = string
     managed_policy_arn = string
   }))
-  description = "Create iic permission set"
+  description = "Create idc permission set"
 }
 
 variable "assignment_map" {
@@ -52,5 +52,5 @@ variable "assignment_map" {
     group          = string
     permission_set = string
   }))
-  description = "Create iic assignment map"
+  description = "Create idc assignment map"
 }

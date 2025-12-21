@@ -65,9 +65,9 @@ module "sdlc_organizations" {
   ou_name       = "sdlc"
 }
 
-# IIC
+# IDC
 module "iam_identity_center" {
-  source                = "../../modules/iic"
+  source                = "../../modules/idc"
   env                   = local.env
   name                  = local.name
   email                 = data.aws_ssm_parameter.this.value
