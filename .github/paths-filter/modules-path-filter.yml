@@ -8,8 +8,8 @@ ec2:
   - terraform/aws/modules/ec2/**
 iam:
   - terraform/aws/modules/iam/**
-iic:
-  - terraform/aws/modules/iic/**
+idc:
+  - terraform/aws/modules/idc/**
 kms:
   - terraform/aws/modules/kms/**
 lambda:
